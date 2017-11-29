@@ -43,9 +43,10 @@ class Settings extends CI_Controller {
 				//Proceed saving				
 				if($this->user_model->update_profile($data['user']['username'])) {			
 					if($this->input->post('resetpass')) {
-						$this->user_model->update_profile_pass($data['user']['username']);
+						$this->user_model->update_profile_pass($data['user']['username']);						
+					}
 
-						$log[] = array(
+					$log[] = array(
 							'user' 		=> 	$userdata['username'],
 							'tag' 		=> 	'',
 							'tag_id'	=> 	'',
@@ -53,12 +54,12 @@ class Settings extends CI_Controller {
 							);
 
 				
-						//Save log loop
-						foreach($log as $lg) {
+					//Save log loop ///////////
+					foreach($log as $lg) {
 							$this->logs_model->create_log($lg['user'], $lg['tag'], $lg['tag_id'], $lg['action']);				
-						}		
-						////////////////////////////////////
-					}
+					}	
+					////////////////////////////////////
+						
 					$this->session->set_flashdata('success', 'Success! Profile Updated!');
 					redirect($_SERVER['HTTP_REFERER'], 'refresh');
 				} else {

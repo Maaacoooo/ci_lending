@@ -10,7 +10,7 @@
   <?php $this->load->view('inc/css')?>
    
 </head>
-<body class="hold-transition skin-black sidebar-mini">
+<body class="hold-transition skin-red sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
 
@@ -51,34 +51,9 @@
             $flash_error = $this->session->flashdata('error');
             $flash_success = $this->session->flashdata('success');
             $flash_valid =  validation_errors();                 
-            if($this->session->flashdata('error')): ?>
+        ?>
+         <?=$this->sessnotif->showNotif()?>
 
-            <div class="alert alert-danger alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4><i class="icon fa fa-ban"></i> Oops!</h4>
-              <?=$this->session->flashdata('error')?>
-            </div>
-                       
-        <?php 
-            endif; //error end
-            //SUCCESS ACTION                          
-            if($this->session->flashdata('success')): ?>
-            <div class="alert alert-success alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4><i class="icon fa fa-check"></i> Success!</h4>
-              <?=$this->session->flashdata('success')?>
-            </div>
-        <?php 
-            endif; //success end
-            //FORM VALIDATION ERROR
-            $this->form_validation->set_error_delimiters('<li>', '</li>');
-            if(validation_errors()): ?>
-            <div class="alert alert-warning alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4><i class="icon fa fa-warning"></i> Warning!</h4>         
-              <?=validation_errors()?>         
-            </div>
-        <?php endif; //formval end ?> 
         </div><!-- /.col-xs-12 -->
       </div><!-- /.row -->
 
@@ -89,14 +64,12 @@
           <div class="box box-primary">
             <div class="box-body box-profile">             
               <?php if (filexist($info['img']) && $info['img']): ?>
-                <img class="profile-user-img img-responsive img-circle" src="<?=base_url('uploads/'.$info['img'])?>" alt="User profile picture">
+                <img class="profile-user-img img-responsive img-circle" src="<?=base_url($info['img'])?>" alt="User profile picture">
               <?php else: ?>
                 <img class="profile-user-img img-responsive img-circle" src="<?=base_url('assets/img/no_image.gif')?>" alt="User profile picture">                
               <?php endif ?>
 
               <h3 class="profile-username text-center"><?=$info['name']?></h3>
-
-              <p class="text-muted text-center"><?=$info['brand']?></p>
               <p class="text-muted text-center"><?=$info['usertype']?></p>
 
               <ul class="list-group list-group-unbordered">
@@ -126,7 +99,7 @@
             </ul>
             <div class="tab-content">
               <div class="tab-pane <?php if(!($flash_error || $flash_success || $flash_valid))echo'active'?>" id="activity">
-                <h4 class="title">Last 50 Activity</h4>
+                <h4 class="title">Last 50 Activity <small><a href="<?=current_url().'/download_logs'?>" class="pull-right"><i class="fa fa-download"></i> Download Logs</a></small></h4>
                 <?php if ($logs): ?>
                 <table class="table table-condensed">
                   <thead>
@@ -173,23 +146,18 @@
                   </div>
                   <div class="form-group">
                     <label for="email" class="col-sm-2 col-md-2 control-label">Email Address</label>
-                    <div class="col-sm-10 col-md-3">
+                    <div class="col-sm-10 col-md-4">
                       <input type="email" name="email" class="form-control" id="email" placeholder="Email Address..." value="<?=$info['email']?>" required>
                     </div>
 
                     <label for="contact" class="col-sm-2 col-md-2 control-label">Contact Number</label>
-                    <div class="col-sm-10 col-md-2">
+                    <div class="col-sm-10 col-md-4">
                       <input type="text" name="contact" class="form-control" id="contact" placeholder="Contact Number..." value="<?=$info['contact']?>">
-                    </div>
-
-                    <label for="img" class="col-sm-2 col-md-1 control-label">Profile Image</label>
-                    <div class="col-sm-10 col-md-1">        
-                        <input type="file" name="img" id="img">       
-                    </div>
+                    </div>                    
                   </div>
                   <div class="form-group">
                     <label for="name" class="col-sm-2 col-md-2 control-label">Usertype</label>
-                    <div class="col-sm-10 col-md-2">        
+                    <div class="col-sm-10 col-md-4">        
                         <select name="usertype" class="form-control" required="">
                           <option disabled="">Select Usertype...</option>
                            <?php 
@@ -204,6 +172,20 @@
                         </select>       
                      </div>
                   </div>
+                  <div class="form-group">    
+                    <label for="img" class="col-sm-2 control-label">Profile Image</label>    
+                    <div class="col-sm-3">
+                      <input type="file" name="img" id="img">   
+                    </div>
+ 
+                    <div class="col-sm-5">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" name="remove_img"> Remove Image
+                        </label>
+                      </div>
+                    </div>    
+                  </div> 
                   <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['username'])?>" />                  
                   <div class="form-group">
                     <div class="col-sm-offset-2 col-sm-10">
@@ -296,10 +278,7 @@
 </div>
 <!-- ./wrapper -->
 
-    <script type="text/javascript" src="<?=base_url('assets/custom/js/jquery-1.11.2.min.js')?>"></script> 
-    <script src="<?=base_url('assets/bower_components/bootstrap/dist/js/bootstrap.min.js')?>"></script>
-    <script src="<?=base_url('assets/dist/js/adminlte.min.js')?>"></script>
-    <script src="<?=base_url('assets/custom/js/jquery-ui.js');?>" type="text/javascript" language="javascript" charset="UTF-8"></script>  
+    <?php $this->load->view('inc/js')?>    
   
 </body>
 </html>

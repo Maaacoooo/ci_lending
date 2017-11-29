@@ -1,5 +1,5 @@
 <div class="pull-right hidden-xs">
-    <strong>&copy; 2017 <a href="#">Redwoods</a></strong>. All rights
+    <strong>&copy; <?=date('Y')?> <a href="#">STI College Dipolog</a></strong>. All rights
     reserved.
 </div>     	
     <span class="label bg-blue">{elapsed_time}s</span>

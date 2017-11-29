@@ -59,37 +59,36 @@ class Users extends CI_Controller {
 		
 			//Form Validation for user
 			$this->form_validation->set_rules('name', 'Name', 'trim|required'); 
+			$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email'); 
+			$this->form_validation->set_rules('contact', 'Contact Number', 'trim'); 
 			$this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[users.username]|alpha_dash'); 
-			$this->form_validation->set_rules('usertype', 'Usertype', 'trim|required'); 
-			$this->form_validation->set_rules('email', 'Email', 'trim|required');  
-			$this->form_validation->set_rules('contact', 'Contact', 'trim|required'); 
-						
+			$this->form_validation->set_rules('usertype', 'Usertype', 'trim|required'); 			
+			
 			//Validate Usertype
-			if($data['user']['usertype'] == 'Administrator') {
+			if($data['user']['user_level'] >= 10) {
 
 				if($this->form_validation->run() == FALSE)	{
 					$this->load->view('user/list', $data);
 				} else {	
-					
-					//Proceed saving user				
-					if($this->user_model->create_user()) {			
 
-						$user_id = $this->input->post('username'); //fetch last insert case Row ID
+					$username = strip_tags($this->input->post('username')); //the username
+
+					//Proceed saving user				
+					if($this->user_model->create_user($username)) {			
+
+						
 						// Save Log Data ///////////////////				
 
 						$log[] = array(
 							'user' 		=> 	$userdata['username'],
 							'tag' 		=> 	'user',
-							'tag_id'	=> 	$user_id,
+							'tag_id'	=> 	$username,
 							'action' 	=> 	'User Registration'
 							);
 
 				
-						//Save log loop
-						foreach($log as $lg) {
-							$this->logs_model->create_log($lg['user'], $lg['tag'], $lg['tag_id'], $lg['action']);				
-						}		
-						////////////////////////////////////
+						//Save Logs/////////////////////////
+						$this->logs_model->save_logs($log);		
 					
 						$this->session->set_flashdata('success', 'User registered!');
 						redirect($_SERVER['HTTP_REFERER'], 'refresh');
@@ -123,10 +122,28 @@ class Users extends CI_Controller {
 			//Page Data 
 			$data['usertypes']		= $this->user_model->usertypes();			
 
-
 			$data['info']		= $this->user_model->userdetails($id);
 			$data['logs']		= $this->logs_model->fetch_user_logs($id, 50);
 			$data['title'] 		= $data['info']['name'];
+
+
+			//Download Log Data 
+			if ($this->uri->segment(4) == 'download_logs' && $data['user']['user_level'] >= 10) {
+
+				$this->load->library('magictable'); //load magictable library
+
+				$log_data = $this->logs_model->fetch_user_logs($id, NULL);
+
+		        foreach ($log_data as $lg) {
+		        	$logs[] = (explode(';', (implode(";", $lg))));
+		        }
+
+		        $upload_path = checkDir('./uploads/logs/'.$id.'/');
+		        $file_path = $upload_path.$id.'_'.date('Y-m-d_H-i-s').'.log';
+
+		        write_file($file_path, $this->magictable->maketable(array('ID', 'USERNAME', 'TAG', 'TAG_ID', 'ACTION', 'IP ADDRESS', 'DATE | TIME'),$logs));
+		        force_download($file_path, NULL);
+			}
 
 			//Validate if record exist
 			 //IF NO ID OR NO RESULT, REDIRECT
@@ -137,18 +154,23 @@ class Users extends CI_Controller {
 			//Form Validation for user
 			$this->form_validation->set_rules('name', 'Name', 'trim|required');  
 			$this->form_validation->set_rules('usertype', 'Usertype', 'trim|required'); 
-			$this->form_validation->set_rules('email', 'Email', 'trim|required');  
-			$this->form_validation->set_rules('contact', 'Contact', 'trim|required'); 
+			$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email'); 
+			$this->form_validation->set_rules('contact', 'Contact Number', 'trim');  
+			$this->form_validation->set_rules('usertype', 'Usertype', 'trim|required'); 
 		
 			//Validate Usertype
-			if($data['user']['usertype'] == 'Administrator') {
+			if($data['user']['user_level'] >= 10) {
 				if($this->form_validation->run() == FALSE)	{
 				$this->load->view('user/update', $data);
 				} else {			
 
+					$location = NULL;
+					if($this->input->post('location')) {
+						$location = $this->input->post('location');
+					}
 					//Proceed saving candidate				
 					$key_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row
-					if($this->user_model->update_user($key_id)) {		
+					if($this->user_model->update_user($key_id, $location)) {		
 
 						$log[] = array(
 							'user' 		=> 	$userdata['username'],
@@ -158,11 +180,8 @@ class Users extends CI_Controller {
 							);
 
 				
-						//Save log loop
-						foreach($log as $lg) {
-							$this->logs_model->create_log($lg['user'], $lg['tag'], $lg['tag_id'], $lg['action']);				
-						}		
-						////////////////////////////////////
+						//Save Logs/////////////////////////
+						$this->logs_model->save_logs($log);		
 						
 					
 						$this->session->set_flashdata('success', 'Succes! User Updated!');
@@ -215,11 +234,9 @@ class Users extends CI_Controller {
 							);
 
 				
-						//Save log loop
-						foreach($log as $lg) {
-							$this->logs_model->create_log($lg['user'], $lg['tag'], $lg['tag_id'], $lg['action']);				
-						}		
-						////////////////////////////////////
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+
 					$this->session->set_flashdata('success', 'User Deleted!');
 					redirect('users', 'refresh');
 				}
@@ -262,11 +279,9 @@ class Users extends CI_Controller {
 							);
 
 				
-						//Save log loop
-						foreach($log as $lg) {
-							$this->logs_model->create_log($lg['user'], $lg['tag'], $lg['tag_id'], $lg['action']);				
-						}		
-						////////////////////////////////////
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+
 					$this->session->set_flashdata('success', 'Password Resetted to Default!');
 					redirect($_SERVER['HTTP_REFERER'], 'refresh');
 				}

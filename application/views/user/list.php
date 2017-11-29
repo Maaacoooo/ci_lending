@@ -10,7 +10,7 @@
   <?php $this->load->view('inc/css')?>
    
 </head>
-<body class="hold-transition skin-black sidebar-mini">
+<body class="hold-transition skin-red sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
 
@@ -45,37 +45,7 @@
       
       <div class="row">
         <div class="col-xs-12">
-          <?php
-            //ALERT / NOTIFICATION
-            //ERROR ACTION                          
-            if($this->session->flashdata('error')): ?>
-
-            <div class="alert alert-danger alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4><i class="icon fa fa-ban"></i> Oops!</h4>
-              <?=$this->session->flashdata('error')?>
-            </div>
-                       
-        <?php 
-            endif; //error end
-            //SUCCESS ACTION                          
-            if($this->session->flashdata('success')): ?>
-            <div class="alert alert-success alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4><i class="icon fa fa-check"></i> Success!</h4>
-              <?=$this->session->flashdata('success')?>
-            </div>
-        <?php 
-            endif; //success end
-            //FORM VALIDATION ERROR
-            $this->form_validation->set_error_delimiters('<li>', '</li>');
-            if(validation_errors()): ?>
-            <div class="alert alert-warning alert-dismissible">
-              <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
-              <h4><i class="icon fa fa-warning"></i> Warning!</h4>         
-              <?=validation_errors()?>         
-            </div>
-        <?php endif; //formval end ?> 
+          <?=$this->sessnotif->showNotif()?>
         </div><!-- /.col-xs-12 -->
       </div><!-- /.row -->
 
@@ -112,7 +82,7 @@
                   <td>
                     <a href="<?=base_url('users/update/'.$res['username'])?>">
                       <?php if (filexist($res['img']) && $res['img']): ?>
-                        <img class="profile-user-img img-responsive img-circle" src="<?=base_url('uploads/'.$res['img'])?>" alt="User profile picture">
+                        <img class="profile-user-img img-responsive img-circle" src="<?=base_url($res['img'])?>" alt="User profile picture">
                       <?php else: ?>
                         <img class="profile-user-img img-responsive img-circle" src="<?=base_url('assets/img/no_image.gif')?>" alt="User profile picture">                
                       <?php endif ?>
@@ -151,7 +121,7 @@
           <div class="box-body">
               <div class="callout callout-info">
                 <h4><i class="fa fa-info-circle"></i> Information</h4>
-                <p>The default password of every new user is <strong class="strong text-success">Redwoods2017</strong>(case-sensitive).</p>
+                <p>The default password of every new user is <strong class="strong text-success">Inventory2017</strong>(case-sensitive).</p>
                 <p>Please advise your New User to change his password after logging in.</p>
               </div>
 
@@ -186,7 +156,6 @@
 
             </div>
             <div class="form-group">            
-
               <label for="name" class="col-sm-2 col-md-2 control-label">Usertype</label>
               <div class="col-sm-10 col-md-2">        
                   <select name="usertype" class="form-control" required="">
@@ -203,7 +172,6 @@
                   </select>       
                </div>
             </div>
-
           </div>
           <!-- /.box-body -->
           <div class="box-footer">

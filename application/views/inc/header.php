@@ -1,9 +1,9 @@
 <!-- Logo -->
     <a href="<?=base_url('dashboard')?>" class="logo">
       <!-- mini logo for sidebar mini 50x50 pixels -->
-      <span class="logo-mini"><b>IV</b>S</span>
+      <span class="logo-mini"><b>R</b>W</span>
       <!-- logo for regular state and mobile devices -->
-      <span class="logo-lg"><b>Inventory</b>System</span>
+      <span class="logo-lg"><b>Red</b>Woods Lending</span>
     </a>
     <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top">
@@ -21,7 +21,7 @@
           <li class="dropdown user user-menu">
             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
               <?php if (filexist($user['img']) && $user['img']): ?>
-                <img src="<?=base_url('uploads/'.$user['img'])?>" class="user-image" alt="User Image">
+                <img src="<?=base_url($user['img'])?>" class="user-image" alt="User Image">
               <?php else: ?>
                 <img src="<?=base_url('assets/img/user.png')?>" class="user-image" alt="User Image">                
               <?php endif ?>
@@ -31,7 +31,7 @@
               <!-- User image -->
               <li class="user-header">
                 <?php if (filexist($user['img']) && $user['img']): ?>
-                  <img src="<?=base_url('uploads/'.$user['img'])?>" class="img-circle" alt="User Image">
+                  <img src="<?=base_url($user['img'])?>" class="img-circle" alt="User Image">
                 <?php else: ?>
                   <img src="<?=base_url('assets/img/no_image.gif')?>" class="img-circle" alt="User Image">                
                 <?php endif ?>

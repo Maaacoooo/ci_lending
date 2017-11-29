@@ -3,6 +3,16 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 /*
 |--------------------------------------------------------------------------
+| System Defaults
+|--------------------------------------------------------------------------
+|
+| This are the global default variables of the system
+|
+*/
+define('APP_NAME', 'RedWoods Lending'); // Application name 
+
+/*
+|--------------------------------------------------------------------------
 | Display Debug backtrace
 |--------------------------------------------------------------------------
 |

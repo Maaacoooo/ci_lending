@@ -11,7 +11,7 @@
   <link rel="stylesheet" href="<?=base_url('assets/custom/css/jquery-ui.min.css')?>">
    
 </head>
-<body class="hold-transition skin-black sidebar-mini">
+<body class="hold-transition skin-red sidebar-mini">
 <!-- Site wrapper -->
 <div class="wrapper">
 
