@@ -19,3 +19,11 @@
 	border: 0;
 	width: auto;
 }
+
+.table-dark-border {
+	border: 2px solid #9E9E9E;
+}
+
+.table-dark-border tr td, .table-dark-border tr th {
+	border: 1px solid #424242;
+}
