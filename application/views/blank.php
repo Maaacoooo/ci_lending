@@ -35,8 +35,8 @@
         <?=$title?>        
       </h1>
       <ol class="breadcrumb">
-        <li><a href="#">Home</a></li>
-        <li><a href="#">Examples</a></li>
+        <li><a href="<?=base_url()?>">Dashboard</a></li>
+        <li><a href="<?=base_url()?>">Examples</a></li>
         <li class="active"><?=$title?></li>
       </ol>
     </section>
