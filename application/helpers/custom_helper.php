@@ -58,8 +58,11 @@
      * @param  String   $range  the range to be calculated
      * @return int              the Age
      */
-    function getAge($age_sql, $range) {
+    function getAge($age_sql, $range = NULL) {
 
+        if (is_null($range)) {
+            $range = now();
+        }
         $str = "#".timespan(mysql_to_unix($age_sql . '00:00:00'), $range, 1);
 
         sscanf($str,"#%d",$age);
