@@ -180,6 +180,21 @@
         return $currency . ' ' . $digits;
     }
 
+    /**
+     * Converts Bootstrap Date to MySQL Date Form and vice versa
+     * @param  String $str mm/dd/yy
+     * @return [type]      [description]
+     */
+    function dateform($str) {
+        $date = explode('/', $str);
+
+        if($date) {
+            //return yyyy-mm-dd format
+            return $date[2] . '-' . $date[1] . '-' . $date[0]; 
+        }
+
+    }
+
 
 
 
