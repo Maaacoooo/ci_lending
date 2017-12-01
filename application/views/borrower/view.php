@@ -331,7 +331,7 @@
         </div>
         <div class="modal-body">          
               <div class="row">
-                <div class="col-md-3 col-sm-12">
+                <div class="col-md-4 col-sm-12">
                   <label for="employ_grp">Employer Type</label>
                   <div class="form-group">
                     <div class="col-xs-7">
@@ -348,7 +348,7 @@
                     </div><!-- /.col-xs-6 -->                    
                   </div>
                 </div><!-- /.col-md-4 col-sm-12 -->
-                <div class="col-md-4 col-sm-12">
+                <div class="col-md-3 col-sm-12">
                   <div class="form-group">
                       <label for="employ_name">Employer's Name</label>
                       <input type="text" name="employ_name" id="employ_name" class="form-control" placeholder="Name of Company..." value="<?=set_value('employ_name')?>" />
@@ -482,6 +482,134 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+
+  <div class="modal fade" id="AddMobile">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <?=form_open('borrowers/add_contact')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Add New Mobile Number</h4>
+        </div>
+        <div class="modal-body">          
+           <div class="form-group">
+             <label for="">Mobile Number</label>
+             <input type="text" name="contact[]" id="" class="form-control" data-inputmask='"mask": "(999) 999-9999"' placeholder="(912) 345-6789" data-mask required="" />
+           </div><!-- /.form-group -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-primary">Save</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+
+  <div class="modal fade" id="AddEmail">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <?=form_open('borrowers/add_contact')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Add New Email Address</h4>
+        </div>
+        <div class="modal-body">          
+           <div class="form-group">
+             <label for="email">Email Address</label>
+             <input type="email" name="email[]" id="email" class="form-control" required="" placeholder="youremail@emailprovider.com" />
+           </div><!-- /.form-group -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-primary">Save</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+
+
+
+  <?php if ($employments): ?>
+  <?php foreach ($employments as $emp): ?>
+  <div class="modal fade" id="UpdateEmployer<?=$emp['id']?>">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?=form_open('borrowers/add_contact')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><?=$emp['employer_business']?></h4>
+        </div>
+        <div class="modal-body">          
+           <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#employ_info<?=$emp['id']?>" data-toggle="tab" data-target="#employ_info<?=$emp['id']?>">Info</a></li>
+              <li><a href="#employ_update<?=$emp['id']?>" data-toggle="tab" data-target="#employ_update<?=$emp['id']?>">Update</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="employ_info<?=$emp['id']?>">
+                <strong>Employer Name</strong>
+                <p class="text-muted"><?=$emp['employer_business']?></p><!-- /.text-muted -->
+                <hr />
+                <strong>Employer Type</strong>
+                <p class="text-muted">
+                  <?php if ($emp['type']): ?>
+                              <span class="label bg-red">GOVERNMENT</span> 
+                            <?php else: ?>
+                              <span class="label bg-green">PRIVATE</span> 
+                            <?php endif ?>
+                </p><!-- /.text-muted -->
+                <hr />
+                <strong>Position</strong>
+                <p class="text-muted"><?=$emp['position_nature']?></p><!-- /.text-muted -->
+                <hr />
+                <strong>Operating Dates</strong>
+                <p class="text-muted">
+                  <?=$emp['date_started']?> to <?php if($emp['date_ended']){echo $emp['date_ended']; } else { echo 'Present'; }?>
+                </p><!-- /.text-muted -->
+                <hr />
+                <strong>Work Address</strong>
+                <p class="text-muted"><?=$emp['address']?></p><!-- /.text-muted -->
+                <hr />
+                <strong>Status</strong>
+                <p class="text-muted"><?=$emp['status']?></p><!-- /.text-muted -->
+                <hr />
+                <strong>Remarks</strong>
+                <p class="text-muted"><?=$emp['remarks']?></p><!-- /.text-muted -->                
+              </div>
+              <div class="tab-pane" id="employ_update<?=$emp['id']?>">
+                asdasdasdasdasdasd
+              </div><!-- /#employ_update.tab-pane -->
+            </div><!-- /.tab-content -->
+          </div><!-- /.nav-tabs-custom -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($emp['id'])?>" />
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <?php endforeach ?>
+  <?php endif ?>
 
 
   <footer class="main-footer">    

@@ -137,7 +137,7 @@ Class Borrower_Model extends CI_Model {
             'value'   => $value
             );
 
-         $this->db->insert('borrowers_contacts', $data);
+         return $this->db->insert('borrowers_contacts', $data);
     }
 
 

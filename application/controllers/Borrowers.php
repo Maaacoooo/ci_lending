@@ -423,6 +423,74 @@ class Borrowers extends CI_Controller {
 	}
 
 
+	public function add_contact()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				$this->session->set_flashdata('error', 'An Error has Occured!');
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
+
+					if ($this->input->post('contact')) {
+						//Save Contact Numbers ///////////
+						$contact = $this->input->post('contact');
+						//Loop
+						for ($i=0; $i < sizeof($contact); $i++) { 
+							$action = $this->borrower_model->create_contact($acc_id, 0, $contact[$i]); //save 
+						}
+						$log_action = "Added New Contact Number";
+					}
+
+					if ($this->input->post('email')) {
+						//Save Emails /////////////
+						$email = $this->input->post('email');
+						//Loop
+						for ($i=0; $i < sizeof($email); $i++) { 
+							$action = $this->borrower_model->create_contact($acc_id, 1, $email[$i]); //save 
+						}
+						$log_action = "Added New Email Address";
+					}
+
+				if($action) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$acc_id,
+							'action' 	=> 	$log_action
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+
 	/**
 	 * Checks the Serial of the Item. Returns True if Serial Exist from another Record
 	 * @param  [type] $item [description]
