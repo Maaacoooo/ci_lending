@@ -5,3 +5,17 @@
 .marker {
 	background: yellow;
 }
+
+.group-box {
+	border: 1px solid #CECECE;
+	margin: 0 2px;
+  	padding: 0.35em 0.625em 0.75em;
+}
+
+.group-box-title {
+	padding: 0 10px 0 10px;
+	font-size: 14px;
+	font-weight: bold;
+	border: 0;
+	width: auto;
+}
