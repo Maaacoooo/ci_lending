@@ -10,6 +10,12 @@
        folder instead of downloading all of them to reduce the load. -->
   <link rel="stylesheet" href="<?=base_url('assets/dist/css/skins/skin-red.min.css')?>">
 
+  <!-- iCheck for checkboxes and radio inputs -->
+  <link rel="stylesheet" href="<?=base_url('assets/plugins/iCheck/all.css')?>">
+
+  <!-- bootstrap datepicker -->
+  <link rel="stylesheet" href="<?=base_url('assets/bower_components/bootstrap-datepicker/dist/css/bootstrap-datepicker.min.css')?>">
+
   <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
   <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
   <!--[if lt IE 9]>

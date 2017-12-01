@@ -89,7 +89,7 @@
                     </a>
                   </td>
                   <td><a href="<?=base_url('borrowers/view/'.$res['id'])?>"><?=$res['lastname'].', '.$res['firstname']?></a></td>
-                  <td><a href="<?=base_url('borrowers/view/'.$res['id'])?>"><?=$res['spouse_name']?></a></td>
+                  <td><a href="<?=base_url('borrowers/view/'.$res['id'])?>"><?=$res['spouse']?></a></td>
                   <td><a href="<?=base_url('borrowers/view/'.$res['id'])?>"><?=$res['id']?></a></td>
                 </tr>
               <?php endforeach; ?>
