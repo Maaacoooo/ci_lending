@@ -128,43 +128,43 @@
                 <div class="col-sm-5">
                   <div class="form-group">
                     <label for="bplace_bldg">Building / Block / House</label>
-                    <input type="text" name="bplace_bldg" class="form-control" id="bplace_bldg" placeholder="Building / Block / House..." value="" required/>
+                    <input type="text" name="bplace_bldg" class="form-control" id="bplace_bldg" placeholder="Building / Block / House..." value="<?=set_value('bplace_bldg')?>" required/>
                   </div>
                 </div><!-- /.col-sm-5 -->
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label for="bplace_strt">Street</label>
-                    <input type="text" name="bplace_strt" class="form-control" id="bplace_strt" placeholder="Street..." value="" required/>
+                    <input type="text" name="bplace_strt" class="form-control" id="bplace_strt" placeholder="Street..." value="<?=set_value('bplace_strt')?>" required/>
                   </div>
                 </div><!-- /.col-sm-4 -->
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="bplace_brgy">Barangay</label>
-                    <input type="text" name="bplace_brgy" class="form-control" id="bplace_brgy" placeholder="Barangay..." value="" required/>
+                    <input type="text" name="bplace_brgy" class="form-control" id="bplace_brgy" placeholder="Barangay..." value="<?=set_value('bplace_brgy')?>" required/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="bplace_city">City / Municipality</label>
-                    <input type="text" name="bplace_city" class="form-control" id="bplace_city" placeholder="City / Municipality..." value="" required/>
+                    <input type="text" name="bplace_city" class="form-control" id="bplace_city" placeholder="City / Municipality..." value="<?=set_value('bplace_city')?>" required/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="bplace_prov">Province / Region</label>
-                    <input type="text" name="bplace_prov" class="form-control" id="bplace_prov" placeholder="Province / Region..." value="" required/>
+                    <input type="text" name="bplace_prov" class="form-control" id="bplace_prov" placeholder="Province / Region..." value="<?=set_value('bplace_prov')?>" required/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label for="bplace_zip">Zip Code</label>
-                    <input type="text" name="bplace_zip" class="form-control" id="bplace_zip" placeholder="Zip Code..." value="" required/>
+                    <input type="text" name="bplace_zip" class="form-control" id="bplace_zip" placeholder="Zip Code..." value="<?=set_value('bplace_zip')?>" required/>
                   </div>
                 </div><!-- /.col-sm-2 -->
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label for="bplace_country">Country</label>
-                    <input type="text" name="bplace_country" class="form-control" id="bplace_country" placeholder="Country..." value="Philippines" required/>
+                    <label for="bplace_ctry">Country</label>
+                    <input type="text" name="bplace_ctry" class="form-control" id="bplace_ctry" placeholder="Country..."  value="<?php if(set_value('bplace_ctry'))echo set_value('bplace_ctry'); else echo 'Philippines';?>" required/>
                   </div>
                 </div><!-- /.col-sm-4 -->
               </div><!-- /.row -->              
@@ -278,8 +278,8 @@
                 </div><!-- /.col-sm-2 -->
                 <div class="col-sm-4">
                   <div class="form-group">
-                    <label for="addr_country">Country</label>
-                    <input type="text" name="addr_country" class="form-control" id="addr_country" placeholder="Country..." value="<?php if(set_value('addr_country'))echo set_value('addr_country'); else echo 'Philippines';?>" required/>
+                    <label for="addr_ctry">Country</label>
+                    <input type="text" name="addr_ctry" class="form-control" id="addr_ctry" placeholder="Country..." value="<?php if(set_value('addr_ctry'))echo set_value('addr_ctry'); else echo 'Philippines';?>" required/>
                   </div>
                 </div><!-- /.col-sm-4 -->
               </div><!-- /.row -->

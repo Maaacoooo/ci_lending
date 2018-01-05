@@ -92,9 +92,14 @@ Class Borrower_Model extends CI_Model {
      */
     function create_address($acc_id, $tag, $bldg, $street, $brgy, $city, $prov, $zip, $ctry) {
 
+        //Unsets current address from an account
+        if ($tag == 2) {
+            $this->update_currentAddr($acc_id, NULL);
+        }
+
           $data = array(
-            'borrower_id' => $acc_id,
-            'type'        => $tag,
+            'borrower_id'=> $acc_id,
+            'type'       => $tag,
             'building'   => $bldg,
             'street'     => $street,
             'barangay'   => $brgy,
@@ -107,6 +112,7 @@ Class Borrower_Model extends CI_Model {
          $this->db->insert('borrowers_address', $data);
 
          return $this->db->insert_id(); //returns the inserted id
+
     }
 
 
@@ -248,6 +254,23 @@ Class Borrower_Model extends CI_Model {
             
             $this->db->where('id', $item_id);
             return $this->db->update('items', $data);          
+        
+    }
+
+
+    /**
+     * Unsets the existing Current Address and sets a new current address
+     * @return [type] [description]
+     */
+    function update_currentAddr($acc_id, $addr_id) {
+
+        //unset existing current address
+        $this->db->update('borrowers_address', array('type' => 3), array('borrower_id'=>$acc_id, 'type' => 2));
+
+        if (!is_null($addr_id)) {
+            //sets an address to current address
+            $this->db->update('borrowers_address', array('type' => 2), array('id'=>$addr_id));
+        }
         
     }
 
