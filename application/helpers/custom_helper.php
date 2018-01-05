@@ -189,12 +189,71 @@
      * @return [type]      [description]
      */
     function dateform($str) {
-        $date = explode('/', $str);
 
-        if($date) {
+
+        if(strpbrk($str, '-')) {
+            
+            // yyyy-mm-dd format to dd/mm/yyyy format
+            
+            $date = explode('-', $str);
+
+           //array size validation
+            if(sizeof($date) != 3) {
+                //returns null if not date form 
+                return NULL;                
+            }
+
+            //parse to Int
+            $year   = intval($date[0]);
+            $month  = str_pad(intval($date[1]),2,"0",STR_PAD_LEFT);
+            $day    = str_pad(intval($date[2]),2,"0",STR_PAD_LEFT);
+
+            if($year <= 0 || $month <= 0 || $day <= 0 || strlen($year) != 4 || strlen($month) != 2 || strlen($day) != 2 || !($month <= 12) || !($day <= 31)) {
+                return NULL;
+            }
+
+            
+            //return mm/dd/yyyy format
+            return $day . '/' . $month . '/' . $year; 
+
+
+        } elseif(strpbrk($str, '/')) {
+
+           // dd/mm/yyyy format to yyyy-mm-dd format
+           
+           $date = explode('/', $str);
+
+           //array size validation
+            if(sizeof($date) != 3) {
+                //returns null if not date form 
+                return NULL;                
+            }
+
+            //parse to Int
+            $year   = intval($date[2]);
+            $month  = str_pad(intval($date[1]),2,"0",STR_PAD_LEFT);
+            $day    = str_pad(intval($date[0]),2,"0",STR_PAD_LEFT);
+
+
+
+
+            if($year <= 0 || $month <= 0 || $day <= 0 || strlen($year) != 4 || strlen($month) != 2 || strlen($day) != 2 || !($month <= 12) || !($day <= 31)) {
+                return NULL;
+            }
+
+            
             //return yyyy-mm-dd format
-            return $date[2] . '-' . $date[1] . '-' . $date[0]; 
+            return $year . '-' . $month . '-' . $day; 
+
+
+        } else {
+            //if none date format
+            return NULL;
         }
+        /**
+         *  
+         */
+
 
     }
 
