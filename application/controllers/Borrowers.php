@@ -280,10 +280,8 @@ class Borrowers extends CI_Controller {
 	}
 
 	public function test() {
-		//echo dateform('2015-22-23');
-		echo dateform($this->input->get('nah'));
-		//echo dateform('adsadsad');
-		//
+		//$this->load->library('Lols');
+		var_dump($this->sessnotif->test());
 	}
 
 	public function view($id)		{
@@ -395,6 +393,242 @@ class Borrowers extends CI_Controller {
 
 
 
+	
+
+
+	public function add_contact()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
+
+					if ($this->input->post('contact')) {
+						//Save Contact Numbers ///////////
+						$contact = $this->input->post('contact');
+						//Loop
+						for ($i=0; $i < sizeof($contact); $i++) { 
+							$action = $this->borrower_model->create_contact($acc_id, 0, $contact[$i]); //save 
+						}
+						$log_action = "Added New Contact Number";
+					}
+
+					if ($this->input->post('email')) {
+						//Save Emails /////////////
+						$email = $this->input->post('email');
+						//Loop
+						for ($i=0; $i < sizeof($email); $i++) { 
+							$action = $this->borrower_model->create_contact($acc_id, 1, $email[$i]); //save 
+						}
+						$log_action = "Added New Email Address";
+					}
+
+				if($action) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$acc_id,
+							'action' 	=> 	$log_action
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+	public function upload_gallery()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$key_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row				
+
+				if($this->item_model->upload_gallery($key_id)) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'item',
+							'tag_id'	=> 	$key_id,
+							'action' 	=> 	'Uploaded a Gallery Picture'
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$this->session->set_flashdata('gallery', 1); //used by tabs
+					$this->session->set_flashdata('success', 'Picture Uploaded');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					$this->session->set_flashdata('gallery', 1); //used by tabs
+					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+	public function delete_gallery()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$key_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
+				$item = $this->item_model->view_gallery($key_id);	
+
+				if($this->item_model->delete_gallery($key_id)) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'item',
+							'tag_id'	=> 	$item['item_id'],
+							'action' 	=> 	'Deleted a Gallery Picture'
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$this->session->set_flashdata('gallery', 1); //used by tabs
+					$this->session->set_flashdata('success', 'Deleted Picture');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					$this->session->set_flashdata('gallery', 1); //used by tabs
+					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+
+	public function delete()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{
+			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$key_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row				
+
+				if($this->item_model->delete($key_id)) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'item',
+							'tag_id'	=> 	$key_id,
+							'action' 	=> 	'Deleted Item'
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+
+					$this->session->set_flashdata('success', 'Item Deleted!');
+					redirect('items', 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+
+
+	/**
+	 * -----------------------------------------------------------------------------------------------------------
+	 * Work and Business Related 
+	 * -----------------------------------------------------------------------------------------------------------
+	 * 
+	 */
+	
 	public function add_work()		{
 
 		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
@@ -428,14 +662,17 @@ class Borrowers extends CI_Controller {
 		 
 		   if($this->form_validation->run() == FALSE)	{
 
-				$this->session->set_flashdata('error', 'An Error has Occured!');
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
 				redirect($_SERVER['HTTP_REFERER'], 'refresh');
 
 			} else {
 
 				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
 
-				//Save Business
+						//Save Business
 						if ($this->input->post('business_nature') || $this->input->post('business_name')) {
 							$employer = strip_tags($this->input->post('business_name'));
 							$position = strip_tags($this->input->post('business_nature'));
@@ -445,7 +682,7 @@ class Borrowers extends CI_Controller {
 							$status = strip_tags($this->input->post('business_status'));
 							$remarks = strip_tags($this->input->post('business_remarks'));
 							$action = $this->borrower_model->create_work($acc_id, NULL, $employer, $position, $address, dateform($date_start), $contact, $status, $remarks);
-							$log_action = "Added a New Business";
+							$log_action = "Added a New Business - " . $employer;
 						}
 
 						//Save Employment
@@ -459,7 +696,7 @@ class Borrowers extends CI_Controller {
 							$status = strip_tags($this->input->post('employ_status'));
 							$remarks = strip_tags($this->input->post('employ_remarks'));
 							$action = $this->borrower_model->create_work($acc_id, $type, $employer, $position, $address, dateform($date_start), $contact, $status, $remarks);
-							$log_action = "Added a New Employer";							
+							$log_action = "Added a New Employer - " . $employer;							
 						}
 
 				if($action) {
@@ -536,15 +773,29 @@ class Borrowers extends CI_Controller {
 
 				//Save Business
 						if ($this->input->post('business_nature') || $this->input->post('business_name')) {
+
 							$employer = strip_tags($this->input->post('business_name'));
 							$position = strip_tags($this->input->post('business_nature'));
 							$address = strip_tags($this->input->post('business_addr'));
 							$date_start = strip_tags($this->input->post('business_date'));
+							$date_end = strip_tags($this->input->post('business_end'));
 							$contact = strip_tags($this->input->post('business_contact'));
 							$status = strip_tags($this->input->post('business_status'));
 							$remarks = strip_tags($this->input->post('business_remarks'));
+
+							//Fetch old data
+							$info = $this->borrower_model->view_work($id);
+
+							if($employer != $info['employer_business']) {
+								$log_action = "Updated a Business Information: " . $info['employer_business'] . ' -> ' . $employer;
+							} else {
+								$log_action = "Updated a Business Information: " . $info['employer_business'];
+							}
+
+							//Update Function
 							$action = $this->borrower_model->update_work($id, NULL, $employer, $position, $address, dateform($date_start), $contact, $status, $remarks, dateform($date_end));
-							$log_action = "Updated a Business Information";
+							
+							
 						}
 
 						//Save Employment
@@ -558,20 +809,31 @@ class Borrowers extends CI_Controller {
 							$contact = strip_tags($this->input->post('employ_contact'));
 							$status = strip_tags($this->input->post('employ_status'));
 							$remarks = strip_tags($this->input->post('employ_remarks'));
-							$action = $this->borrower_model->update_work($id, $type, $employer, $position, $address, dateform($date_start), $contact, $status, $remarks, dateform($date_end));
-							$log_action = "Updated an Employment Information";							
+
+							//Fetch old data
+							$info = $this->borrower_model->view_work($id);
+
+							if($employer != $info['employer_business']) {
+								$log_action = "Updated an Employer Information: " . $info['employer_business'] . ' -> ' . $employer;
+							} else {
+								$log_action = "Updated an Employer Information: " . $info['employer_business'];
+							}
+
+							//Update Function
+							$action = $this->borrower_model->update_work($id, $type, $employer, $position, $address, dateform($date_start), $contact, $status, $remarks, dateform($date_end));	
+
 						}
 
 				if($action) {
 
 					$log[] = array(
-							'user' 		=> 	$userdata['username'],
-							'tag' 		=> 	'borrower',
-							'tag_id'	=> 	$acc_id,
-							'action' 	=> 	$log_action
-							);
+								'user' 		=> 	$userdata['username'],
+								'tag' 		=> 	'borrower',
+								'tag_id'	=> 	$acc_id,
+								'action' 	=> 	$log_action
+								);
 
-				
+					
 					//Save Logs/////////////////////////
 					$this->logs_model->save_logs($log);		
 					////////////////////////////////////
@@ -581,73 +843,7 @@ class Borrowers extends CI_Controller {
 					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
 					redirect($_SERVER['HTTP_REFERER'], 'refresh');
 				}
-			}
 
-		} else {
-
-			$this->session->set_flashdata('error', 'You need to login!');
-			redirect('dashboard/login', 'refresh');
-		}
-
-	}
-
-
-	public function add_contact()		{
-
-		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
-
-		if($userdata)	{			
-			//FORM VALIDATION
-			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
-		 
-		   if($this->form_validation->run() == FALSE)	{
-
-				$this->session->set_flashdata('error', 'An Error has Occured!');
-				redirect($_SERVER['HTTP_REFERER'], 'refresh');
-
-			} else {
-
-				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
-
-					if ($this->input->post('contact')) {
-						//Save Contact Numbers ///////////
-						$contact = $this->input->post('contact');
-						//Loop
-						for ($i=0; $i < sizeof($contact); $i++) { 
-							$action = $this->borrower_model->create_contact($acc_id, 0, $contact[$i]); //save 
-						}
-						$log_action = "Added New Contact Number";
-					}
-
-					if ($this->input->post('email')) {
-						//Save Emails /////////////
-						$email = $this->input->post('email');
-						//Loop
-						for ($i=0; $i < sizeof($email); $i++) { 
-							$action = $this->borrower_model->create_contact($acc_id, 1, $email[$i]); //save 
-						}
-						$log_action = "Added New Email Address";
-					}
-
-				if($action) {
-
-					$log[] = array(
-							'user' 		=> 	$userdata['username'],
-							'tag' 		=> 	'borrower',
-							'tag_id'	=> 	$acc_id,
-							'action' 	=> 	$log_action
-							);
-
-				
-					//Save Logs/////////////////////////
-					$this->logs_model->save_logs($log);		
-					////////////////////////////////////
-					$this->session->set_flashdata('success', $log_action);
-					redirect($_SERVER['HTTP_REFERER'], 'refresh');
-				} else {
-					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
-					redirect($_SERVER['HTTP_REFERER'], 'refresh');
-				}
 			}
 
 		} else {
@@ -660,130 +856,7 @@ class Borrowers extends CI_Controller {
 
 
 
-	/**
-	 * Checks the Serial of the Item. Returns True if Serial Exist from another Record
-	 * @param  [type] $item [description]
-	 * @return [type]       [description]
-	 */
-	function check_serial($serial) {
-
-
-		if($serial) {
-			$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
-			$item = $this->encryption->decrypt($this->input->post('id')); 
-
-			if($this->item_model->check_serial($item, $serial)) {
-				$this->form_validation->set_message('check_serial', 'Serial is Registered from another Item!');		
-				return FALSE;
-			} else {
-				return TRUE;
-			}
-		} else {
-			return TRUE;
-		}
-	}
-
-
-	public function upload_gallery()		{
-
-		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
-
-		if($userdata)	{			
-			//FORM VALIDATION
-			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
-		 
-		   if($this->form_validation->run() == FALSE)	{
-
-				$this->session->set_flashdata('error', 'An Error has Occured!');
-				redirect($_SERVER['HTTP_REFERER'], 'refresh');
-
-			} else {
-
-				$key_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row				
-
-				if($this->item_model->upload_gallery($key_id)) {
-
-					$log[] = array(
-							'user' 		=> 	$userdata['username'],
-							'tag' 		=> 	'item',
-							'tag_id'	=> 	$key_id,
-							'action' 	=> 	'Uploaded a Gallery Picture'
-							);
-
-				
-					//Save Logs/////////////////////////
-					$this->logs_model->save_logs($log);		
-					////////////////////////////////////
-					$this->session->set_flashdata('gallery', 1); //used by tabs
-					$this->session->set_flashdata('success', 'Picture Uploaded');
-					redirect($_SERVER['HTTP_REFERER'], 'refresh');
-				} else {
-					$this->session->set_flashdata('gallery', 1); //used by tabs
-					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
-					redirect($_SERVER['HTTP_REFERER'], 'refresh');
-				}
-			}
-
-		} else {
-
-			$this->session->set_flashdata('error', 'You need to login!');
-			redirect('dashboard/login', 'refresh');
-		}
-
-	}
-
-	public function delete_gallery()		{
-
-		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
-
-		if($userdata)	{			
-			//FORM VALIDATION
-			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
-		 
-		   if($this->form_validation->run() == FALSE)	{
-
-				$this->session->set_flashdata('error', 'An Error has Occured!');
-				redirect($_SERVER['HTTP_REFERER'], 'refresh');
-
-			} else {
-
-				$key_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
-				$item = $this->item_model->view_gallery($key_id);	
-
-				if($this->item_model->delete_gallery($key_id)) {
-
-					$log[] = array(
-							'user' 		=> 	$userdata['username'],
-							'tag' 		=> 	'item',
-							'tag_id'	=> 	$item['item_id'],
-							'action' 	=> 	'Deleted a Gallery Picture'
-							);
-
-				
-					//Save Logs/////////////////////////
-					$this->logs_model->save_logs($log);		
-					////////////////////////////////////
-					$this->session->set_flashdata('gallery', 1); //used by tabs
-					$this->session->set_flashdata('success', 'Deleted Picture');
-					redirect($_SERVER['HTTP_REFERER'], 'refresh');
-				} else {
-					$this->session->set_flashdata('gallery', 1); //used by tabs
-					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
-					redirect($_SERVER['HTTP_REFERER'], 'refresh');
-				}
-			}
-
-		} else {
-
-			$this->session->set_flashdata('error', 'You need to login!');
-			redirect('dashboard/login', 'refresh');
-		}
-
-	}
-
-
-
-	public function delete()		{
+	public function delete_work()		{
 
 		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
 
@@ -791,33 +864,58 @@ class Borrowers extends CI_Controller {
 			
 			//FORM VALIDATION
 			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+			$this->form_validation->set_rules('checkbox', 'Check Box', 'trim|required');   
+			$this->form_validation->set_rules('acc_id', 'Account ID', 'trim|required');   
+			$this->form_validation->set_rules('key', 'key', 'trim|required');   
 		 
 		   if($this->form_validation->run() == FALSE)	{
 
-				$this->session->set_flashdata('error', 'An Error has Occured!');
+		   		//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
 				redirect($_SERVER['HTTP_REFERER'], 'refresh');
 
 			} else {
 
-				$key_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row				
+				$id 	= $this->encryption->decrypt($this->input->post('id')); //ID of the row				
+				$acc_id = $this->encryption->decrypt($this->input->post('acc_id')); //Account ID			
+				$key 	= $this->encryption->decrypt($this->input->post('key')); //Type of Key	
 
-				if($this->item_model->delete($key_id)) {
+				$info 	= $this->borrower_model->view_work($id);
 
-					$log[] = array(
-							'user' 		=> 	$userdata['username'],
-							'tag' 		=> 	'item',
-							'tag_id'	=> 	$key_id,
-							'action' 	=> 	'Deleted Item'
-							);
 
-				
-					//Save Logs/////////////////////////
-					$this->logs_model->save_logs($log);		
-					////////////////////////////////////
+				if($key) {
+					//Business				
+					$log_action = 'Deleted a Business Record - ' . $info['employer_business'];
+				} else {
+					//Employer
+					$log_action = 'Deleted an Employer Record - ' . $info['employer_business'];
+				}		
 
-					$this->session->set_flashdata('success', 'Item Deleted!');
-					redirect('items', 'refresh');
+				//Delete Function
+				if(!$this->borrower_model->delete_work($id)) {
+					//Redirects and show error
+					//Set Flashdata Notif
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
 				}
+
+				// Log function
+				$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$acc_id,
+							'action' 	=> 	$log_action
+				);
+				
+				// Save Logs 
+				$this->logs_model->save_logs($log);		
+	
+				//Set Flashdata Notif
+				$this->session->set_flashdata('success', $log_action);
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				
 			}
 
 		} else {

@@ -164,46 +164,7 @@ Class Borrower_Model extends CI_Model {
     }
 
 
-    function create_work($acc_id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks) {
-
-        $data = array(
-            'borrower_id'       => $acc_id,
-            'type'              => $type,
-            'employer_business' => $employer,
-            'position_nature'   => $position,
-            'address'           => $address,
-            'date_started'      => $date_start,
-            'tel_no'            => $contact,
-            'status'            => $status,
-            'remarks'           => $remarks
-            );
-
-         $this->db->insert('borrowers_work', $data);
-
-         return $this->db->insert_id(); //returns the inserted id
-
-    }
-
-    function update_work($id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks, $date_end) {
-
-        $data = array(
-            'type'              => $type,
-            'employer_business' => $employer,
-            'position_nature'   => $position,
-            'address'           => $address,
-            'date_started'      => $date_start,
-            'date_ended'        => $date_end,
-            'tel_no'            => $contact,
-            'status'            => $status,
-            'remarks'           => $remarks
-            );
-
-         $this->db->where('borrowers_work.id', $id);
-         $this->db->update('borrowers_work', $data);
-
-         return $id; //returns the inserted id
-
-    }
+    
 
     /**
      * Creates an Item Record
@@ -578,25 +539,66 @@ Class Borrower_Model extends CI_Model {
     }
 
 
+
     /**
-     * Checks the serial of an item if it already exist in the database
-     * - used by Form Validation for 
-     * @param  [type] $id     the ID of the 
-     * @param  [type] $serial [description]
-     * @return [type]         [description]
+     * -------------------------------------------------------------------
+     * WORK AND BUSINESS
+     * -------------------------------------------------------------------
+     * 
      */
-    function check_serial($id, $serial) {
+    
+    function view_work($id) {
 
-             $this->db->select('*');        
-             $this->db->where('id !=', $id);          
-             $this->db->where('serial', $serial);          
-             $this->db->limit(1);
+        $this->db->where('id', $id);
+        $query = $this->db->get('borrowers_work');
 
-             $query = $this->db->get('items');
+        return $query->row_array();
+    }
 
-             return $query->row_array();
+    function create_work($acc_id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks) {
+
+        $data = array(
+            'borrower_id'       => $acc_id,
+            'type'              => $type,
+            'employer_business' => $employer,
+            'position_nature'   => $position,
+            'address'           => $address,
+            'date_started'      => $date_start,
+            'tel_no'            => $contact,
+            'status'            => $status,
+            'remarks'           => $remarks
+            );
+
+         $this->db->insert('borrowers_work', $data);
+
+         return $this->db->insert_id(); //returns the inserted id
+
+    }
+
+    function update_work($id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks, $date_end) {
+
+        $data = array(
+            'type'              => $type,
+            'employer_business' => $employer,
+            'position_nature'   => $position,
+            'address'           => $address,
+            'date_started'      => $date_start,
+            'date_ended'        => $date_end,
+            'tel_no'            => $contact,
+            'status'            => $status,
+            'remarks'           => $remarks
+            );
+
+         $this->db->where('borrowers_work.id', $id);
+         $this->db->update('borrowers_work', $data);
+
+         return $id; //returns the updated id
+
     }
 
 
+    function delete_work($id) {
+        return $this->db->delete('borrowers_work', array('id' => $id));
+    }
 
 }

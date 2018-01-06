@@ -367,7 +367,7 @@
                 <div class="col-md-2 col-sm-12">
                   <div class="form-group">
                       <label for="employ_date">Date Started</label>
-                      <input type="text" name="employ_date" id="employ_date" class="form-control" placeholder="mm/dd/yyyy" value="<?=set_value('employ_date')?>" />
+                      <input type="text" name="employ_date" id="employ_date" class="form-control bootstrap-datepicker" placeholder="mm/dd/yyyy" value="<?=set_value('employ_date')?>" />
                   </div><!-- /.form-group -->
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
@@ -375,7 +375,7 @@
                 <div class="col-md-6 col-sm-12">
                   <div class="form-group">
                       <label for="employ_addr">Work Address</label>
-                      <input type="text" name="employ_addr" id="employ_addr" class="form-control" placeholder="Complete Address..." value="<?=set_value('employ_addr')?>" />
+                      <input type="text" name="employ_addr" id="employ_addr" class="form-control bootstrap-datepicker" placeholder="Complete Address..." value="<?=set_value('employ_addr')?>" />
                   </div><!-- /.form-group -->
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-3 col-sm-12">
@@ -434,13 +434,13 @@
                 <div class="col-md-4 col-sm-12">
                   <div class="form-group">
                       <label for="business_nature">Nature of Business</label>
-                      <input type="text" name="business_nature" id="business_nature" class="form-control" placeholder="Position..." value="<?=set_value('business_nature')?>" />
+                      <input type="text" name="business_nature" id="business_nature" class="form-control" placeholder="Nature of Business..." value="<?=set_value('business_nature')?>" />
                   </div><!-- /.form-group -->
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-2 col-sm-12">
                   <div class="form-group">
                       <label for="business_date">Date Started</label>
-                      <input type="text" name="business_date" id="business_date" class="form-control" placeholder="mm/dd/yyyy" value="<?=set_value('business_date')?>" />
+                      <input type="text" name="business_date" id="business_date" class="form-control bootstrap-datepicker" placeholder="mm/dd/yyyy" value="<?=set_value('business_date')?>" />
                   </div><!-- /.form-group -->
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
@@ -832,13 +832,13 @@
                   <div class="col-md-2 col-sm-12">
                     <div class="form-group">
                         <label for="employ_date">Date Started</label>
-                        <input type="text" name="employ_date" id="employ_date" class="form-control" placeholder="mm/dd/yyyy" value="<?=dateform($emp['date_started'])?>" />
+                        <input type="text" name="employ_date" id="employ_date" class="form-control bootstrap-datepicker" placeholder="mm/dd/yyyy" value="<?=dateform($emp['date_started'])?>" />
                     </div><!-- /.form-group -->
                   </div><!-- /.col-md-4 col-sm-12 -->
                   <div class="col-md-2 col-sm-12">
                     <div class="form-group">
                         <label for="employ_date">Date Ended</label>
-                        <input type="text" name="employ_end" id="employ_end" class="form-control" placeholder="mm/dd/yyyy" value="<?=dateform($emp['date_ended'])?>" />
+                        <input type="text" name="employ_end" id="employ_end" class="form-control bootstrap-datepicker" placeholder="mm/dd/yyyy" value="<?=dateform($emp['date_ended'])?>" />
                     </div><!-- /.form-group -->
                   </div><!-- /.col-md-4 col-sm-12 -->
                 </div><!-- /.row -->
@@ -881,16 +881,18 @@
               </div><!-- /#employ_update.tab-pane -->
               <div id="employ_delete<?=$emp['id']?>" class="tab-pane">
                 <div class="callout callout-danger">
-                  <h5>Are you sure to delete <?=$emp['employer_business']?>?</h5>
-                  <p>Deleting the records of this employer cannot be undone!</p>
-
+                  <h4><i class="fa fa-warning"></i> Are you sure to delete <?=$emp['employer_business']?>?</h4>
+                  <p>Deleting the records of this employer cannot be undone!</p>                  
                   <div class="row">
                     <?=form_open('borrowers/delete_work')?>
                     <div class="col-sm-6">
                       <div class="checkbox">
                         <label>
-                          <input type="checkbox" required/> Yes. I am sure to delete this Record.
+                          <input name="checkbox" type="checkbox" required/> Yes. I am sure to delete this Record.
                         </label>
+                          <input type="hidden" name="id" value="<?=$this->encryption->encrypt($emp['id'])?>" />
+                          <input type="hidden" name="acc_id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+                          <input type="hidden" name="key" value="<?=$this->encryption->encrypt(0)?>" />
                         <button class="btn btn-danger btn-outline btn-flat btn-sm"><i class="fa fa-trash"></i> Delete</button>
                       </div><!-- /.checkbox -->                      
                     </div><!-- /.col-sm-6 -->
@@ -911,6 +913,162 @@
   <?php endforeach ?>
   <?php endif ?>
 
+
+<!-- ///////////////////////// Business Details ///////////////////////// -->
+
+<?php if ($businesses): ?>
+  <?php foreach ($businesses as $business): ?>
+  <div class="modal fade" id="UpdateBusiness<?=$business['id']?>">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Business: <?=$business['employer_business']?></h4>
+        </div>
+        <div class="modal-body">          
+           <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#employ_info<?=$business['id']?>" data-toggle="tab" data-target="#business_info<?=$business['id']?>">Information</a></li>
+              <li><a href="#business_update<?=$business['id']?>" data-toggle="tab" data-target="#business_update<?=$business['id']?>">Update</a></li>
+              <li><a href="#business_delete<?=$business['id']?>" data-toggle="tab" data-target="#business_delete<?=$business['id']?>">Delete</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="business_info<?=$business['id']?>">
+                <div class="row">
+                  <div class="col-md-6">
+                    <strong>Business Name</strong>
+                    <p class="text-muted"><?=$business['employer_business']?></p><!-- /.text-muted -->
+                    <hr />
+                    <strong>Nature of Business</strong>
+                    <p class="text-muted"><?=$business['position_nature']?></p><!-- /.text-muted -->
+                    <hr />
+                    <strong>Contact Number</strong>
+                    <p class="text-muted"><?=$business['tel_no']?></p><!-- /.text-muted -->
+                    <hr />
+                    <strong>Business Address</strong>
+                    <p class="text-muted"><?=$business['address']?></p><!-- /.text-muted -->
+                    <hr />          
+                  </div><!-- /.col-md-6 -->
+                  <div class="col-md-6">
+                    <strong>Operating Dates</strong>
+                    <p class="text-muted">
+                      <?=$business['date_started']?> to <?php if($business['date_ended']){echo $business['date_ended']; } else { echo 'Present'; }?>
+                      <?php if ($business['date_ended']): ?>
+                        <span class="badge"><?=getAge($business['date_started'], $business['date_ended'])?> yrs</span>
+                      <?php else: ?>
+                        <span class="badge"><?=getAge($business['date_started'])?> yrs</span>
+                      <?php endif ?>
+                    </p><!-- /.text-muted -->
+                    <hr />     
+                    <strong>Status</strong>
+                    <p class="text-muted"><?=$business['status']?></p><!-- /.text-muted -->
+                    <hr />
+                    <strong>Remarks</strong>
+                    <p class="text-muted"><?=$business['remarks']?></p><!-- /.text-muted -->   
+                  </div><!-- /.col-md-6 -->
+                </div><!-- /.row -->             
+              </div>
+
+              <div class="tab-pane" id="business_update<?=$business['id']?>">
+                <?=form_open('borrowers/update_work')?>
+                <div class="row">                
+                  <div class="col-md-5 col-sm-12">
+                    <div class="form-group">
+                        <label for="business_name">Business Name</label>
+                        <input type="text" name="business_name" id="business_name" class="form-control" placeholder="Name of Company..." value="<?=$business['employer_business']?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <label for="business_nature">Nature of Business</label>
+                        <input type="text" name="business_nature" id="business_nature" class="form-control" placeholder="Nature of Business..." value="<?=$business['position_nature']?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-2 col-sm-12">
+                    <div class="form-group">
+                        <label for="business_date">Date Started</label>
+                        <input type="text" name="business_date" id="business_date" class="form-control bootstrap-datepicker" placeholder="mm/dd/yyyy" value="<?=dateform($business['date_started'])?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-2 col-sm-12 -->
+                  <div class="col-md-2 col-sm-12">
+                    <div class="form-group">
+                        <label for="business_date">Date Ended</label>
+                        <input type="text" name="business_end" id="business_end" class="form-control bootstrap-datepicker" placeholder="mm/dd/yyyy" value="<?=dateform($business['date_ended'])?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-2 col-sm-12 -->
+                </div><!-- /.row -->
+                <div class="row">
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="business_addr">Business Address</label>
+                        <input type="text" name="business_addr" id="business_addr" class="form-control" placeholder="Business Address..." value="<?=$business['address']?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                      <label for="business_contact">Contact Number</label>
+                      <input type="text" name="business_contact" id="" class="form-control" value="<?=$business['tel_no']?>" data-inputmask='"mask": "(999) 999-9999"' placeholder="(912) 345-6789" data-mask />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <label for="business_status">Status</label>
+                        <input type="text" name="business_status" id="business_status" class="form-control" placeholder="Status..." value="<?=$business['status']?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                </div><!-- /.row -->
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label for="business_remarks">Remarks</label>
+                      <textarea name="business_remarks" id="business_remarks" class="form-control"><?=$business['remarks']?></textarea>
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-sm-12 -->
+                </div><!-- /.row -->
+                <input type="hidden" name="id" value="<?=$this->encryption->encrypt($business['id'])?>" />
+                <input type="hidden" name="acc_id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+                <div class="row">
+                  <div class="col-sm-12">
+                    <button type="submit" class="btn btn-flat btn-primary pull-right">Update Record</button>
+                  </div><!-- /.col-sm-12 -->
+                </div><!-- /.row -->
+                <?=form_close()?>
+              </div><!-- /#employ_update.tab-pane -->
+              <div id="business_delete<?=$business['id']?>" class="tab-pane">
+                <div class="callout callout-danger">
+                  <h4><i class="fa fa-warning"></i> Are you sure to delete <?=$business['employer_business']?>?</h4>
+                  <p>Deleting the records of this business cannot be undone!</p>
+
+                  <div class="row">
+                    <?=form_open('borrowers/delete_work')?>
+                    <div class="col-sm-6">
+                      <div class="checkbox">
+                        <label>
+                          <input name="checkbox" type="checkbox" required/> Yes. I am sure to delete this Record.
+                        </label>
+                          <input type="hidden" name="id" value="<?=$this->encryption->encrypt($business['id'])?>" />
+                          <input type="hidden" name="acc_id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+                          <input type="hidden" name="key" value="<?=$this->encryption->encrypt(1)?>" />
+                        <button class="btn btn-danger btn-outline btn-flat btn-sm"><i class="fa fa-trash"></i> Delete</button>
+                      </div><!-- /.checkbox -->                      
+                    </div><!-- /.col-sm-6 -->
+                    <?=form_close()?>
+                  </div><!-- /.row -->
+                </div><!-- /.callout callout-danger -->
+              </div><!-- /#business_delete.tab-pane -->
+            </div><!-- /.tab-content -->
+          </div><!-- /.nav-tabs-custom -->
+        </div><!-- /.modal-body -->
+
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <?php endforeach ?>
+  <?php endif ?>
 
 
 
@@ -938,7 +1096,7 @@
     })
 
     //Date picker
-    $('#birthdate, #spouse_bdate, #employ_date, #employ_end, #business_date').datepicker({
+    $('input[type="text"].bootstrap-datepicker').datepicker({
       autoclose: true
     })
 
