@@ -184,6 +184,27 @@ Class Borrower_Model extends CI_Model {
 
     }
 
+    function update_work($id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks, $date_end) {
+
+        $data = array(
+            'type'              => $type,
+            'employer_business' => $employer,
+            'position_nature'   => $position,
+            'address'           => $address,
+            'date_started'      => $date_start,
+            'date_ended'        => $date_end,
+            'tel_no'            => $contact,
+            'status'            => $status,
+            'remarks'           => $remarks
+            );
+
+         $this->db->where('borrowers_work.id', $id);
+         $this->db->update('borrowers_work', $data);
+
+         return $id; //returns the inserted id
+
+    }
+
     /**
      * Creates an Item Record
      * @param  String   $item_id    the decrypted ITEM ID

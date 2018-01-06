@@ -280,12 +280,14 @@ class Borrowers extends CI_Controller {
 	}
 
 	public function test() {
-		foreach ($_POST as $key => $value) {
-			echo '$this->form_validation->set_rules(\''.$key.'\', \'\', \'trim|required\');'. "\n";
-		}
+		//echo dateform('2015-22-23');
+		echo dateform($this->input->get('nah'));
+		//echo dateform('adsadsad');
+		//
 	}
 
 	public function view($id)		{
+
 
 		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
 
@@ -458,6 +460,106 @@ class Borrowers extends CI_Controller {
 							$remarks = strip_tags($this->input->post('employ_remarks'));
 							$action = $this->borrower_model->create_work($acc_id, $type, $employer, $position, $address, dateform($date_start), $contact, $status, $remarks);
 							$log_action = "Added a New Employer";							
+						}
+
+				if($action) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$acc_id,
+							'action' 	=> 	$log_action
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+
+	public function update_work()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+
+			//Employment / Employed
+			if($this->input->post('employ_grp') || $this->input->post('employ_name')) {
+				$this->form_validation->set_rules('employ_grp', 'Employer Group', 'trim|required');
+				$this->form_validation->set_rules('employ_name', 'Employer Name', 'trim|required');
+				$this->form_validation->set_rules('employ_position', 'Employed Position', 'trim|required');
+				$this->form_validation->set_rules('employ_date', 'Employed Date', 'trim|required');
+				$this->form_validation->set_rules('employ_addr', 'Employed Word Address', 'trim|required');
+				$this->form_validation->set_rules('employ_contact', 'Employed Contact', 'trim|required');
+				$this->form_validation->set_rules('employ_status', 'Employment Status', 'trim');
+				$this->form_validation->set_rules('employ_remarks', 'Employment Remarks', 'trim');
+			}
+
+			//Business / Self-employed
+			if ($this->input->post('business_nature') || $this->input->post('business_name')) {
+				$this->form_validation->set_rules('business_name', 'Business Name', 'trim|required');
+				$this->form_validation->set_rules('business_nature', 'Business Nature', 'trim|required');
+				$this->form_validation->set_rules('business_date', 'Business Start Date', 'trim|required');
+				$this->form_validation->set_rules('business_addr', 'Business Address', 'trim|required');
+				$this->form_validation->set_rules('business_contact', 'Business Contact', 'trim|required');
+				$this->form_validation->set_rules('business_status', 'Business Status', 'trim');
+				$this->form_validation->set_rules('business_remarks', 'Business Remarks', 'trim');
+			}
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				$this->session->set_flashdata('error', 'An Error has Occured!');				
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$acc_id = $this->encryption->decrypt($this->input->post('acc_id')); //ID of the Borrower's account			
+				$id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
+
+				//Save Business
+						if ($this->input->post('business_nature') || $this->input->post('business_name')) {
+							$employer = strip_tags($this->input->post('business_name'));
+							$position = strip_tags($this->input->post('business_nature'));
+							$address = strip_tags($this->input->post('business_addr'));
+							$date_start = strip_tags($this->input->post('business_date'));
+							$contact = strip_tags($this->input->post('business_contact'));
+							$status = strip_tags($this->input->post('business_status'));
+							$remarks = strip_tags($this->input->post('business_remarks'));
+							$action = $this->borrower_model->update_work($id, NULL, $employer, $position, $address, dateform($date_start), $contact, $status, $remarks, dateform($date_end));
+							$log_action = "Updated a Business Information";
+						}
+
+						//Save Employment
+						if($this->input->post('employ_grp') || $this->input->post('employ_name')) {
+							$type = strip_tags($this->input->post('employ_grp'));
+							$employer = strip_tags($this->input->post('employ_name'));
+							$position = strip_tags($this->input->post('employ_position'));
+							$address = strip_tags($this->input->post('employ_addr'));
+							$date_start = strip_tags($this->input->post('employ_date'));
+							$date_end = strip_tags($this->input->post('employ_end'));
+							$contact = strip_tags($this->input->post('employ_contact'));
+							$status = strip_tags($this->input->post('employ_status'));
+							$remarks = strip_tags($this->input->post('employ_remarks'));
+							$action = $this->borrower_model->update_work($id, $type, $employer, $position, $address, dateform($date_start), $contact, $status, $remarks, dateform($date_end));
+							$log_action = "Updated an Employment Information";							
 						}
 
 				if($action) {
@@ -725,102 +827,6 @@ class Borrowers extends CI_Controller {
 		}
 
 	}
-
-
-
-	public function print_total_inventory()		{
-
-		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
-
-		if($userdata)	{
-
-			$data['site_title'] = APP_NAME;
-			$data['user'] = $this->user_model->userdetails($userdata['username']); //fetches users record
-
-			//Page Data 
-			$data['items']		= $this->item_model->total_inventory();
-			$data['total_items'] = $this->item_model->count_items('', '');
-			$data['title'] 		= 'Total Inventory Report';
-
-		
-			//Validate Usertype
-			if($data['user']['usertype'] == 'Administrator') {
-				
-				$this->load->view('items/print_total_inventory', $data);
-				
-			} else {
-				show_error('Oops! Your account does not have the privilege to view the content. Please Contact the Administrator', 403, 'Access Denied!');				
-			}		
-
-		} else {
-
-			$this->session->set_flashdata('error', 'You need to login!');
-			redirect('dashboard/login', 'refresh');
-		}
-
-	}
-
-
-
-	public function rebatch()		{
-
-		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
-
-		if($userdata)	{
-			
-			//FORM VALIDATION
-			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
-		 
-		   if($this->form_validation->run() == FALSE)	{
-
-				$this->session->set_flashdata('error', 'An Error has Occured!');
-				redirect($_SERVER['HTTP_REFERER'], 'refresh');
-
-			} else {
-
-				$key_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row				
-				$batch 	= $this->inventory_model->view_inventory($key_id); 
-				$qty 	= $this->input->post('qty'); 
-				$srp 	= $this->input->post('srp'); 
-				$dp 	= $this->input->post('dp'); 
-
-				//Subract inventory from current batch
-				$this->inventory_model->add_inventory($batch['item_id'], ($qty*-1), $batch['location'], $batch['actual_price'], $batch['dealer_price']);
-				//Add inventory to new batch
-				$new_batch = $this->inventory_model->add_inventory($batch['item_id'], ($qty), $batch['location'], $srp, $dp);
-				
-
-				$log[] = array(
-							'user' 		=> 	$userdata['username'],
-							'tag' 		=> 	'inventory',
-							'tag_id'	=> 	$key_id,
-							'action' 	=> 	'Rebatched ' . $qty . ' items to Batch ' . $new_batch
-							);
-
-				$log[] = array(
-							'user' 		=> 	$userdata['username'],
-							'tag' 		=> 	'inventory',
-							'tag_id'	=> 	$new_batch,
-							'action' 	=> 	'Rebatched ' . $qty . ' items from Batch ' . $key_id
-							);
-
-
-				//Save Logs/////////////////////////
-				$this->logs_model->save_logs($log);		
-				////////////////////////////////////
-				$this->session->set_flashdata('success', 'Successfully Rebatched!');
-				redirect($_SERVER['HTTP_REFERER'], 'refresh');
-				
-			}
-
-		} else {
-
-			$this->session->set_flashdata('error', 'You need to login!');
-			redirect('dashboard/login', 'refresh');
-		}
-
-	}
-
 
 
 

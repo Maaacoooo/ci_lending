@@ -243,7 +243,6 @@
                             <?php endif ?>
                             <?=$emp['position_nature']?> - 
                             <?=$emp['employer_business']?> (<?=$emp['year_started']?>-<?php if($emp['year_ended']){echo $emp['year_ended']; } else { echo 'Present'; }?>)</a>
-                          <a href="#" data-toggle="modal" data-target="#UpdateEmployer<?=$emp['id']?>"><i class="fa fa-edit"></i></a>
                         </li> 
                         <?php endforeach ?>
                         <?php endif ?>
@@ -262,7 +261,6 @@
                           <a href="#" data-toggle="modal" data-target="#UpdateBusiness<?=$buss['id']?>">                          
                             <?=$buss['employer_business']?> - <?=$buss['address']?> 
                             (<?=$buss['year_started']?>-<?php if($buss['year_ended']){echo $buss['year_ended']; } else { echo 'Present'; }?>)</a>
-                          <a href="#" data-toggle="modal" data-target="#UpdateBusiness<?=$buss['id']?>"><i class="fa fa-edit"></i></a>
                         </li> 
                         <?php endforeach ?>
                         <?php endif ?>
@@ -737,66 +735,174 @@
   <!-- /.modal -->
 
 
-
+  <!-- ///////////////////  Employer Details //////////////////////// -->
 
   <?php if ($employments): ?>
   <?php foreach ($employments as $emp): ?>
   <div class="modal fade" id="UpdateEmployer<?=$emp['id']?>">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <?=form_open('borrowers/add_contact')?>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
-          <h4 class="modal-title"><?=$emp['employer_business']?></h4>
+          <h4 class="modal-title">Employer: <?=$emp['employer_business']?></h4>
         </div>
         <div class="modal-body">          
            <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
-              <li class="active"><a href="#employ_info<?=$emp['id']?>" data-toggle="tab" data-target="#employ_info<?=$emp['id']?>">Info</a></li>
+              <li class="active"><a href="#employ_info<?=$emp['id']?>" data-toggle="tab" data-target="#employ_info<?=$emp['id']?>">Information</a></li>
               <li><a href="#employ_update<?=$emp['id']?>" data-toggle="tab" data-target="#employ_update<?=$emp['id']?>">Update</a></li>
+              <li><a href="#employ_delete<?=$emp['id']?>" data-toggle="tab" data-target="#employ_delete<?=$emp['id']?>">Delete</a></li>
             </ul>
             <div class="tab-content">
               <div class="tab-pane active" id="employ_info<?=$emp['id']?>">
-                <strong>Employer Name</strong>
-                <p class="text-muted"><?=$emp['employer_business']?></p><!-- /.text-muted -->
-                <hr />
-                <strong>Employer Type</strong>
-                <p class="text-muted">
-                  <?php if ($emp['type']): ?>
-                              <span class="label bg-red">GOVERNMENT</span> 
-                            <?php else: ?>
-                              <span class="label bg-green">PRIVATE</span> 
-                            <?php endif ?>
-                </p><!-- /.text-muted -->
-                <hr />
-                <strong>Position</strong>
-                <p class="text-muted"><?=$emp['position_nature']?></p><!-- /.text-muted -->
-                <hr />
-                <strong>Operating Dates</strong>
-                <p class="text-muted">
-                  <?=$emp['date_started']?> to <?php if($emp['date_ended']){echo $emp['date_ended']; } else { echo 'Present'; }?>
-                </p><!-- /.text-muted -->
-                <hr />
-                <strong>Work Address</strong>
-                <p class="text-muted"><?=$emp['address']?></p><!-- /.text-muted -->
-                <hr />
-                <strong>Status</strong>
-                <p class="text-muted"><?=$emp['status']?></p><!-- /.text-muted -->
-                <hr />
-                <strong>Remarks</strong>
-                <p class="text-muted"><?=$emp['remarks']?></p><!-- /.text-muted -->                
+                <div class="row">
+                  <div class="col-md-6">
+                    <strong>Employer Name</strong>
+                    <p class="text-muted"><?=$emp['employer_business']?>
+                      <?php if ($emp['type']): ?>
+                                  <span class="label bg-red">GOVERNMENT</span> 
+                                <?php else: ?>
+                                  <span class="label bg-green">PRIVATE</span> 
+                                <?php endif ?>
+                    </p><!-- /.text-muted -->
+                    <hr />
+                    <strong>Position</strong>
+                    <p class="text-muted"><?=$emp['position_nature']?></p><!-- /.text-muted -->
+                    <hr />
+                    <strong>Contact Number</strong>
+                    <p class="text-muted"><?=$emp['tel_no']?></p><!-- /.text-muted -->
+                    <hr />
+                    <strong>Work Address</strong>
+                    <p class="text-muted"><?=$emp['address']?></p><!-- /.text-muted -->
+                    <hr />          
+                  </div><!-- /.col-md-6 -->
+                  <div class="col-md-6">
+                    <strong>Operating / Employment Dates</strong>
+                    <p class="text-muted">
+                      <?=$emp['date_started']?> to <?php if($emp['date_ended']){echo $emp['date_ended']; } else { echo 'Present'; }?>
+                      <?php if ($emp['date_ended']): ?>
+                        <span class="badge"><?=getAge($emp['date_started'], $emp['date_ended'])?> yrs</span>
+                      <?php else: ?>
+                        <span class="badge"><?=getAge($emp['date_started'])?> yrs</span>
+                      <?php endif ?>
+                    </p><!-- /.text-muted -->
+                    <hr />     
+                    <strong>Status</strong>
+                    <p class="text-muted"><?=$emp['status']?></p><!-- /.text-muted -->
+                    <hr />
+                    <strong>Remarks</strong>
+                    <p class="text-muted"><?=$emp['remarks']?></p><!-- /.text-muted -->   
+                  </div><!-- /.col-md-6 -->
+                </div><!-- /.row -->             
               </div>
+
               <div class="tab-pane" id="employ_update<?=$emp['id']?>">
-                asdasdasdasdasdasd
+                <?=form_open('borrowers/update_work')?>
+                <div class="row">
+                  <div class="col-md-3 col-sm-12">
+                    <label for="employ_grp">Employer Type</label>
+                    <div class="form-group">
+                      <div class="col-xs-6">
+                        <label>
+                            <input type="radio" name="employ_grp" value="1" class="minimal-red <?php if($emp['type'])echo'checked';?>" <?php if($emp['type'])echo'checked';?>>
+                          GOV
+                        </label>
+                      </div><!-- /.col-xs-6 -->
+                      <div class="col-xs-6">
+                        <label>
+                            <input type="radio" name="employ_grp" value="0" class="minimal-red <?php if(!$emp['type'])echo'checked';?>" <?php if(!$emp['type'])echo'checked';?>>
+                          PRIV
+                        </label>
+                      </div><!-- /.col-xs-6 -->                    
+                    </div>
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <label for="employ_name">Employer's Name</label>
+                        <input type="text" name="employ_name" id="employ_name" class="form-control" placeholder="Name of Company..." value="<?=$emp['employer_business']?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-2 col-sm-12">
+                    <div class="form-group">
+                        <label for="employ_position">Position</label>
+                        <input type="text" name="employ_position" id="employ_position" class="form-control" placeholder="Position..." value="<?=$emp['position_nature']?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-2 col-sm-12">
+                    <div class="form-group">
+                        <label for="employ_date">Date Started</label>
+                        <input type="text" name="employ_date" id="employ_date" class="form-control" placeholder="mm/dd/yyyy" value="<?=dateform($emp['date_started'])?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-2 col-sm-12">
+                    <div class="form-group">
+                        <label for="employ_date">Date Ended</label>
+                        <input type="text" name="employ_end" id="employ_end" class="form-control" placeholder="mm/dd/yyyy" value="<?=dateform($emp['date_ended'])?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                </div><!-- /.row -->
+                <div class="row">
+                  <div class="col-md-6 col-sm-12">
+                    <div class="form-group">
+                        <label for="employ_addr">Work Address</label>
+                        <input type="text" name="employ_addr" id="employ_addr" class="form-control" placeholder="Complete Address..." value="<?=$emp['address']?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                      <label for="employ_contact">Contact Number</label>
+                      <input type="text" name="employ_contact" id="" class="form-control" value="<?=$emp['tel_no']?>" data-inputmask='"mask": "(999) 999-9999"' placeholder="(912) 345-6789" data-mask />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                  <div class="col-md-3 col-sm-12">
+                    <div class="form-group">
+                        <label for="employ_status">Status</label>
+                        <input type="text" name="employ_status" id="employ_status" class="form-control" placeholder="Status..." value="<?=$emp['status']?>" />
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-md-4 col-sm-12 -->
+                </div><!-- /.row -->
+                <div class="row">
+                  <div class="col-sm-12">
+                    <div class="form-group">
+                      <label for="employ_remarks">Remarks</label>
+                      <textarea name="employ_remarks" id="employ_remarks" class="form-control"><?=$emp['remarks']?></textarea>
+                    </div><!-- /.form-group -->
+                  </div><!-- /.col-sm-12 -->
+                </div><!-- /.row -->
+                <input type="hidden" name="id" value="<?=$this->encryption->encrypt($emp['id'])?>" />
+                <input type="hidden" name="acc_id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+                <div class="row">
+                  <div class="col-sm-12">
+                    <button type="submit" class="btn btn-flat btn-primary pull-right">Update Record</button>
+                  </div><!-- /.col-sm-12 -->
+                </div><!-- /.row -->
+                <?=form_close()?>
               </div><!-- /#employ_update.tab-pane -->
+              <div id="employ_delete<?=$emp['id']?>" class="tab-pane">
+                <div class="callout callout-danger">
+                  <h5>Are you sure to delete <?=$emp['employer_business']?>?</h5>
+                  <p>Deleting the records of this employer cannot be undone!</p>
+
+                  <div class="row">
+                    <?=form_open('borrowers/delete_work')?>
+                    <div class="col-sm-6">
+                      <div class="checkbox">
+                        <label>
+                          <input type="checkbox" required/> Yes. I am sure to delete this Record.
+                        </label>
+                        <button class="btn btn-danger btn-outline btn-flat btn-sm"><i class="fa fa-trash"></i> Delete</button>
+                      </div><!-- /.checkbox -->                      
+                    </div><!-- /.col-sm-6 -->
+                    <?=form_close()?>
+                  </div><!-- /.row -->
+                </div><!-- /.callout callout-danger -->
+              </div><!-- /#employ_delete.tab-pane -->
             </div><!-- /.tab-content -->
           </div><!-- /.nav-tabs-custom -->
         </div><!-- /.modal-body -->
 
-        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($emp['id'])?>" />
       </div>
-      <?=form_close()?>
       <!-- /.modal-content -->
     </div>
     <!-- /.modal-dialog -->
@@ -804,6 +910,8 @@
   <!-- /.modal -->
   <?php endforeach ?>
   <?php endif ?>
+
+
 
 
   <footer class="main-footer">    
@@ -830,7 +938,7 @@
     })
 
     //Date picker
-    $('#birthdate, #spouse_bdate, #employ_date, #business_date').datepicker({
+    $('#birthdate, #spouse_bdate, #employ_date, #employ_end, #business_date').datepicker({
       autoclose: true
     })
 
