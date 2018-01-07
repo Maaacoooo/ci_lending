@@ -4,6 +4,13 @@ Class Borrower_Model extends CI_Model {
 
 // CREATE DATA ////////////////////////////////////////////////////////////////////
 
+
+    /**
+     * -------------------------------------------------------------------------------
+     * Borrowers
+     * ------------------------------------------------------------------------------- 
+     */
+
    /**
      * Generates an Account ID
      */
@@ -76,203 +83,6 @@ Class Borrower_Model extends CI_Model {
     }
 
 
-
-    /**
-     * Inserts a Borrower's Address Record
-     * @param  int        $acc_id     
-     * @param  String     $tag        
-     * @param  String     $bldg       
-     * @param  String     $street     
-     * @param  String     $brgy       
-     * @param  String     $city       
-     * @param  String     $prov       
-     * @param  String     $zip        
-     * @param  String     $ctry       
-     * @return Boolean                returns TRUE if success
-     */
-    function create_address($acc_id, $tag, $bldg, $street, $brgy, $city, $prov, $zip, $ctry) {
-
-        //Unsets current address from an account
-        if ($tag == 2) {
-            $this->update_currentAddr($acc_id, NULL);
-        }
-
-          $data = array(
-            'borrower_id'=> $acc_id,
-            'type'       => $tag,
-            'building'   => $bldg,
-            'street'     => $street,
-            'barangay'   => $brgy,
-            'city'       => $city,
-            'province'   => $prov,
-            'zip'        => $zip,
-            'country'    => $ctry
-            );
-
-         $this->db->insert('borrowers_address', $data);
-
-         return $this->db->insert_id(); //returns the inserted id
-
-    }
-
-
-    function create_spouse($acc_id) {
-
-        $data = array(
-            'borrower_id'   => $acc_id,  
-            'fname'         => strip_tags($this->input->post('spouse_fname')),  
-            'lname'         => strip_tags($this->input->post('spouse_lname')),  
-            'mname'         => strip_tags($this->input->post('spouse_mname')),  
-            'bdate'         => strip_tags($this->input->post('spouse_bdate')),
-            'bplace'        => strip_tags($this->input->post('spouse_bplace')),
-            'contact'       => strip_tags($this->input->post('spouse_contact')),
-            'occupation'    => strip_tags($this->input->post('spouse_occupation')),
-            'work_address'  => strip_tags($this->input->post('spouse_occuaddr')),
-        );
-
-        $this->db->insert('borrowers_spouse', $data);
-        $spouse = $this->db->insert_id();
-
-        return $this->db->update('borrowers', array('spouse' => $spouse), array('id'=>$acc_id)); //updates the spouse record of the account row
-    }
-
-    function create_contact($acc_id, $type, $value) {
-        $data = array(
-            'borrower_id' => $acc_id,
-            'type'        => $type,
-            'value'   => $value
-            );
-
-         return $this->db->insert('borrowers_contacts', $data);
-    }
-
-
-    function create_educ($acc_id) {
-
-        $data = array(
-            'borrower_id' => $acc_id,  
-            'level'       => strip_tags($this->input->post('educ_level')),  
-            'school'      => strip_tags($this->input->post('educ_school')),  
-            'course'      => strip_tags($this->input->post('educ_course')),  
-            'year'        => strip_tags($this->input->post('educ_year'))
-        );
-
-        $this->db->insert('borrowers_educ', $data);
-        $educ = $this->db->insert_id();
-
-        return $this->db->update('borrowers', array('education' => $educ), array('id'=>$acc_id)); //updates the spouse record of the account row
-    }
-
-
-    
-
-    /**
-     * Creates an Item Record
-     * @param  String   $item_id    the decrypted ITEM ID
-     * @return Boolean              TRUE on success
-     */
-    function update($item_id) { 
-
-          $filepath = $this->view($item_id)['img'];
-
-          if($this->input->post('remove_img')) {
-            if(filexist($filepath)) {
-              unlink($filepath); //removes the file
-            }
-            $filepath = ''; //set to null
-          }
-
-          //Process Image Upload
-              if($_FILES['img']['name'] != NULL)  {       
-
-                //remove old img
-                if(filexist($filepath)) {
-                  unlink($filepath); //removes the file
-                } 
-
-                $path = checkDir('./uploads/items/'.$item_id.'/'); //the path to upload
-
-                $config['upload_path'] = $path;
-                $config['allowed_types'] = 'gif|jpg|png'; 
-                $config['encrypt_name'] = TRUE;                        
-
-                $this->load->library('upload', $config);
-                $this->upload->initialize($config);         
-                
-                $field_name = "img";
-                $this->upload->do_upload($field_name);
-
-                $upload_data = $this->upload->data();
-
-                $filepath = $path . $upload_data['file_name']; //overwrite variable
-
-                 // Set Watermark ////////////////////////////////////////////////////
-                $wm_config['quality'] = '100%';
-                $wm_config['wm_text'] = 'Copyright '.APP_NAME.' '.date('Y');
-                $wm_config['wm_type'] = 'text';
-                $wm_config['wm_font_path'] = './system/fonts/arial.ttf';
-                $wm_config['wm_font_size'] = '16';
-                $wm_config['wm_font_color'] = 'ffffff';
-                $wm_config['wm_vrt_alignment'] = 'bottom';
-                $wm_config['wm_hor_alignment'] = 'left';
-                $wm_config['source_image'] = $filepath; 
-                /////////////////////////////////////////////////////////////////////
-            
-            } 
-
-            $data = array(                
-                'name'           => strip_tags($this->input->post('name', TRUE)),  
-                'category'       => strip_tags($this->input->post('category', TRUE)),  
-                'brand'          => strip_tags($this->input->post('brand', TRUE)),  
-                'unit'           => strip_tags($this->input->post('unit', TRUE)),  
-                'description'    => strip_tags($this->input->post('desc', TRUE)),  
-                'serial'         => strip_tags($this->input->post('serial', TRUE)),
-                'actual_price'   => strip_tags($this->input->post('srp', TRUE)),
-                'dealer_price'   => strip_tags($this->input->post('dp', TRUE)),
-                'critical_level' => strip_tags($this->input->post('critical_level', TRUE)),
-                'img'            => $filepath
-             );
-       
-            
-            $this->db->where('id', $item_id);
-            return $this->db->update('items', $data);          
-        
-    }
-
-
-    /**
-     * Unsets the existing Current Address and sets a new current address
-     * @return [type] [description]
-     */
-    function update_currentAddr($acc_id, $addr_id) {
-
-        //unset existing current address
-        $this->db->update('borrowers_address', array('type' => 3), array('borrower_id'=>$acc_id, 'type' => 2));
-
-        if (!is_null($addr_id)) {
-            //sets an address to current address
-            $this->db->update('borrowers_address', array('type' => 2), array('id'=>$addr_id));
-        }
-        
-    }
-
-
-    /**
-     * Deletes a user record
-     * @param  int    $id    the DECODED id of the item.   
-     * @return boolean    returns TRUE if success
-     */
-    function delete($id) {
-
- 
-           $data = array(           
-                'is_deleted'      => 1
-             );
-            
-            $this->db->where('id', $id);
-            return $this->db->update('items', $data);          
-
-    }
 
 
     /**
@@ -355,6 +165,15 @@ Class Borrower_Model extends CI_Model {
                 CONCAT(borrowers_address.building, ", ", borrowers_address.street, ", ", 
                         borrowers_address.barangay, ", ", borrowers_address.city, ", ", 
                         borrowers_address.province, ", ", borrowers_address.zip, ", ", borrowers_address.country) as bplace,
+                borrowers_address.id as bplace_id,
+                borrowers_address.building, 
+                borrowers_address.street, 
+                borrowers_address.barangay,
+                borrowers_address.city,
+                borrowers_address.province, 
+                borrowers_address.zip,
+                borrowers_address.country,
+                borrowers_educ.id as educ_id,
                 borrowers_educ.level as educ_level,
                 borrowers_educ.course as educ_course,
                 borrowers_educ.school as educ_school,
@@ -369,6 +188,122 @@ Class Borrower_Model extends CI_Model {
 
              return $query->row_array();
     }
+
+
+    function update($id, $bplace_id) {
+
+
+        //Update Borrower's basic info
+            $data = array(              
+                'firstname'      => strip_tags($this->input->post('fname')),  
+                'lastname'       => strip_tags($this->input->post('lname')),  
+                'middlename'     => strip_tags($this->input->post('mname')),  
+                'birthdate'      => dateform(strip_tags($this->input->post('bdate'))),
+                'sex'            => strip_tags($this->input->post('sex')),
+                'civil_status'   => strip_tags($this->input->post('civil_stat'))
+             );
+
+            $this->db->where('id', $id);
+            
+            if(!$this->db->update('borrowers', $data)) {
+                return FALSE;
+            } 
+
+
+        //Update Birthplace
+        
+              $bldg = strip_tags($this->input->post('bplace_bldg'));
+              $strt = strip_tags($this->input->post('bplace_strt'));
+              $brgy = strip_tags($this->input->post('bplace_brgy'));
+              $city = strip_tags($this->input->post('bplace_city'));
+              $prov = strip_tags($this->input->post('bplace_prov'));
+              $zip  = strip_tags($this->input->post('bplace_zip'));
+              $ctry = strip_tags($this->input->post('bplace_ctry'));
+
+              $data2 = array(
+                'building'   => $bldg,
+                'street'     => $strt,
+                'barangay'   => $brgy,
+                'city'       => $city,
+                'province'   => $prov,
+                'zip'        => $zip,
+                'country'    => $ctry
+              );
+
+            $this->db->where('id', $bplace_id);
+            //$this->db->update('borrowers_address', $data2);
+
+            
+            if(!$this->db->update('borrowers_address', $data2)) {
+                return FALSE;
+            } 
+
+            return TRUE;
+    }
+
+
+    /**
+     * -------------------------------------------------------------------------------
+     * Addresses  
+     * -------------------------------------------------------------------------------
+     */
+
+
+
+    /**
+     * Inserts a Borrower's Address Record
+     * @param  int        $acc_id     
+     * @param  String     $tag        
+     * @param  String     $bldg       
+     * @param  String     $street     
+     * @param  String     $brgy       
+     * @param  String     $city       
+     * @param  String     $prov       
+     * @param  String     $zip        
+     * @param  String     $ctry       
+     * @return Boolean                returns TRUE if success
+     */
+    function create_address($acc_id, $tag, $bldg, $street, $brgy, $city, $prov, $zip, $ctry) {
+
+        //Unsets current address from an account
+        if ($tag == 2) {
+            $this->update_currentAddr($acc_id, NULL);
+        }
+
+          $data = array(
+            'borrower_id'=> $acc_id,
+            'type'       => $tag,
+            'building'   => $bldg,
+            'street'     => $street,
+            'barangay'   => $brgy,
+            'city'       => $city,
+            'province'   => $prov,
+            'zip'        => $zip,
+            'country'    => $ctry
+            );
+
+         $this->db->insert('borrowers_address', $data);
+
+         return $this->db->insert_id(); //returns the inserted id
+
+    }
+
+    /**
+     * Unsets the existing Current Address and sets a new current address
+     * @return [type] [description]
+     */
+    function update_currentAddr($acc_id, $addr_id) {
+
+        //unset existing current address
+        $this->db->update('borrowers_address', array('type' => 3), array('borrower_id'=>$acc_id, 'type' => 2));
+
+        if (!is_null($addr_id)) {
+            //sets an address to current address
+            $this->db->update('borrowers_address', array('type' => 2), array('id'=>$addr_id));
+        }
+        
+    }
+
 
     function fetch_addresses($acc_id, $type = NULL) {
         $this->db->select('
@@ -400,6 +335,65 @@ Class Borrower_Model extends CI_Model {
     }
 
 
+    function view_address($id) {
+        $this->db->where('id', $id);
+
+        return $this->db->get('borrowers_address')->result_array();
+    }
+
+
+
+
+    /**
+     * -------------------------------------------------------------------------------
+     * Spouse
+     * -------------------------------------------------------------------------------
+     * 
+     */
+
+
+    function create_spouse($acc_id) {
+
+        $data = array(
+            'borrower_id'   => $acc_id,  
+            'fname'         => strip_tags($this->input->post('spouse_fname')),  
+            'lname'         => strip_tags($this->input->post('spouse_lname')),  
+            'mname'         => strip_tags($this->input->post('spouse_mname')),  
+            'bdate'         => strip_tags($this->input->post('spouse_bdate')),
+            'bplace'        => strip_tags($this->input->post('spouse_bplace')),
+            'contact'       => strip_tags($this->input->post('spouse_contact')),
+            'occupation'    => strip_tags($this->input->post('spouse_occupation')),
+            'work_address'  => strip_tags($this->input->post('spouse_occuaddr')),
+        );
+
+        $this->db->insert('borrowers_spouse', $data);
+        $spouse = $this->db->insert_id();
+
+        return $this->db->update('borrowers', array('spouse' => $spouse), array('id'=>$acc_id)); //updates the spouse record of the account row
+    }
+
+
+
+
+
+
+    /**
+     * -------------------------------------------------------------------------------
+     * Contact and Emails
+     * -------------------------------------------------------------------------------
+     * 
+     */
+
+    function create_contact($acc_id, $type, $value) {
+        $data = array(
+            'borrower_id' => $acc_id,
+            'type'        => $type,
+            'value'   => $value
+            );
+
+         return $this->db->insert('borrowers_contacts', $data);
+    }
+
     function fetch_contacts($acc_id, $type) {
         $this->db->where('type', $type);
         $this->db->where('borrower_id', $acc_id);
@@ -409,6 +403,40 @@ Class Borrower_Model extends CI_Model {
     }
 
 
+
+    /**
+     * -------------------------------------------------------------------------------
+     * Educational Attainment
+     * -------------------------------------------------------------------------------
+     * 
+     */
+
+
+    function create_educ($acc_id) {
+
+        $data = array(
+            'borrower_id' => $acc_id,  
+            'level'       => strip_tags($this->input->post('educ_level')),  
+            'school'      => strip_tags($this->input->post('educ_school')),  
+            'course'      => strip_tags($this->input->post('educ_course')),  
+            'year'        => strip_tags($this->input->post('educ_year'))
+        );
+
+        $this->db->insert('borrowers_educ', $data);
+        $educ = $this->db->insert_id();
+
+        return $this->db->update('borrowers', array('education' => $educ), array('id'=>$acc_id));
+    }
+
+
+
+    /**
+     * -------------------------------------------------------------------
+     * WORK AND BUSINESS
+     * -------------------------------------------------------------------
+     * 
+     */
+    
     function fetch_works($acc_id, $type) {
 
         $this->db->select('
@@ -438,7 +466,67 @@ Class Borrower_Model extends CI_Model {
 
         return $query->result_array();
     }
+    
+    function view_work($id) {
 
+        $this->db->where('id', $id);
+        $query = $this->db->get('borrowers_work');
+
+        return $query->row_array();
+    }
+
+    function create_work($acc_id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks) {
+
+        $data = array(
+            'borrower_id'       => $acc_id,
+            'type'              => $type,
+            'employer_business' => $employer,
+            'position_nature'   => $position,
+            'address'           => $address,
+            'date_started'      => $date_start,
+            'tel_no'            => $contact,
+            'status'            => $status,
+            'remarks'           => $remarks
+            );
+
+         $this->db->insert('borrowers_work', $data);
+
+         return $this->db->insert_id(); //returns the inserted id
+
+    }
+
+    function update_work($id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks, $date_end) {
+
+        $data = array(
+            'type'              => $type,
+            'employer_business' => $employer,
+            'position_nature'   => $position,
+            'address'           => $address,
+            'date_started'      => $date_start,
+            'date_ended'        => $date_end,
+            'tel_no'            => $contact,
+            'status'            => $status,
+            'remarks'           => $remarks
+            );
+
+         $this->db->where('borrowers_work.id', $id);
+         $this->db->update('borrowers_work', $data);
+
+         return $id; //returns the updated id
+
+    }
+
+
+    function delete_work($id) {
+        return $this->db->delete('borrowers_work', array('id' => $id));
+    }
+
+
+
+    /**
+     * -----------------------------------------------------------------------------------------------------------------------
+     */
+    
 
     /**
      * Fetches the Gallery Images of an Item
@@ -536,69 +624,6 @@ Class Borrower_Model extends CI_Model {
             }
 
             return $this->db->delete('item_gallery', array('id' => $id));
-    }
-
-
-
-    /**
-     * -------------------------------------------------------------------
-     * WORK AND BUSINESS
-     * -------------------------------------------------------------------
-     * 
-     */
-    
-    function view_work($id) {
-
-        $this->db->where('id', $id);
-        $query = $this->db->get('borrowers_work');
-
-        return $query->row_array();
-    }
-
-    function create_work($acc_id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks) {
-
-        $data = array(
-            'borrower_id'       => $acc_id,
-            'type'              => $type,
-            'employer_business' => $employer,
-            'position_nature'   => $position,
-            'address'           => $address,
-            'date_started'      => $date_start,
-            'tel_no'            => $contact,
-            'status'            => $status,
-            'remarks'           => $remarks
-            );
-
-         $this->db->insert('borrowers_work', $data);
-
-         return $this->db->insert_id(); //returns the inserted id
-
-    }
-
-    function update_work($id, $type, $employer, $position, $address, $date_start, $contact, $status, $remarks, $date_end) {
-
-        $data = array(
-            'type'              => $type,
-            'employer_business' => $employer,
-            'position_nature'   => $position,
-            'address'           => $address,
-            'date_started'      => $date_start,
-            'date_ended'        => $date_end,
-            'tel_no'            => $contact,
-            'status'            => $status,
-            'remarks'           => $remarks
-            );
-
-         $this->db->where('borrowers_work.id', $id);
-         $this->db->update('borrowers_work', $data);
-
-         return $id; //returns the updated id
-
-    }
-
-
-    function delete_work($id) {
-        return $this->db->delete('borrowers_work', array('id' => $id));
     }
 
 }

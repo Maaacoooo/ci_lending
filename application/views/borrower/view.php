@@ -97,7 +97,7 @@
               <div class="tab-pane <?php if(!($flash_settings))echo'active'?>" id="personal">
                 <table class="table table-condensed table-dark-border">
                   <tr>
-                    <td colspan="6"><strong>Personal Information</strong> <a href="#" class="pull-right"><i class="fa fa-edit"></i></a></td>
+                    <td colspan="6"><strong>Personal Information</strong> <a href="#personalInfoModal" data-toggle="modal" data-target="#personalInfoModal" class="pull-right"><i class="fa fa-edit"></i></a></td>
                   </tr>
                   <tr>
                     <td colspan="2"><strong>Fullname</strong> <small><em>(First Middle Last)</em></small></td>
@@ -511,6 +511,13 @@
                   <?php endif ?>
                 </select>
               </div><!-- /.col-md-8 col-sm-12 -->
+              <div class="col-md-2 col-sm-12">
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" name="" id="" /> New Address
+                  </label>
+                </div><!-- /.checkbox -->
+              </div><!-- /.col-md-2 col-sm-12 -->
             </div><!-- /.row --> 
             </div>  
             <hr /> 
@@ -518,7 +525,7 @@
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label for="addr_type">Address Type</label>
-                    <select class="form-control" name="addr_type" id="addr_type" required>
+                    <select class="form-control" name="addr_type" id="addr_type" required disabled="">
                       <option disabled selected>Select Address Type...</option>
                       <option value="<?=$this->encryption->encrypt('1')?>">Home</option>
                       <option value="<?=$this->encryption->encrypt('2')?>">Current</option>
@@ -529,43 +536,43 @@
                 <div class="col-sm-5">
                   <div class="form-group">
                     <label for="addr_bldg">Building / Block / House</label>
-                    <input type="text" name="addr_bldg" class="form-control" id="addr_bldg" placeholder="Building / Block / House..." value="<?=set_value('addr_bldg')?>" required/>
+                    <input type="text" name="addr_bldg" class="form-control" id="addr_bldg" placeholder="Building / Block / House..." value="<?=set_value('addr_bldg')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-5 -->
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label for="addr_strt">Street</label>
-                    <input type="text" name="addr_strt" class="form-control" id="addr_strt" placeholder="Street..." value="<?=set_value('addr_strt')?>" required/>
+                    <input type="text" name="addr_strt" class="form-control" id="addr_strt" placeholder="Street..." value="<?=set_value('addr_strt')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-4 -->
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label for="addr_brgy">Barangay</label>
-                    <input type="text" name="addr_brgy" class="form-control" id="addr_brgy" placeholder="Barangay..." value="<?=set_value('addr_brgy')?>" required/>
+                    <input type="text" name="addr_brgy" class="form-control" id="addr_brgy" placeholder="Barangay..." value="<?=set_value('addr_brgy')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="addr_city">City / Municipality</label>
-                    <input type="text" name="addr_city" class="form-control" id="addr_city" placeholder="City / Municipality..." value="<?=set_value('addr_city')?>" required/>
+                    <input type="text" name="addr_city" class="form-control" id="addr_city" placeholder="City / Municipality..." value="<?=set_value('addr_city')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="addr_prov">Province / Region</label>
-                    <input type="text" name="addr_prov" class="form-control" id="addr_prov" placeholder="Province / Region..." value="<?=set_value('addr_prov')?>" required/>
+                    <input type="text" name="addr_prov" class="form-control" id="addr_prov" placeholder="Province / Region..." value="<?=set_value('addr_prov')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label for="addr_zip">Zip Code</label>
-                    <input type="text" name="addr_zip" class="form-control" id="addr_zip" placeholder="Zip Code..." value="<?=set_value('addr_zip')?>" required/>
+                    <input type="text" name="addr_zip" class="form-control" id="addr_zip" placeholder="Zip Code..." value="<?=set_value('addr_zip')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-2 -->
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label for="addr_ctry">Country</label>
-                    <input type="text" name="addr_ctry" class="form-control" id="addr_ctry" placeholder="Country..." value="<?php if(set_value('addr_ctry'))echo set_value('addr_ctry'); else echo 'Philippines';?>" required/>
+                    <input type="text" name="addr_ctry" class="form-control" id="addr_ctry" placeholder="Country..." value="<?php if(set_value('addr_ctry'))echo set_value('addr_ctry'); else echo 'Philippines';?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-4 -->
               </div><!-- /.row -->
@@ -1069,6 +1076,139 @@
   <!-- /.modal -->
   <?php endforeach ?>
   <?php endif ?>
+
+
+
+  <!-- ///////////////////////////// Personal Information //////////////////////////////////// -->
+
+  <div class="modal fade" id="personalInfoModal">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <?=form_open('borrowers/Update_PersonalInfo')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Update Personal Information</h4>
+        </div>
+        <div class="modal-body">          
+            <div class="form-group">
+              <div class="row">
+                <div class="col-md-4 col-sm-12">
+                  <label for="fname">First Name</label>
+                  <input type="text" class="form-control" name="fname" id="fname" placeholder="Enter First Name..." value="<?=$info['firstname']?>" required>
+                </div><!-- /.col-md-4 col-sm-12 -->
+                <div class="col-md-4 col-sm-12">
+                  <label for="mname">Middle Name</label>
+                  <input type="text" class="form-control" name="mname" id="mname" placeholder="Enter Middle Name..." value="<?=$info['middlename']?>" required>
+                </div><!-- /.col-md-4 col-sm-12 -->
+                <div class="col-md-4 col-sm-12">
+                  <label for="lname">Last Name</label>
+                  <input type="text" class="form-control" name="lname" id="lname" placeholder="Enter Last Name..." value="<?=$info['lastname']?>" required>
+                </div><!-- /.col-md-4 col-sm-12 -->
+              </div><!-- /.row -->
+            </div><!-- /.form-group -->
+
+              <div class="row">
+                <div class="col-md-4 col-sm-12">
+                  <div class="form-group">
+                    <label>Birth Date:</label>
+                    <div class="input-group date">
+                      <div class="input-group-addon">
+                        <i class="fa fa-calendar"></i>
+                      </div>
+                      <input type="text" class="form-control bootstrap-datepicker" name="bdate" id="birthdate" value="<?=dateform($info['birthdate'])?>" placeholder="mm/dd/yyyy">
+                    </div>
+                    <!-- /.input group -->
+                  </div>
+                </div><!-- /.col-md-4 col-sm-12 -->
+                <div class="col-md-4 col-sm-12">
+                  <label for="sex">Sex</label>
+                  <div class="form-group">
+                    <div class="col-xs-6">
+                      <label>
+                          <input type="radio" name="sex" value="1" class="minimal-red" required <?php if($info['sex'])echo 'checked';?>>
+                        Male
+                      </label>
+                    </div><!-- /.col-xs-6 -->
+                    <div class="col-xs-6">
+                      <label>
+                          <input type="radio" name="sex" value="0" class="minimal-red" required <?php if(!$info['sex'])echo 'checked';?>>
+                        Female
+                      </label>
+                    </div><!-- /.col-xs-6 -->                    
+                  </div>
+                </div><!-- /.col-md-4 col-sm-12 -->
+                <div class="col-md-4 col-sm-12">
+                  <label for="civil_stat">Civil Status</label>
+                  <select name="civil_stat" id="civil_stat" class="form-control" required>
+                    <option disabled selected> Select Option...</option>
+                    <option value="Single" <?php if($info['civil_status']=='Single')echo'selected';?>>Single</option>
+                    <option value="Married" <?php if($info['civil_status']=='Married')echo'selected';?>>Married</option>
+                  </select>
+                </div><!-- /.col-md-4 col-sm-12 -->
+              </div><!-- /.row -->
+            
+            <fieldset class="group-box">
+              <legend class="group-box-title">Birth Place</legend>
+              <div class="row">
+                <div class="col-sm-5">
+                  <div class="form-group">
+                    <label for="bplace_bldg">Building / Block / House</label>
+                    <input type="text" name="bplace_bldg" class="form-control" id="bplace_bldg" placeholder="Building / Block / House..." value="<?=$info['building']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-5 -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="bplace_strt">Street</label>
+                    <input type="text" name="bplace_strt" class="form-control" id="bplace_strt" placeholder="Street..." value="<?=$info['street']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-4 -->
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="bplace_brgy">Barangay</label>
+                    <input type="text" name="bplace_brgy" class="form-control" id="bplace_brgy" placeholder="Barangay..." value="<?=$info['barangay']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-3 -->
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="bplace_city">City / Municipality</label>
+                    <input type="text" name="bplace_city" class="form-control" id="bplace_city" placeholder="City / Municipality..." value="<?=$info['city']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-3 -->
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="bplace_prov">Province / Region</label>
+                    <input type="text" name="bplace_prov" class="form-control" id="bplace_prov" placeholder="Province / Region..." value="<?=$info['province']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-3 -->
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="bplace_zip">Zip Code</label>
+                    <input type="text" name="bplace_zip" class="form-control" id="bplace_zip" placeholder="Zip Code..." value="<?=$info['zip']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-2 -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="bplace_ctry">Country</label>
+                    <input type="text" name="bplace_ctry" class="form-control" id="bplace_ctry" placeholder="Country..."  value="<?=$info['country']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-4 -->
+              </div><!-- /.row -->              
+            </fieldset><!-- /.group-box -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-primary">Save</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 
 
 
