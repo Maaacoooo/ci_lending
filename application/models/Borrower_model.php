@@ -429,11 +429,26 @@ Class Borrower_Model extends CI_Model {
     }
 
 
+    function update_educ($acc_id) {
+
+        $data = array(
+            'level'       => strip_tags($this->input->post('educ_level')),  
+            'school'      => strip_tags($this->input->post('educ_school')),  
+            'course'      => strip_tags($this->input->post('educ_course')),  
+            'year'        => strip_tags($this->input->post('educ_year'))
+        );
+
+        $this->db->where('id', $this->view($acc_id)['educ_id']);
+        return $this->db->update('borrowers_educ', $data);
+
+    }
+
+
 
     /**
-     * -------------------------------------------------------------------
+     * -------------------------------------------------------------------------------
      * WORK AND BUSINESS
-     * -------------------------------------------------------------------
+     * -------------------------------------------------------------------------------
      * 
      */
     

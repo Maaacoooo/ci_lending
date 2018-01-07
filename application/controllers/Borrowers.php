@@ -464,6 +464,69 @@ class Borrowers extends CI_Controller {
 
 	}
 
+	/**
+	 * -------------------------------------------------------------------------------------------------------------
+	 * Educational Attainment
+	 * -------------------------------------------------------------------------------------------------------------
+	 */
+	
+	public function Update_Education()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{
+			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+			//Educational Attainment
+			$this->form_validation->set_rules('educ_level', 'Education Level', 'trim|required');
+			$this->form_validation->set_rules('educ_school', 'School Attended', 'trim|required');
+			$this->form_validation->set_rules('educ_course', 'Course Taken', 'trim|required');
+			$this->form_validation->set_rules('educ_year', 'School Year', 'trim|required');
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row				
+
+				if($this->borrower_model->update_educ($acc_id)) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$acc_id,
+							'action' 	=> 	'Updated Educational Background'
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+
+					$this->session->set_flashdata('success', 'Updated Educational Background');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					//Error occurs / Error on savincg
+					$this->session->set_flashdata('error', 'An Error has Occured!');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
 
 
 	/**
