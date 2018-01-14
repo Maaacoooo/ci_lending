@@ -466,6 +466,101 @@ class Borrowers extends CI_Controller {
 
 	/**
 	 * -------------------------------------------------------------------------------------------------------------
+	 * Spouse 
+	 * -------------------------------------------------------------------------------------------------------------
+	 * 
+	 */
+	
+	public function Update_Spouse()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{
+			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+			
+			$this->form_validation->set_rules('spouse_fname', 'Spouse Firstname', 'trim|required');
+			$this->form_validation->set_rules('spouse_mname', 'Spouse Middlename', 'trim|required');
+			$this->form_validation->set_rules('spouse_lname', 'Spouse Lastname', 'trim|required');
+			$this->form_validation->set_rules('spouse_bdate', 'Spouse Birthdate', 'trim|required');
+			$this->form_validation->set_rules('spouse_bplace', 'Spouse Birthplace', 'trim');
+			$this->form_validation->set_rules('spouse_contact', 'Spouse Contact', 'trim|required');
+			$this->form_validation->set_rules('spouse_occupation', 'Spouse Occupation', 'trim');
+			$this->form_validation->set_rules('spouse_occuaddr', 'Spouse Work Address', 'trim');
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row				
+
+				$info = $this->borrower_model->view($acc_id);
+
+				//check if spouse exist. if none, register new spouse
+				if($info['spouse_id']) {
+					//if record exits, update Spouse info
+					//Update function
+					if($this->borrower_model->update_spouse($info['spouse_id'])) {
+						$log_action = "Updated a Spouse Record";
+						//set flag
+						$flag = TRUE;
+					} else {
+						//set error flag
+						$flag = FALSE;
+					}
+
+				} else {
+					//Register Spouse
+					if($this->borrower_model->create_spouse($acc_id)) {
+						$log_action = "Created a Spouse Record. Married to " . $this->input->post('spouse_fname') . ' ' . $this->input->post('spouse_lname');
+						//set flag
+						$flag = TRUE;
+					}
+				}
+
+				//check if it is action successfully executed; return SUCCESS if true
+				if($flag) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$acc_id,
+							'action' 	=> 	$log_action
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					//Error occurs / Error on savincg
+					$this->session->set_flashdata('error', 'An Error has Occured!');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+
+	/**
+	 * -------------------------------------------------------------------------------------------------------------
 	 * Educational Attainment
 	 * -------------------------------------------------------------------------------------------------------------
 	 */

@@ -157,6 +157,10 @@ Class Borrower_Model extends CI_Model {
                 borrowers.created_at,
                 borrowers.id,
                 CONCAT(borrowers_spouse.fname, " ", borrowers_spouse.mname, " ", borrowers_spouse.lname) as spouse_name,
+                borrowers_spouse.id as spouse_id,
+                borrowers_spouse.fname as spouse_fname,
+                borrowers_spouse.mname as spouse_mname, 
+                borrowers_spouse.lname as spouse_lname,
                 borrowers_spouse.bplace as spouse_bplace,
                 borrowers_spouse.bdate as spouse_bdate,
                 borrowers_spouse.contact as spouse_contact,
@@ -231,8 +235,6 @@ Class Borrower_Model extends CI_Model {
               );
 
             $this->db->where('id', $bplace_id);
-            //$this->db->update('borrowers_address', $data2);
-
             
             if(!$this->db->update('borrowers_address', $data2)) {
                 return FALSE;
@@ -359,7 +361,7 @@ Class Borrower_Model extends CI_Model {
             'fname'         => strip_tags($this->input->post('spouse_fname')),  
             'lname'         => strip_tags($this->input->post('spouse_lname')),  
             'mname'         => strip_tags($this->input->post('spouse_mname')),  
-            'bdate'         => strip_tags($this->input->post('spouse_bdate')),
+            'bdate'         => dateform(strip_tags($this->input->post('spouse_bdate'))),
             'bplace'        => strip_tags($this->input->post('spouse_bplace')),
             'contact'       => strip_tags($this->input->post('spouse_contact')),
             'occupation'    => strip_tags($this->input->post('spouse_occupation')),
@@ -367,12 +369,29 @@ Class Borrower_Model extends CI_Model {
         );
 
         $this->db->insert('borrowers_spouse', $data);
-        $spouse = $this->db->insert_id();
+        $spouse = $this->db->insert_id(); //get Spouse ID
 
         return $this->db->update('borrowers', array('spouse' => $spouse), array('id'=>$acc_id)); //updates the spouse record of the account row
     }
 
 
+    function update_spouse($id) {
+
+        $data = array(
+            'fname'         => strip_tags($this->input->post('spouse_fname')),  
+            'lname'         => strip_tags($this->input->post('spouse_lname')),  
+            'mname'         => strip_tags($this->input->post('spouse_mname')),  
+            'bdate'         => dateform(strip_tags($this->input->post('spouse_bdate'))),
+            'bplace'        => strip_tags($this->input->post('spouse_bplace')),
+            'contact'       => strip_tags($this->input->post('spouse_contact')),
+            'occupation'    => strip_tags($this->input->post('spouse_occupation')),
+            'work_address'  => strip_tags($this->input->post('spouse_occuaddr')),
+        );
+
+
+            $this->db->where('id', $id);
+            return $this->db->update('borrowers_spouse', $data);
+    }
 
 
 

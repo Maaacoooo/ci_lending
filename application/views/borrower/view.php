@@ -1302,7 +1302,7 @@
   <div class="modal fade" id="SpouseInfoModal">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
-        <?=form_open('borrowers/Update_PersonalInfo')?>
+        <?=form_open('borrowers/Update_Spouse')?>
         <div class="modal-header">
           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
             <span aria-hidden="true">&times;</span></button>
@@ -1311,17 +1311,17 @@
         <div class="modal-body">          
             <div class="form-group">
               <div class="row">
-                <div class="col-md-4 col-sm-12">
-                  <label for="fname">First Name</label>
-                  <input type="text" class="form-control" name="fname" id="fname" placeholder="Enter First Name..." value="<?=$info['firstname']?>" required>
+               <div class="col-md-4 col-sm-12">
+                  <label for="spouse_fname">Spouse First Name</label>
+                  <input type="text" class="form-control" name="spouse_fname" id="spouse_fname" placeholder="Enter First Name..." value="<?=$info['spouse_fname']?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
-                  <label for="mname">Middle Name</label>
-                  <input type="text" class="form-control" name="mname" id="mname" placeholder="Enter Middle Name..." value="<?=$info['middlename']?>" required>
+                  <label for="spouse_mname">Spouse Middle Name</label>
+                  <input type="text" class="form-control" name="spouse_mname" id="spouse_mname" placeholder="Enter Middle Name (Maiden)..." value="<?=$info['spouse_mname']?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
-                  <label for="lname">Last Name</label>
-                  <input type="text" class="form-control" name="lname" id="lname" placeholder="Enter Last Name..." value="<?=$info['lastname']?>" required>
+                  <label for="spouse_lname">Spouse Last Name</label>
+                  <input type="text" class="form-control" name="spouse_lname" id="spouse_lname" placeholder="Enter Last Name (Maiden)..." value="<?=$info['spouse_lname']?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
             </div><!-- /.form-group -->
@@ -1334,85 +1334,39 @@
                       <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="text" class="form-control bootstrap-datepicker" name="bdate" id="birthdate" value="<?=dateform($info['birthdate'])?>" placeholder="mm/dd/yyyy">
+                      <input type="text" name="spouse_bdate" class="form-control bootstrap-datepicker" id="spouse_bdate" value="<?=dateform($info['spouse_bdate'])?>" placeholder="mm/dd/yyyy" />
                     </div>
                     <!-- /.input group -->
                   </div>
                 </div><!-- /.col-md-4 col-sm-12 -->
-                <div class="col-md-4 col-sm-12">
-                  <label for="sex">Sex</label>
+                <div class="col-md-8 col-sm-12">
                   <div class="form-group">
-                    <div class="col-xs-6">
-                      <label>
-                          <input type="radio" name="sex" value="1" class="minimal-red" required <?php if($info['sex'])echo 'checked';?>>
-                        Male
-                      </label>
-                    </div><!-- /.col-xs-6 -->
-                    <div class="col-xs-6">
-                      <label>
-                          <input type="radio" name="sex" value="0" class="minimal-red" required <?php if(!$info['sex'])echo 'checked';?>>
-                        Female
-                      </label>
-                    </div><!-- /.col-xs-6 -->                    
+                    <label for="spouse_bplace">Spouse Birth Place</label>     
+                    <input type="text" name="spouse_bplace" id="spouse_bplace" class="form-control" value="<?=$info['spouse_bplace']?>" />              
                   </div>
-                </div><!-- /.col-md-4 col-sm-12 -->
-                <div class="col-md-4 col-sm-12">
-                  <label for="civil_stat">Civil Status</label>
-                  <select name="civil_stat" id="civil_stat" class="form-control" required>
-                    <option disabled selected> Select Option...</option>
-                    <option value="Single" <?php if($info['civil_status']=='Single')echo'selected';?>>Single</option>
-                    <option value="Married" <?php if($info['civil_status']=='Married')echo'selected';?>>Married</option>
-                  </select>
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
-            
-            <fieldset class="group-box">
-              <legend class="group-box-title">Birth Place</legend>
+
               <div class="row">
-                <div class="col-sm-5">
+                <div class="col-md-3 col-sm-12">
                   <div class="form-group">
-                    <label for="bplace_bldg">Building / Block / House</label>
-                    <input type="text" name="bplace_bldg" class="form-control" id="bplace_bldg" placeholder="Building / Block / House..." value="<?=$info['building']?>" required/>
+                    <label for="spouse_contact">Contact Number</label>     
+                    <input type="text" class="form-control" id="spouse_contact" name="spouse_contact" value="<?=$info['spouse_contact']?>"  data-inputmask='"mask": "(999) 999-9999"' placeholder="(912) 345-6789" data-mask> 
                   </div>
-                </div><!-- /.col-sm-5 -->
-                <div class="col-sm-4">
+                </div><!-- /.col-md-3 col-sm-12 -->
+                <div class="col-md-3 col-sm-12">
                   <div class="form-group">
-                    <label for="bplace_strt">Street</label>
-                    <input type="text" name="bplace_strt" class="form-control" id="bplace_strt" placeholder="Street..." value="<?=$info['street']?>" required/>
+                    <label for="spouse_occupation">Current Occupation</label>     
+                    <input type="text" name="spouse_occupation" id="spouse_occupation" class="form-control" value="<?=$info['spouse_occupation']?>" />   
                   </div>
-                </div><!-- /.col-sm-4 -->
-                <div class="col-sm-3">
+                </div><!-- /.col-md-4 col-sm-12 -->
+                <div class="col-md-6 col-sm-12">
                   <div class="form-group">
-                    <label for="bplace_brgy">Barangay</label>
-                    <input type="text" name="bplace_brgy" class="form-control" id="bplace_brgy" placeholder="Barangay..." value="<?=$info['barangay']?>" required/>
+                    <label for="spouse_occuaddr">Occupation Address</label>     
+                    <input type="text" name="spouse_occuaddr" id="spouse_occuaddr" class="form-control" value="<?=$info['spouse_work']?>" />              
                   </div>
-                </div><!-- /.col-sm-3 -->
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label for="bplace_city">City / Municipality</label>
-                    <input type="text" name="bplace_city" class="form-control" id="bplace_city" placeholder="City / Municipality..." value="<?=$info['city']?>" required/>
-                  </div>
-                </div><!-- /.col-sm-3 -->
-                <div class="col-sm-3">
-                  <div class="form-group">
-                    <label for="bplace_prov">Province / Region</label>
-                    <input type="text" name="bplace_prov" class="form-control" id="bplace_prov" placeholder="Province / Region..." value="<?=$info['province']?>" required/>
-                  </div>
-                </div><!-- /.col-sm-3 -->
-                <div class="col-sm-2">
-                  <div class="form-group">
-                    <label for="bplace_zip">Zip Code</label>
-                    <input type="text" name="bplace_zip" class="form-control" id="bplace_zip" placeholder="Zip Code..." value="<?=$info['zip']?>" required/>
-                  </div>
-                </div><!-- /.col-sm-2 -->
-                <div class="col-sm-4">
-                  <div class="form-group">
-                    <label for="bplace_ctry">Country</label>
-                    <input type="text" name="bplace_ctry" class="form-control" id="bplace_ctry" placeholder="Country..."  value="<?=$info['country']?>" required/>
-                  </div>
-                </div><!-- /.col-sm-4 -->
-              </div><!-- /.row -->              
-            </fieldset><!-- /.group-box -->
+                </div><!-- /.col-md-4 col-sm-12 -->
+              </div><!-- /.row -->
         </div><!-- /.modal-body -->
 
         <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
