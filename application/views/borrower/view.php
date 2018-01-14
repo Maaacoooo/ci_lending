@@ -592,6 +592,9 @@
   <!-- /.modal -->
 
 
+
+<!-- ///////////////////////////////// New Address ////////////////////////////////////// -->
+
   <div class="modal fade" id="AddAddress">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -682,6 +685,9 @@
   </div>
   <!-- /.modal -->
 
+
+<!-- //////////////////////////// Add Mobile ///////////////////////////// -->
+
   <div class="modal fade" id="AddMobile">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
@@ -711,6 +717,84 @@
   </div>
   <!-- /.modal -->
 
+<!-- //////////////////////////// Update Mobile ///////////////////////////// -->
+  <?php if ($mobiles): ?>
+  <?php foreach ($mobiles as $mob): ?>  
+
+  <div class="modal fade" id="UpdateMobile<?=$mob['id']?>">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <?=form_open('borrowers/update_contact')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Update Mobile Number</h4>
+        </div>
+        <div class="modal-body">          
+          <div class="callout callout-info">
+            <p><i class="fa fa-info-circle"></i> To delete a record, simply clear the textbox and save.</p>
+          </div><!-- /.callout callout-info -->    
+           <div class="form-group">
+             <label for="">Mobile Number</label>
+             <input type="text" name="value" value="<?=$mob['value']?>" class="form-control" data-inputmask='"mask": "(999) 999-9999"' placeholder="(912) 345-6789"/>
+           </div><!-- /.form-group -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($mob['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-primary">Save</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <?php endforeach ?>  
+  <?php endif ?>
+
+
+  <!-- //////////////////////////// Update Email ///////////////////////////// -->
+  <?php if ($emails): ?>
+  <?php foreach ($emails as $email): ?>  
+
+  <div class="modal fade" id="UpdateEmail<?=$email['id']?>">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <?=form_open('borrowers/update_contact')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Update Email Address</h4>
+        </div>
+        <div class="modal-body">      
+          <div class="callout callout-info">
+            <p><i class="fa fa-info-circle"></i> To delete a record, simply clear the textbox and save.</p>
+          </div><!-- /.callout callout-info -->    
+           <div class="form-group">
+             <label for="">Email Address</label>
+             <input type="email" name="value" value="<?=$email['value']?>" class="form-control" placeholder="youremail@emailprovider.com" />
+           </div><!-- /.form-group -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($email['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-primary">Save</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <?php endforeach ?>  
+  <?php endif ?>
+
+<!-- //////////////////////////// Add Email ///////////////////////////// -->
 
   <div class="modal fade" id="AddEmail">
     <div class="modal-dialog modal-sm">

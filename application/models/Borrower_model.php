@@ -402,6 +402,25 @@ Class Borrower_Model extends CI_Model {
      * -------------------------------------------------------------------------------
      * 
      */
+    
+    function view_contact($id) {
+        $this->db->where('id', $id);
+        return $this->db->get('borrowers_contacts')->row_array();
+    }
+
+    function delete_contact($id) {
+        $this->db->where('id', $id);
+        return $this->db->delete('borrowers_contacts');
+    }
+
+    function update_contact($id) {
+        $data = array(
+            'value'   => strip_tags($this->input->post('value'))
+            );
+
+         $this->db->where('id', $id);
+         return $this->db->update('borrowers_contacts', $data);
+    }
 
     function create_contact($acc_id, $type, $value) {
         $data = array(

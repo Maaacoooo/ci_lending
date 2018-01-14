@@ -779,6 +779,78 @@ class Borrowers extends CI_Controller {
 	}
 
 
+	public function update_contact()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+			$this->form_validation->set_rules('value', 'Value', 'trim');   
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$id = $this->encryption->decrypt($this->input->post('id')); //ID of the row	
+				$info = $this->borrower_model->view_contact($id);	
+
+				//if value is blank, delete contact
+				if($this->input->post('value')) {
+					//update contact
+					//validate if task executed successfully
+					if($this->borrower_model->update_contact($id)) {
+						$log_action = 'Updated Contact Information: ' . $info['value'] . ' to ' . $this->input->post('value');
+						$flag = true; //success flag
+					} else {
+						$flag = false; //error flag
+					}
+				} else {
+					//delete contact
+					if($this->borrower_model->delete_contact($id)) {
+						$log_action = 'Deleted Contact Information: ' . $info['value'];
+						$flag = true; //success flag
+					} else {
+						$flag = false; //error flag
+					}
+				}
+
+				if($flag) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$info['borrower_id'],
+							'action' 	=> 	$log_action
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					$this->session->set_flashdata('error', 'Error Occured!');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
 
 	/**
 	 * -----------------------------------------------------------------------------------------------------------
