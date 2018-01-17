@@ -95,6 +95,11 @@
             </ul>
             <div class="tab-content">
               <div class="tab-pane <?php if(!($flash_settings))echo'active'?>" id="personal">
+                <div class="row">
+                  <div class="col-sm-12">
+                    <a href="<?=current_url()?>/print" target="_blank" class="pull-right"><i class="fa fa-print"></i> Print Information</a>
+                  </div><!-- /.col-sm-12 -->
+                </div><!-- /.row -->
                 <table class="table table-condensed table-dark-border">
                   <tr>
                     <td colspan="6"><strong>Personal Information</strong> <a href="#personalInfoModal" data-toggle="modal" data-target="#personalInfoModal" class="pull-right"><i class="fa fa-edit"></i></a></td>
@@ -268,7 +273,7 @@
                       </ul>
                     </td>
                   </tr>
-                </table><!-- /.table table-condensed table-dark-border -->
+                </table><!-- /.table table-condensed table-dark-border -->                
               </div>
               <!-- /.tab-pane -->
               <div class="tab-pane" id="activity">
@@ -413,7 +418,7 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
-
+  
   <div class="modal fade" id="AddBusiness">
     <div class="modal-dialog modal-lg">
       <div class="modal-content">
@@ -487,6 +492,7 @@
   </div>
   <!-- /.modal -->
 
+<!-- ///////////////////////////// Update Current Address ////////////////////////////// -->
 
   <div class="modal fade" id="UpdateCurrentAddr">
     <div class="modal-dialog modal-lg">
@@ -514,65 +520,54 @@
               <div class="col-md-2 col-sm-12">
                 <div class="checkbox">
                   <label>
-                    <input type="checkbox" name="" id="" /> New Address
+                    <input type="checkbox" name="new_address" id="new_address" onclick="enable_new()" /> New Address
                   </label>
                 </div><!-- /.checkbox -->
               </div><!-- /.col-md-2 col-sm-12 -->
             </div><!-- /.row --> 
             </div>  
             <hr /> 
-            <div class="row">                
-                <div class="col-sm-2">
-                  <div class="form-group">
-                    <label for="addr_type">Address Type</label>
-                    <select class="form-control" name="addr_type" id="addr_type" required disabled="">
-                      <option disabled selected>Select Address Type...</option>
-                      <option value="<?=$this->encryption->encrypt('1')?>">Home</option>
-                      <option value="<?=$this->encryption->encrypt('2')?>">Current</option>
-                      <option value="<?=$this->encryption->encrypt('3')?>">Others</option>
-                    </select>
-                  </div><!-- /.form-group -->
-                </div><!-- /.col-sm-2 -->
+            <div class="row">               
                 <div class="col-sm-5">
                   <div class="form-group">
                     <label for="addr_bldg">Building / Block / House</label>
-                    <input type="text" name="addr_bldg" class="form-control" id="addr_bldg" placeholder="Building / Block / House..." value="<?=set_value('addr_bldg')?>" required disabled/>
+                    <input type="text" name="addr_bldg" class="form-control" id="new_addr_bldg" placeholder="Building / Block / House..." value="<?=set_value('addr_bldg')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-5 -->
-                <div class="col-sm-2">
+                <div class="col-sm-4">
                   <div class="form-group">
                     <label for="addr_strt">Street</label>
-                    <input type="text" name="addr_strt" class="form-control" id="addr_strt" placeholder="Street..." value="<?=set_value('addr_strt')?>" required disabled/>
+                    <input type="text" name="addr_strt" class="form-control" id="new_addr_strt" placeholder="Street..." value="<?=set_value('addr_strt')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-4 -->
-                <div class="col-sm-2">
+                <div class="col-sm-3">
                   <div class="form-group">
                     <label for="addr_brgy">Barangay</label>
-                    <input type="text" name="addr_brgy" class="form-control" id="addr_brgy" placeholder="Barangay..." value="<?=set_value('addr_brgy')?>" required disabled/>
+                    <input type="text" name="addr_brgy" class="form-control" id="new_addr_brgy" placeholder="Barangay..." value="<?=set_value('addr_brgy')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="addr_city">City / Municipality</label>
-                    <input type="text" name="addr_city" class="form-control" id="addr_city" placeholder="City / Municipality..." value="<?=set_value('addr_city')?>" required disabled/>
+                    <input type="text" name="addr_city" class="form-control" id="new_addr_city" placeholder="City / Municipality..." value="<?=set_value('addr_city')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-3">
                   <div class="form-group">
                     <label for="addr_prov">Province / Region</label>
-                    <input type="text" name="addr_prov" class="form-control" id="addr_prov" placeholder="Province / Region..." value="<?=set_value('addr_prov')?>" required disabled/>
+                    <input type="text" name="addr_prov" class="form-control" id="new_addr_prov" placeholder="Province / Region..." value="<?=set_value('addr_prov')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-3 -->
                 <div class="col-sm-2">
                   <div class="form-group">
                     <label for="addr_zip">Zip Code</label>
-                    <input type="text" name="addr_zip" class="form-control" id="addr_zip" placeholder="Zip Code..." value="<?=set_value('addr_zip')?>" required disabled/>
+                    <input type="text" name="addr_zip" class="form-control" id="new_addr_zip" placeholder="Zip Code..." value="<?=set_value('addr_zip')?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-2 -->
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label for="addr_ctry">Country</label>
-                    <input type="text" name="addr_ctry" class="form-control" id="addr_ctry" placeholder="Country..." value="<?php if(set_value('addr_ctry'))echo set_value('addr_ctry'); else echo 'Philippines';?>" required disabled/>
+                    <input type="text" name="addr_ctry" class="form-control" id="new_addr_ctry" placeholder="Country..." value="<?php if(set_value('addr_ctry'))echo set_value('addr_ctry'); else echo 'Philippines';?>" required disabled/>
                   </div>
                 </div><!-- /.col-sm-4 -->
               </div><!-- /.row -->
@@ -1483,18 +1478,59 @@
     <script src="<?=base_url('assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')?>"></script>
 
     <script type="text/javascript">
-    $('[data-mask]').inputmask()
+
+    //Initialize input mask
+    $('[data-mask]').inputmask();
 
     //Red color scheme for iCheck
     $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
       checkboxClass: 'icheckbox_minimal-red',
       radioClass   : 'iradio_minimal-red'
-    })
+    });
 
     //Date picker
     $('input[type="text"].bootstrap-datepicker').datepicker({
       autoclose: true
-    })
+    });
+
+
+    //enable new address in UpdateCurrentAddr
+    
+    function enable_new() {
+      if(document.getElementById("new_address").checked == true) {
+
+        console.log("checked");
+
+        
+        //enable fields
+        document.getElementById("addr_list").disabled = true;
+
+        document.getElementById("new_addr_bldg").disabled = false;
+        document.getElementById("new_addr_strt").disabled = false;
+        document.getElementById("new_addr_brgy").disabled = false;
+        document.getElementById("new_addr_city").disabled = false;
+        document.getElementById("new_addr_prov").disabled = false;
+        document.getElementById("new_addr_zip").disabled = false;
+        document.getElementById("new_addr_ctry").disabled = false; 
+
+      } else {
+
+        console.log("unchecked");
+        //disable fields
+        
+        document.getElementById("addr_list").disabled = false;   
+
+        document.getElementById("new_addr_bldg").disabled = true;
+        document.getElementById("new_addr_strt").disabled = true;
+        document.getElementById("new_addr_brgy").disabled = true;
+        document.getElementById("new_addr_city").disabled = true;
+        document.getElementById("new_addr_prov").disabled = true;
+        document.getElementById("new_addr_zip").disabled = true;
+        document.getElementById("new_addr_ctry").disabled = true;
+      }
+
+
+    }
 
     </script>
   

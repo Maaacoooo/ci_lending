@@ -630,7 +630,6 @@ class Borrowers extends CI_Controller {
 	 * --------------------------------------------------------------------------------------------------------------
 	 */
 
-
 	public function add_address()		{
 
 		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
@@ -649,8 +648,88 @@ class Borrowers extends CI_Controller {
 		 
 		   if($this->form_validation->run() == FALSE)	{
 
-				$this->session->set_flashdata('error', 'An Error has Occured!');
-				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+
+			} else {
+
+				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
+
+				$bldg = strip_tags($this->input->post('addr_bldg'));
+				$strt = strip_tags($this->input->post('addr_strt'));
+				$brgy = strip_tags($this->input->post('addr_brgy'));
+				$city = strip_tags($this->input->post('addr_city'));
+				$prov = strip_tags($this->input->post('addr_prov'));
+				$zip  = strip_tags($this->input->post('addr_zip'));
+				$ctry = strip_tags($this->input->post('addr_ctry'));
+				$type = $this->encryption->decrypt($this->input->post('addr_type'));
+
+				$action = $this->borrower_model->create_address($acc_id, $type, $bldg, $strt, $brgy, $city, $prov, $zip, $ctry);
+				$log_action = "Added New Address";
+
+				if($action) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$acc_id,
+							'action' 	=> 	$log_action
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+	/**
+	 * Updates current address, either from address list or new input
+	 */
+	public function update_CurrentAddr()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{			
+
+			if ($this->input->post('new_address')) {
+				//Set FORM VALIDATION for new address
+				$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+				$this->form_validation->set_rules('addr_bldg', 'Address Bldg', 'trim|required');
+				$this->form_validation->set_rules('addr_strt', 'Address Street', 'trim|required');
+				$this->form_validation->set_rules('addr_brgy', 'Address Brgy', 'trim|required');
+				$this->form_validation->set_rules('addr_city', 'Address City', 'trim|required');
+				$this->form_validation->set_rules('addr_prov', 'Address Province', 'trim|required');
+				$this->form_validation->set_rules('addr_zip', 'Address ZIP Code', 'trim|required');
+				$this->form_validation->set_rules('addr_ctry', 'Address Country', 'trim|required');
+				$this->form_validation->set_rules('addr_type', 'Address Type', 'trim|required');
+			} else {
+				//Set FORM VALIDATION for address list
+				$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+				$this->form_validation->set_rules('addr_list', 'Address List', 'trim|required');   
+			}
+			
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
 
 			} else {
 
