@@ -651,6 +651,8 @@ class Borrowers extends CI_Controller {
 				//convert validation errors to flashdata notification
 		   		$notif['warning'] = array_values($this->form_validation->error_array());
 		   		$this->sessnotif->setNotif($notif);
+				
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
 
 			} else {
 
@@ -717,7 +719,6 @@ class Borrowers extends CI_Controller {
 				$this->form_validation->set_rules('addr_prov', 'Address Province', 'trim|required');
 				$this->form_validation->set_rules('addr_zip', 'Address ZIP Code', 'trim|required');
 				$this->form_validation->set_rules('addr_ctry', 'Address Country', 'trim|required');
-				$this->form_validation->set_rules('addr_type', 'Address Type', 'trim|required');
 			} else {
 				//Set FORM VALIDATION for address list
 				$this->form_validation->set_rules('id', 'ID', 'trim|required');   
@@ -731,23 +732,51 @@ class Borrowers extends CI_Controller {
 		   		$notif['warning'] = array_values($this->form_validation->error_array());
 		   		$this->sessnotif->setNotif($notif);
 
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
 			} else {
 
-				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
+				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row		
+				$current_addr = $this->borrower_model->view_address(NULL, $acc_id);	
 
-				$bldg = strip_tags($this->input->post('addr_bldg'));
-				$strt = strip_tags($this->input->post('addr_strt'));
-				$brgy = strip_tags($this->input->post('addr_brgy'));
-				$city = strip_tags($this->input->post('addr_city'));
-				$prov = strip_tags($this->input->post('addr_prov'));
-				$zip  = strip_tags($this->input->post('addr_zip'));
-				$ctry = strip_tags($this->input->post('addr_ctry'));
-				$type = $this->encryption->decrypt($this->input->post('addr_type'));
+				if ($this->input->post('new_address')) {
+					//Create New Address 
+					$bldg = strip_tags($this->input->post('addr_bldg'));
+					$strt = strip_tags($this->input->post('addr_strt'));
+					$brgy = strip_tags($this->input->post('addr_brgy'));
+					$city = strip_tags($this->input->post('addr_city'));
+					$prov = strip_tags($this->input->post('addr_prov'));
+					$zip  = strip_tags($this->input->post('addr_zip'));
+					$ctry = strip_tags($this->input->post('addr_ctry'));
 
-				$action = $this->borrower_model->create_address($acc_id, $type, $bldg, $strt, $brgy, $city, $prov, $zip, $ctry);
-				$log_action = "Added New Address";
+					$new_addr = $this->borrower_model->create_address($acc_id, 2, $bldg, $strt, $brgy, $city, $prov, $zip, $ctry); //New Address ID
+					
+					//save new address
+					if($new_addr) {
+						$info = $this->borrower_model->view_address($new_addr); //gets the data of the new address
+						$log_action = "Created New Current Address: " . $info['address'] . "| Last address set was: " . $current_addr['address'];
+						$flag = true;
+					} else {
+						$flag = false;
+					}
 
-				if($action) {
+				} else {
+					//Update Current Address from Address List
+					$addr_list = $this->encryption->decrypt($this->input->post('addr_list'));
+
+					$info = $this->borrower_model->view_address($addr_list); //gets the data of the old current address
+
+					if($this->borrower_model->update_CurrentAddr($acc_id, $addr_list)) {
+						$log_action = "Changed Current Address from " . $current_addr['address'] . " to " . $info['address'];
+						$flag = true;
+					} else {
+						$flag = false;
+					}
+				}
+
+				
+
+				if($flag) {
 
 					$log[] = array(
 							'user' 		=> 	$userdata['username'],
@@ -763,7 +792,7 @@ class Borrowers extends CI_Controller {
 					$this->session->set_flashdata('success', $log_action);
 					redirect($_SERVER['HTTP_REFERER'], 'refresh');
 				} else {
-					$this->session->set_flashdata('error', 'Error Occured! No file uploaded');
+					$this->session->set_flashdata('error', 'Error Occured!');
 					redirect($_SERVER['HTTP_REFERER'], 'refresh');
 				}
 			}

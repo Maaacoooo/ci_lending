@@ -302,7 +302,9 @@ Class Borrower_Model extends CI_Model {
         if (!is_null($addr_id)) {
             //sets an address to current address
             $this->db->update('borrowers_address', array('type' => 2), array('id'=>$addr_id));
-        }
+        } 
+
+        return $addr_id;
         
     }
 
@@ -337,10 +339,37 @@ Class Borrower_Model extends CI_Model {
     }
 
 
-    function view_address($id) {
-        $this->db->where('id', $id);
+    /**
+     * Returns the address row details;
+     * if $id set to NULL, $acc_id must not be null
+     * with NULL $id, and definite $acc_id, returns Current Address Record
+     * @param  [type] $id [description]
+     * @return [type]     [description]
+     */
+    function view_address($id, $acc_id = null) {
 
-        return $this->db->get('borrowers_address')->result_array();
+        $this->db->select('
+        id,
+        borrower_id,
+        type,
+        building,
+        street,
+        barangay,
+        city,
+        province
+        zip,
+        country,
+        CONCAT(building, ", ", street, ", ", barangay, ", ", city, ", ", province, ", ", zip, ", ",country) as address
+        ');
+        if(is_null($id)) {
+            //returns Current Address
+            $this->db->where('borrower_id', $acc_id);
+            $this->db->where('type', 2);
+        } else {
+            $this->db->where('id', $id);
+        }
+
+        return $this->db->get('borrowers_address')->row_array();
     }
 
 
