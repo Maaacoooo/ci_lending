@@ -700,6 +700,96 @@ class Borrowers extends CI_Controller {
 	}
 
 
+
+	public function update_address()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+			$this->form_validation->set_rules('addr_bldg', 'Address Bldg', 'trim|required');
+			$this->form_validation->set_rules('addr_strt', 'Address Street', 'trim|required');
+			$this->form_validation->set_rules('addr_brgy', 'Address Brgy', 'trim|required');
+			$this->form_validation->set_rules('addr_city', 'Address City', 'trim|required');
+			$this->form_validation->set_rules('addr_prov', 'Address Province', 'trim|required');
+			$this->form_validation->set_rules('addr_zip', 'Address ZIP Code', 'trim|required');
+			$this->form_validation->set_rules('addr_ctry', 'Address Country', 'trim|required');
+			$this->form_validation->set_rules('addr_type', 'Address Type', 'trim|required');
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+				
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$id = $this->encryption->decrypt($this->input->post('id')); //ID of the address
+				$info = $this->borrower_model->view_address($id); //Fetch old address info
+
+				$bldg = strip_tags($this->input->post('addr_bldg'));
+				$strt = strip_tags($this->input->post('addr_strt'));
+				$brgy = strip_tags($this->input->post('addr_brgy'));
+				$city = strip_tags($this->input->post('addr_city'));
+				$prov = strip_tags($this->input->post('addr_prov'));
+				$zip  = strip_tags($this->input->post('addr_zip'));
+				$ctry = strip_tags($this->input->post('addr_ctry'));
+				$type = $this->encryption->decrypt($this->input->post('addr_type'));
+
+				$action = $this->borrower_model->update_address($id, $info['borrower_id'], $type, $bldg, $strt, $brgy, $city, $prov, $zip, $ctry);
+				$new_address = $this->borrower_model->view_address($action); // fetch new address info
+
+				//Much more complex logging information
+				//Compare details 
+				if ($new_address['address'] != $info['address']) {
+					$log_action = "Updated Address: " . $info['address'] . " to " . $new_address['address']; //log_action
+				} else {
+					//Address Types
+					if($new_address['type'] == 1) {
+						$addr_type = "Home";
+					} elseif($new_address['type'] == 2) {
+						$addr_type = "Current";
+					} elseif($new_address['type'] == 3) {
+						$addr_type = "Other";
+					}
+
+					$log_action = "Updated " . $new_address['address'] . " as " . $addr_type . " Address";
+				}
+				
+
+				if($action) {
+
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'borrower',
+							'tag_id'	=> 	$info['borrower_id'],
+							'action' 	=> 	$log_action
+							);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				} else {
+					$this->session->set_flashdata('error', 'Error Occured!');
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
 	/**
 	 * Updates current address, either from address list or new input
 	 */

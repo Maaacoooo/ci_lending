@@ -290,6 +290,45 @@ Class Borrower_Model extends CI_Model {
 
     }
 
+
+    /**
+     * Updates a Borrower's Address Record
+     * @param  int        $acc_id     
+     * @param  String     $tag        
+     * @param  String     $bldg       
+     * @param  String     $street     
+     * @param  String     $brgy       
+     * @param  String     $city       
+     * @param  String     $prov       
+     * @param  String     $zip        
+     * @param  String     $ctry       
+     * @return Boolean                returns TRUE if success
+     */
+    function update_address($id, $acc_id, $tag, $bldg, $street, $brgy, $city, $prov, $zip, $ctry) {
+
+        //Unsets current address from an account
+        if ($tag == 2) {
+            $this->update_currentAddr($acc_id, NULL);
+        }
+
+          $data = array(
+            'type'       => $tag,
+            'building'   => $bldg,
+            'street'     => $street,
+            'barangay'   => $brgy,
+            'city'       => $city,
+            'province'   => $prov,
+            'zip'        => $zip,
+            'country'    => $ctry
+            );
+
+         $this->db->where('id', $id);
+         $this->db->update('borrowers_address', $data);
+
+         return $id; //returns the inserted id
+
+    }
+
     /**
      * Unsets the existing Current Address and sets a new current address
      * @return [type] [description]

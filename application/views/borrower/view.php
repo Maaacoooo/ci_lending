@@ -197,7 +197,7 @@
                             $type = "Other";                            
                           }
                           ?>
-                          <li><?=$type?> - <?=$addr['address']?> <a href="#"><i class="fa fa-edit"></i></a></li>
+                          <li><?=$type?> - <?=$addr['address']?> <a href="#" data-target="#UpdateAddress<?=$addr['id']?>" data-toggle="modal"><i class="fa fa-edit"></i></a></li>
                         <?php endforeach ?>
                         <li style="list-style: none;"><a href="#" data-target="#AddAddress" data-toggle="modal"><i class="fa fa-plus"></i> Add New Address</a></li>
                       </ul>
@@ -679,6 +679,105 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+
+
+
+<!-- ///////////////////////////////// Update Address ////////////////////////////////////// -->
+
+  <?php if ($addresses): ?>
+  <?php foreach ($addresses as $addr): ?>
+  
+  <div class="modal fade" id="UpdateAddress<?=$addr['id']?>">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <?=form_open('borrowers/update_address')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Update New Address</h4>
+        </div>
+        <div class="modal-body"> 
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="callout callout-info">
+                  <h4><i class="fa fa-info-circle"></i> Information</h4>
+                  <p>Setting an address type to <span class="badge">Current</span> will replace the Current Address, 
+                    and will be changed to <span class="badge">Others</span>.</p>
+                </div><!-- /.callout callout-info -->
+              </div><!-- /.col-sm-12 -->
+            </div><!-- /.row -->         
+            <div class="row">
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="addr_type">Address Type</label>
+                    <select class="form-control" name="addr_type" id="addr_type" required>
+                      <option disabled selected>Select Address Type...</option>
+                      <option value="<?=$this->encryption->encrypt('1')?>" <?php if($addr['type']==1)echo'selected';?>>Home</option>
+                      <option value="<?=$this->encryption->encrypt('2')?>" <?php if($addr['type']==2)echo'selected';?>>Current</option>
+                      <option value="<?=$this->encryption->encrypt('3')?>" <?php if($addr['type']==3)echo'selected';?>>Others</option>
+                    </select>
+                  </div><!-- /.form-group -->
+                </div><!-- /.col-sm-2 -->
+                <div class="col-sm-5">
+                  <div class="form-group">
+                    <label for="addr_bldg">Building / Block / House</label>
+                    <input type="text" name="addr_bldg" class="form-control" id="addr_bldg" placeholder="Building / Block / House..." value="<?=$addr['building']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-5 -->
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="addr_strt">Street</label>
+                    <input type="text" name="addr_strt" class="form-control" id="addr_strt" placeholder="Street..." value="<?=$addr['street']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-4 -->
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="addr_brgy">Barangay</label>
+                    <input type="text" name="addr_brgy" class="form-control" id="addr_brgy" placeholder="Barangay..." value="<?=$addr['barangay']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-3 -->
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="addr_city">City / Municipality</label>
+                    <input type="text" name="addr_city" class="form-control" id="addr_city" placeholder="City / Municipality..." value="<?=$addr['city']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-3 -->
+                <div class="col-sm-3">
+                  <div class="form-group">
+                    <label for="addr_prov">Province / Region</label>
+                    <input type="text" name="addr_prov" class="form-control" id="addr_prov" placeholder="Province / Region..." value="<?=$addr['province']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-3 -->
+                <div class="col-sm-2">
+                  <div class="form-group">
+                    <label for="addr_zip">Zip Code</label>
+                    <input type="text" name="addr_zip" class="form-control" id="addr_zip" placeholder="Zip Code..." value="<?=$addr['zip']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-2 -->
+                <div class="col-sm-4">
+                  <div class="form-group">
+                    <label for="addr_ctry">Country</label>
+                    <input type="text" name="addr_ctry" class="form-control" id="addr_ctry" placeholder="Country..." value="<?=$addr['country']?>" required/>
+                  </div>
+                </div><!-- /.col-sm-4 -->
+              </div><!-- /.row -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($addr['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-primary">Save</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <?php endforeach ?>
+  <?php endif ?>
 
 
 <!-- //////////////////////////// Add Mobile ///////////////////////////// -->
