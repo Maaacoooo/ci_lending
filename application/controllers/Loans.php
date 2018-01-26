@@ -109,6 +109,55 @@ class Loans extends CI_Controller {
 	}
 
 
+	public function view($id)		{
+
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{
+
+			$data['site_title'] = APP_NAME;
+			$data['user'] = $this->user_model->userdetails($userdata['username']); //fetches users record
+
+			//Fetch Data	
+			$data['loan']					= $this->loans_model->view($id);
+			$data['info']					= $this->borrower_model->view($data['loan']['borrower_id']);
+			$data['info']['current_addr']	= $this->borrower_model->fetch_addresses($data['loan']['borrower_id'], 2)[0]['address'];
+
+			$data['addresses']		= $this->borrower_model->fetch_addresses($data['loan']['borrower_id']);
+			$data['mobiles']		= $this->borrower_model->fetch_contacts($data['loan']['borrower_id'], 0);
+			$data['emails']			= $this->borrower_model->fetch_contacts($data['loan']['borrower_id'], 1);
+			$data['employments']	= $this->borrower_model->fetch_works($data['loan']['borrower_id'], 0);
+			$data['businesses']		= $this->borrower_model->fetch_works($data['loan']['borrower_id'], NULL);
+
+			$data['expenses']		= $this->loans_model->fetch_expenses();
+			$data['income']			= $this->loans_model->fetch_income();
+
+			$data['title'] 		= 'Loan Application: ' . $data['loan']['id'];
+
+			$data['logs']		= $this->logs_model->fetch_logs('loan', $data['loan']['id'], 50);
+
+			//Validate if record exist
+			 //IF NO ID OR NO RESULT, REDIRECT
+				if(!$data['loan']['borrower_id'] || !$data['info'] || $data['info']['is_deleted']) {
+
+					$notif['error'] = 'Account Deactivated. Please contact your Administrator for Reactivation!';
+		   			$this->sessnotif->setNotif($notif);
+
+					redirect('borrowers', 'refresh');
+			}	
+			
+			$this->load->view('loans/view', $data);	
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
 	function test() {
 		
 		var_dump($this->input->post('creditors'));

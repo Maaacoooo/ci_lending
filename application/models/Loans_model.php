@@ -43,6 +43,15 @@ Class Loans_Model extends CI_Model {
     }
 
 
+
+    function view($id) {
+        $this->db->where('loans.id', $id);
+        $query = $this->db->get('loans');
+
+        return $query->row_array();
+    }
+
+
     /**
      * Returns a range of array of data as per request
      * - Used by Borrower List Pagination
