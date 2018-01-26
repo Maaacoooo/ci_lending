@@ -338,7 +338,7 @@
                 <div class="col-sm-4">
                   <div class="form-group">
                     <label for="home_country">Country</label>
-                    <input type="text" name="home_country" class="form-control" id="home_country" placeholder="Country..." value="<?php if(set_value('home_country'))echo set_value('home_country'); else echo 'Philippines';?>" required/>
+                    <input type="text" name="home_ctry" class="form-control" id="home_country" placeholder="Country..." value="<?php if(set_value('home_country'))echo set_value('home_country'); else echo 'Philippines';?>" required/>
                   </div>
                 </div><!-- /.col-sm-4 -->
               </div><!-- /.row -->
