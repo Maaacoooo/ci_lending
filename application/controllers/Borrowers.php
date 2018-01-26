@@ -8,6 +8,7 @@ class Borrowers extends CI_Controller {
 		parent::__construct();		
 		$this->load->model('user_model');
 		$this->load->model('borrower_model');
+		$this->load->model('loans_model');
 	}	
 
 
@@ -305,6 +306,9 @@ class Borrowers extends CI_Controller {
 			$data['employments']	= $this->borrower_model->fetch_works($id, 0);
 			$data['businesses']		= $this->borrower_model->fetch_works($id, NULL);
 
+			$data['expenses']		= $this->loans_model->fetch_expenses();
+			$data['income']			= $this->loans_model->fetch_income();
+
 			$data['title'] 		= $data['info']['name'];
 
 			$data['logs']		= $this->logs_model->fetch_logs('borrower', $id, 50);
@@ -312,6 +316,10 @@ class Borrowers extends CI_Controller {
 			//Validate if record exist
 			 //IF NO ID OR NO RESULT, REDIRECT
 				if(!$id || !$data['info'] || $data['info']['is_deleted']) {
+
+					$notif['error'] = 'Account Deactivated. Please contact your Administrator for Reactivation!';
+		   			$this->sessnotif->setNotif($notif);
+
 					redirect('borrowers', 'refresh');
 			}	
 			

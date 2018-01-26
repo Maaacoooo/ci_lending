@@ -186,7 +186,7 @@ Class Borrower_Model extends CI_Model {
              $this->db->join('borrowers_educ', 'borrowers_educ.borrower_id = borrowers.id', 'LEFT');
              $this->db->join('borrowers_spouse', 'borrowers_spouse.borrower_id = borrowers.id', 'LEFT');
              $this->db->join('borrowers_address', 'borrowers_address.id = borrowers.bplace', 'LEFT');
-             $this->db->where('borrowers.id', $acc_id);                
+             $this->db->where('borrowers.id', $acc_id);                    
 
              $query = $this->db->get('borrowers');
 

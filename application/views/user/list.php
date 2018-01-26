@@ -17,7 +17,6 @@
   <header class="main-header">
     <?php $this->load->view('inc/header')?>
   </header>
-
   <!-- =============================================== -->
 
   <!-- Left side column. contains the sidebar -->

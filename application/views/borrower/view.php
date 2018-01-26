@@ -76,6 +76,9 @@
                 </li>       
                 <li class="list-group-item">
                   <b>Date Registered</b> <a class="pull-right"><?=$info['created_at']?></a>
+                </li>  
+                <li class="list-group-item">
+                  <a href="#" data-target="#AddLoan" data-toggle="modal" class="btn btn-danger btn-block btn-flat"><i class="fa fa-money"></i> Apply Loan</a>
                 </li>                         
               </ul>
             </div>
@@ -1561,6 +1564,112 @@
   <!-- /.modal -->
 
 
+  <!-- ///////////////////////// Apply Loans ////////////////////////////// -->
+  <div class="modal fade" id="AddLoan">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <?=form_open('loans/create')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Loan Application</h4>
+        </div>
+        <div class="modal-body">   
+            <div class="callout callout-info">              
+              <p><i class="fa fa-exclamation-circle"></i> <strong>ATTENTION!</strong> <br />
+              This Loan Application is subject for Approval. <br />
+              After submitting this application, please print and sign the formal document.</p>
+              <p><i class="fa fa-info-circle"></i> Please fill up all the important fields</p>
+            </div><!-- /.callout callout-info -->       
+            <p>
+              <strong><?=$info['name']?></strong> hereby apply for a loan amounting <input type="text" name="loan_amount" /> for a period of 
+              <input type="text" name="loan_days"> <br />days at the rate of <input type="text" name="loan_rate" max="100" />% per annum and repayable for only one term.
+            </p>
+            <hr />
+            <p><strong>Monthly Income and Expenses of the Borrower:</strong></p>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <table class="table table-bordered table-condensed">
+                  <tr>
+                    <th colspan="2">Income</th>
+                  </tr>
+                  <?php $y=1; foreach($income as $inc): ?>
+                  <tr>
+                    <th><?=$y++.'. '.$inc['title']?></th>
+                    <td width="30%"><input type="text" id="test" class="test" name="income[<?=$inc['id']?>]"/></td>
+                  </tr>
+                  <?php endforeach; ?>
+                </table><!-- /.table table-bordered table-condensed -->
+
+                <table class="table table-bordered table-condensed">
+                  <tr>
+                    <th colspan="2" class="bg-danger italic">Expenses (Less)</th>
+                  </tr>
+                  <?php $x=1; foreach($expenses as $exp): ?>
+                  <tr>
+                    <th><?=$x++.'. '.$exp['title']?></th>
+                    <td width="30%"><input type="text" name="expense[<?=$exp['id']?>]"/></td>
+                  </tr>
+                  <?php endforeach; ?>
+                </table><!-- /.table table-bordered table-condensed -->
+              </div><!-- /.col-md-6 col-md-3-offset -->
+            </div><!-- /.row -->
+            <hr />
+            <p><strong>Summary of other Outstanding Obligations</strong></p>
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                  <div class="row" id="creditors">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="">Name of Creditor</label>
+                        <input type="text" name="creditors_name[]" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-4 -->
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="">Address</label>
+                        <input type="text" name="creditors_address[]" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-4 -->
+                    <div class="col-sm-2">
+                      <div class="form-group">
+                        <label for="">Amount</label>
+                        <input type="text" name="creditors_amount[]" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-2 -->
+                    <div class="col-sm-2">
+                      <div class="form-group">
+                        <label for="">Remarks</label>
+                        <input type="text" name="creditors_remarks[]" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-2 -->
+                  </div><!-- /.row -->
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <button type="button" class="btn btn-default btn-sm pull-right" id="add_creditor"><i class="fa fa-plus"></i> Add Creditor</button>
+                    </div><!-- /.col-sm-12 -->
+                  </div><!-- /.row -->
+              </div><!-- /.col-md-10 col-md-offset-1 -->
+            </div><!-- /.row -->
+
+            <hr />
+
+        </div>
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-danger">Apply Loan</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+
 
   <footer class="main-footer">    
     <?php $this->load->view('inc/footer')?>    
@@ -1577,6 +1686,24 @@
     <script src="<?=base_url('assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')?>"></script>
 
     <script type="text/javascript">
+
+    $(document).ready(function(){
+      $('#add_creditor').click(function(e) {
+              var creditors = $('#creditors').clone();
+              $( "#creditors" ).after( creditors );
+          });
+
+      $('.test').focus(function(e) {
+              var value = $('#test').val();
+              if(!value) {
+
+              } else {
+                value = parseFloat(value).toFixed(2);
+                $('#test').val(value);
+              }
+              
+          });
+      });
 
     //Initialize input mask
     $('[data-mask]').inputmask();
