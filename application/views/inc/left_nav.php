@@ -32,25 +32,65 @@
           <ul class="treeview-menu">
             <li><a href="<?=base_url('borrowers')?>"><i class="fa fa-circle-o"></i> Account List</a></li>
             <li><a href="<?=base_url('borrowers/create')?>"><i class="fa fa-circle-o"></i> Register New Account</a></li>
+            <li><a href="<?=base_url('borrowers')?>"><i class="fa fa-circle-o"></i> Disabled Accounts</a></li>
+
           </ul>
         </li>   
         <li class="treeview">
           <a href="#">
-            <i class="fa fa-money"></i> <span>Loans</span>
+            <i class="fa fa-money"></i> <span>Loan Applications</span>
             <span class="pull-right-container">
               <i class="fa fa-angle-left pull-right"></i>
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="<?=base_url('borrowers')?>"><i class="fa fa-circle-o"></i> Account List</a></li>
-            <li><a href="<?=base_url('borrowers/create')?>"><i class="fa fa-circle-o"></i> Register New Account</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Overall List</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Pending Applications</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> For Collection</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Over-Due Loans</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Declined</a></li>
           </ul>
         </li>  
         <?php endif ?>      
 
         <?php if ($user['user_level'] >= 10): ?>
+        <li class="header">BUSINESS OPTIONS</li>         
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-money"></i> <span>Collection and Payments</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Due Collection</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Overdue Collection</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Today's Collection Report</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Weekly Report</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Monthly Report</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Annual Report</a></li>
+          </ul>
+        </li>  
+
+        <li class="treeview">
+          <a href="#">
+            <i class="fa fa-money"></i> <span>Expenses</span>
+            <span class="pull-right-container">
+              <i class="fa fa-angle-left pull-right"></i>
+            </span>
+          </a>
+          <ul class="treeview-menu">
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Budget Requests</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Pending Budget Requests</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Weekly Report</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Monthly Report</a></li>
+            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Annual Report</a></li>
+          </ul>
+        </li>  
+
         <li class="header">ADMIN OPTIONS</li>         
         <li><a href="<?=base_url('users')?>"><i class="fa fa-users"></i> <span>System Users</span></a></li>
+        <li><a href="<?=base_url('settings')?>"><i class="fa fa-wrench"></i> <span>System Settings</span></a></li>        
         <?php endif ?>      
 
 
