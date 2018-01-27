@@ -61,20 +61,43 @@ Class Loans_Model extends CI_Model {
      * @param  Int      $is_deleted   if deleted record or not
      * @return Array             [description]
      */
-    function fetch_borrowers($limit, $id, $search, $is_deleted) {
+    function fecth_loans($limit, $id, $search, $status, $acc_id) {
 
+            //Search Query
             if($search) {
               $this->db->like('borrowers.firstname', $search);
               $this->db->or_like('borrowers.middlename', $search);
-              $this->db->or_like('borrowers.lastname', $search);
-              $this->db->or_like('borrowers.spouse_name', $search);
+              $this->db->or_like('borrowers.lastname', $search);;
               $this->db->or_like('borrowers.id', $search);
+              $this->db->or_like('loans.id', $search);
+              $this->db->or_like('due_date.id', $search);
             }            
+            
+            if(!is_null($limit)) {
+                $this->db->limit($limit, (($id-1)*$limit));
+            }
 
-            $this->db->where('borrowers.is_deleted', $is_deleted);
-            $this->db->limit($limit, (($id-1)*$limit));
+            if(!is_null($status)) {
+                $this->db->where('loans.status', $status);
+            }
 
-            $query = $this->db->get("borrowers");
+            if(!is_null($acc_id)) {
+                $this->db->where('loans.borrower_id', $acc_id);
+            }
+
+            $this->db->select('
+                loans.id,
+                loans.borrower_id,
+                loans.borrowed_amount,
+                loans.due_date,
+                loans.created_at,
+                loans.updated_at,
+                loans.status
+            ');
+
+            $this->db->join('borrowers', 'borrowers.id = loans.borrower_id', 'left');
+
+            $query = $this->db->get("loans");
 
             if ($query->num_rows() > 0) {
                 return $query->result_array();

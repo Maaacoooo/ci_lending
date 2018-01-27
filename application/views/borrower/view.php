@@ -93,10 +93,12 @@
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li <?php if(!($flash_settings))echo'class="active"'?>><a href="#personal" data-toggle="tab">Account Information</a></li>
+              <li><a href="#application" data-toggle="tab">Loan Applications</a></li>
               <li><a href="#activity" data-toggle="tab">Activity Logs</a></li>
               <li <?php if($flash_settings)echo'class="active"'?>><a href="#settings" data-toggle="tab">Settings</a></li>
             </ul>
             <div class="tab-content">
+              <!-- ///////////////////////////////// Account Information ///////////////////////////////////// -->
               <div class="tab-pane <?php if(!($flash_settings))echo'active'?>" id="personal">
                 <div class="row">
                   <div class="col-sm-12">
@@ -279,6 +281,36 @@
                 </table><!-- /.table table-condensed table-dark-border -->                
               </div>
               <!-- /.tab-pane -->
+
+              <!-- ///////////////////////////////// Loan Application ///////////////////////////////////// -->
+              <div class="tab-pane" id="application">
+                <table class="table table-condensed table-striped">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Amount</th>
+                      <th>Applicate Date</th>
+                      <th>Due Date</th>
+                      <th>Status</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php if ($loans): ?>
+                    <?php foreach ($loans as $loan): ?>
+                    <tr>
+                      <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['id']?></a></td>
+                      <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['borrowed_amount']?></a></td>
+                      <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['created_at']?></a></td>
+                      <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['due_date']?></a></td>
+                      <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['status']?></a></td>
+                    </tr>
+                    <?php endforeach ?>
+                    <?php endif ?>
+                  </tbody>
+                </table><!-- /.table .table-condensed table-striped -->
+              </div>
+
+              <!-- ///////////////////////////////// Activity Logs ///////////////////////////////////// -->
               <div class="tab-pane" id="activity">
                 <h4 class="title">Last Activity</h4>
                 <?php if ($logs): ?>
@@ -314,7 +346,8 @@
                 <?php endif ?>
               </div>
               <!-- /.tab-pane -->
-
+              
+              <!-- ///////////////////////////////// Settings ///////////////////////////////////// -->
               <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="settings">
 
               </div>
