@@ -130,8 +130,13 @@ class Loans extends CI_Controller {
 			$data['employments']	= $this->borrower_model->fetch_works($data['loan']['borrower_id'], 0);
 			$data['businesses']		= $this->borrower_model->fetch_works($data['loan']['borrower_id'], NULL);
 
-			$data['expenses']		= $this->loans_model->fetch_expenses();
-			$data['income']			= $this->loans_model->fetch_income();
+			$data['expenses']	= $this->loans_model->fetch_expenses($id);
+			$data['income']		= $this->loans_model->fetch_income($id);
+			$data['creditors']	= $this->loans_model->fetch_creditors($id);
+
+			$data['ledger']			= $this->loans_model->fetch_ledger($id);
+			$data['ledger_debit']	= $this->loans_model->fetch_ledger_codes('debit');
+			$data['ledger_credit']	= $this->loans_model->fetch_ledger_codes('credit');
 
 			$data['title'] 		= 'Loan Application: ' . $data['loan']['id'];
 
@@ -156,6 +161,77 @@ class Loans extends CI_Controller {
 		}
 
 	}
+
+
+	public function add_ledger()    {
+
+	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+	    if($userdata) {     
+	      //FORM VALIDATION
+	      $this->form_validation->set_rules('id', 'ID', 'trim|required');   
+	      $this->form_validation->set_rules('key', 'Key', 'trim|required');   
+	      $this->form_validation->set_rules('code', 'Code', 'trim|required');   
+	      $this->form_validation->set_rules('amount', 'Amount', 'trim|required');   
+	      $this->form_validation->set_rules('description', 'Description', 'trim|required');   
+	     
+	       if($this->form_validation->run() == FALSE) {
+
+	        //convert validation errors to flashdata notification
+	          $notif['warning'] = array_values($this->form_validation->error_array());
+	          $this->sessnotif->setNotif($notif);
+	          
+	        redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+	      } else {
+
+	        $id = $this->encryption->decrypt($this->input->post('id')); //ID of the loan 
+	        $key = $this->encryption->decrypt($this->input->post('key')); //ID of the key 
+
+	       	$amount = abs(strip_tags($this->input->post('amount')));
+
+	        switch ($key) {
+	          case 'credit':
+	            $flag = $this->loans_model->add_ledger($id, $amount, $userdata['username']);
+	            $log_action = 'Added a Credit Record';
+	            break;
+
+	          case 'debit':
+	            # code...
+	            $flag = $this->loans_model->add_ledger($id, (($amount)*-1), $userdata['username']);
+	            $log_action = 'Added a Debit Record';
+	            break;	
+	        }
+
+
+	        if($flag) {
+
+	          $log[] = array(
+	              'user'    =>  $userdata['username'],
+	              'tag'     =>  'loan',
+	              'tag_id'  =>  $id,
+	              'action'  =>  $log_action
+	              );
+
+	        
+	          //Save Logs/////////////////////////
+	          $this->logs_model->save_logs($log);   
+	          ////////////////////////////////////
+	          $this->session->set_flashdata('success', $log_action);
+	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
+	        } else {
+	          $this->session->set_flashdata('error', 'Error Occured!');
+	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
+	        }
+	      }
+
+	    } else {
+
+	      $this->session->set_flashdata('error', 'You need to login!');
+	      redirect('dashboard/login', 'refresh');
+	    }
+
+  }
 
 
 	function test() {

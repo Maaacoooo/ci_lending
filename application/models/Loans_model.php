@@ -178,6 +178,18 @@ Class Loans_Model extends CI_Model {
 
         if($loan_id) {
             //expenses record of a loan
+           $this->db->select('
+              loans_expense.id as id,
+              loans_expense.amount,
+              expenses.title
+            '); 
+            $this->db->join('loans_expense', 'loans_expense.expense_id = expenses.id AND loans_expense.loan_id="' . $loan_id . '"', 'left');
+
+            $query = $this->db->get('expenses');
+
+            return $query->result_array();
+
+
         } else {
             //return the expenses categories
             return $this->db->get('expenses')->result_array();
@@ -187,10 +199,21 @@ Class Loans_Model extends CI_Model {
 
     function fetch_income($loan_id = null) {
 
-        if($loan_id) {
-            //expenses record of a loan
+        if(!is_null($loan_id)) {
+            //income record of a loan
+            $this->db->select('
+              loans_income.id as id,
+              loans_income.amount,
+              income.title
+            ');
+            $this->db->group_by('income.title');
+            $this->db->join('loans_income', 'loans_income.income_id = income.id AND loans_income.loan_id="' . $loan_id . '"', 'left');
+
+            $query = $this->db->get('income');
+
+            return $query->result_array();
         } else {
-            //return the expenses categories
+            //return the income categories
             return $this->db->get('income')->result_array();
         }
     }
@@ -244,6 +267,78 @@ Class Loans_Model extends CI_Model {
 
         return $this->db->insert_id();
     }
+
+
+    function fetch_creditors($loan_id) {
+
+        return $this->db->where('loan_id', $loan_id)->get('loans_creditors')->result_array();
+
+
+    }
+
+
+
+    /**
+     * ------------------------------------------------------------------------------------------
+     * Loan ledger
+     * ------------------------------------------------------------------------------------------
+     */
+    
+    function fetch_ledger($loan_id) {
+
+        $this->db->where('loan_id', $loan_id);
+        $this->db->select('
+          code,
+          debit,
+          credit,
+          created_at,
+          description,
+          user
+        ');
+
+        return $this->db->get('loans_ledger')->result_array();
+    }
+
+
+    function fetch_ledger_codes($type = NULL) {
+        if (!is_null($type)) {
+          $this->db->where('type', $type);
+        }
+        return $this->db->get('loans_ledger_codes')->result_array();
+    }
+
+
+    function add_ledger($loan_id, $amount, $user) {
+
+          $debit  = 0;
+          $credit = 0;
+
+          //Override Credit
+          if($amount > 0) {
+            $credit = abs($amount);
+          }
+          //Override Debit
+          if($amount < 0) {
+            $debit = abs($amount);
+          }
+
+          $data = array(
+            'loan_id'     => $loan_id,
+            'code'        => strip_tags($this->input->post('code')),
+            'description' => strip_tags($this->input->post('description')),
+            'debit'       => $debit,
+            'credit'      => $credit,
+            'user'        => $user
+          );
+
+          $this->db->insert('loans_ledger', $data);
+
+          return $this->db->insert_id();
+
+    }
+
+
+   
 
 
 }

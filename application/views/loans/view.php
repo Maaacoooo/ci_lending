@@ -61,6 +61,7 @@
             <ul class="nav nav-tabs">
               <li <?php if(!($flash_settings))echo'class="active"'?>><a href="#application" data-toggle="tab">Application Information</a></li>
               <li><a href="#personal" data-toggle="tab">Account Information</a></li>
+              <li><a href="#files" data-toggle="tab">File Archive</a></li>
               <li><a href="#activity" data-toggle="tab">Activity Logs</a></li>
               <li <?php if($flash_settings)echo'class="active"'?>><a href="#settings" data-toggle="tab">Settings</a></li>
             </ul>
@@ -68,18 +69,124 @@
 
               <!-- /////////////////////////////////////////////// Application Information //////////////////////////////////////////////// -->
               <div class="tab-pane <?php if(!($flash_settings))echo'active';?>" id="application">
-                  Application info
+
+                  <div class="row">
+                    <div class="col-md-12">
+                      <?php if ($loan['status']==0): ?>
+                        <div class="callout callout-danger">
+                          <h4><i class="fa fa-info-circle"></i> Pending for Approval</h4>
+                          <p>This Loan Request is pending for Admin Approval.</p>
+                        </div><!-- /.callout callout-gray -->
+                      <?php elseif($loan['status']==2): ?>
+                        <div class="callout bg-navy">
+                          <h4><i class="fa fa-warning"></i> Loan Disapproved</h4>
+                          <p>Oops! This Loan Request has been disapproved.</p>
+                        </div><!-- /.callout callout-gray -->
+                      <?php endif ?>
+                    </div><!-- /.col-md-12 -->
+                  </div><!-- /.row -->
+                  <div class="row">
+                    <div class="col-md-12">
+                      <table class="table table-condensed table-dark-border">
+                        <tr>
+                          <th colspan="6">Loan Information</th>
+                        </tr>
+                        <tr>
+                          <th>Loan ID</th>
+                          <td class="bg-warning"><?=$loan['id']?></td>
+                          <th>Registered</th>
+                          <td class="bg-warning"><?=$loan['created_at']?></td>
+                          <th>Approved</th>
+                          <td class="bg-warning"></td>
+                        </tr>
+                        <tr>
+                          <th>Borrower</th>
+                          <td colspan="5" class="bg-warning"><?=$info['name']?></td>
+                        </tr>
+                        <tr>
+                          <th>Requested Amount</th>
+                          <td width="20%" class="bg-warning"><?=$loan['borrowed_amount']?></td>
+                          <th>Days of Period / Due date</th>
+                          <td width="20%" class="bg-warning"></td>
+                          <th>Rate(%) per Annum</th>
+                          <td width="20%" class="bg-warning"></td>
+                        </tr>
+                        <tr>
+                          <th>Other Creditors: </th>
+                          <td colspan="5" class="bg-warning">
+                            <?php if ($creditors): ?>
+                              <ol>
+                              <?php foreach ($creditors as $cred): ?>
+                                <li><?=$cred['fullname']?> - <?=$cred['address']?> -- Amount: <?=$cred['amount']?> | Remarks: <?=$cred['remarks']?></li>
+                              <?php endforeach ?>
+                              </ol>
+                            <?php endif ?>
+                          </td>
+                        </tr>
+                      </table><!-- /.table table-condensed table-dark-border -->
+                    </div><!-- /.col-md-12 -->
+                  </div><!-- /.row -->
+                  <?php if ($loan['status']==1): ?>
+                  <div class="row">
+                    <div class="col-md-12">
+                      <div class="box box-default">
+                        <div class="box-header"><strong>Loan Ledger</strong></div><!-- /.box-header -->
+                        <div class="box-body">
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <div class="btn-group pull-right">
+                                <button type="button" data-toggle="modal" data-target="#AddDebit" class="btn btn-default"><i class="fa fa-plus"></i> Add Debit</button>
+                                <button type="button" data-toggle="modal" data-target="#AddCredit" class="btn btn-default"><i class="fa fa-minus"></i> Add Credit</button>
+                              </div>
+                            </div><!-- /.col-sm-12 -->
+                          </div><!-- /.row -->
+                          <div class="row">
+                            <div class="col-sm-12">
+                              <hr />
+                              <table class="table table-condensed table-striped table-bordered table-hover">
+                                <thead>
+                                  <tr>
+                                    <th width="25%">DATE | TIME</th>
+                                    <th>CODE</th>
+                                    <th width="40%">DESCRIPTION</th>
+                                    <th>DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th>BALANCE</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <?php $bal=0; if ($ledger): ?>
+                                    <?php foreach ($ledger as $ld): ?>
+                                    <tr>
+                                      <td><span class="badge bg-blue"><?=$ld['user']?></span> <?=$ld['created_at']?></td>
+                                      <td><?=$ld['code']?></td>
+                                      <td><?=$ld['description']?></td>
+                                      <td class="text-danger"><?=$ld['debit']?></td>
+                                      <td class="text-success"><?=$ld['credit']?></td>
+                                      <td class="bg-warning">
+                                        <?php
+                                          $bal = ($bal + $ld['debit']) - ($ld['credit']);
+                                          echo decimalize($bal);
+                                        ?>
+                                      </td>
+                                    </tr>
+                                    <?php endforeach ?>
+                                  <?php endif ?>
+                                </tbody>
+                              </table><!-- /.table table-condensed table-striped -->
+                            </div><!-- /.col-sm-12 -->
+                          </div><!-- /.row -->
+                        </div><!-- /.box-body -->
+                      </div><!-- /.box box-default -->
+                    </div><!-- /.col-md-12 -->
+                  </div><!-- /.row -->
+                  <?php endif ?>
               </div>
               <!-- /.tab-pane -->
               
               <!-- /////////////////////////////////////////////// Account Information //////////////////////////////////////////////// -->
 
               <div class="tab-pane" id="personal">
-                <div class="row">
-                  <div class="col-sm-12">
-                    <a href="<?=current_url()?>/print" target="_blank" class="pull-right"><i class="fa fa-print"></i> Print Information</a>
-                  </div><!-- /.col-sm-12 -->
-                </div><!-- /.row -->
                 <table class="table table-condensed table-dark-border">
                   <tr>
                     <td colspan="6"><strong>Personal Information</strong></td>
@@ -201,8 +308,48 @@
                   </tr>
                 </table><!-- /.table .table-condensed table-dark-border -->
 
-             
+                <table class="table table-condensed table-dark-border">
+                  <tr>
+                    <th colspan="4">Monthly Income and Expenses</th>
+                  </tr>
+                  <tr>
+                    <td width="5%"></td>
+                    <th colspan="3">Income</th>
+                  </tr>
+                  <?php if ($income): ?>
+                  <?php $x=1; foreach ($income as $inc): ?>
+                  <tr>
+                    <td colspan="2" width="10%"></td>
+                    <td><?=$x++?>. <?=$inc['title']?></td>
+                    <td width="50%" class="bg-warning"><?=$inc['amount']?></td>
+                  </tr>
+                  <?php endforeach ?>
+                  <?php endif ?>
+                  <tr>
+                    <td colspan="4"></td>
+                  </tr>
+                  <tr>
+                    <td width="5%"></td>
+                    <th colspan="3">Expenses</th>
+                  </tr>
+                  <?php if ($expenses): ?>
+                  <?php $x=1; foreach ($expenses as $exp): ?>
+                  <tr>
+                    <td colspan="2" width="10%"></td>
+                    <td><?=$x++?>. <?=$exp['title']?></td>
+                    <td width="50%" class="bg-warning"><?=$exp['amount']?></td>
+                  </tr>
+                  <?php endforeach ?>
+                  <?php endif ?>
+                </table><!-- /.table .table-condensed table-dark-border -->             
               </div>
+              
+              <!-- //////////////////////////////////// FILE ARCHIVE ///////////////////////////////// -->
+              <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="files">
+                  <p>Voila! your file archive!</p>
+              </div>
+              <!-- /.tab-pane -->
+              <!-- //////////////////////////////////// ACTIVITY LOGS ///////////////////////////////// -->
               <!-- /.tab-pane -->
               <div class="tab-pane" id="activity">
                 <h4 class="title">Last Activity</h4>
@@ -236,10 +383,10 @@
                     <h4><i class="icon fa fa-warning"></i> No records found!</h4>         
                     No Activity Logs record found in the system
                   </div>
-                <?php endif ?>
+                <?php endif ?>                
               </div>
               <!-- /.tab-pane -->
-
+              <!-- ///////////////////////////////// SETTING ///////////////////////////////////////////////// -->
               <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="settings">
 
               </div>
@@ -288,6 +435,134 @@
     </section>
   </div>
   <!-- /.content-wrapper -->
+
+
+  <!-- ///////////////////////// Add Debit ////////////////////////////// -->
+  <div class="modal fade" id="AddDebit">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?=form_open('loans/add_ledger')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Add Debit</h4>
+        </div>
+        <div class="modal-body">   
+            <div class="callout callout-info">
+              <p><i class="fa fa-info-circle"></i> All inputs provided are as is final. You cannot undo any action!</p>
+            </div><!-- /.callout callout-info -->
+            <div class="row">
+              <div class="col-sm-4 col-md-3">
+                <label for="code">Code</label>
+                <select name="code" id="code" class="form-control">
+                  <option disabled selected>Code...</option>
+                  <?php if ($ledger_debit): ?>
+                  <?php foreach ($ledger_debit as $ldb): ?>
+                    <option value="<?=$ldb['code']?>"><?=$ldb['code']. ' - '. $ldb['description']?></option>
+                  <?php endforeach ?>
+                  <?php endif ?>
+                </select>
+              </div><!-- /.col-sm-4 col-md-4 -->
+              <div class="col-sm-4 col-md-3">
+                <div class="form-group">
+                  <label for="amount">Amount</label>
+                  <input type="text" name="amount" class="form-control" id="amount" placeholder="50.00" />
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 col-md-3 -->
+              <div class="col-sm-4 col-md-6">
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <input type="text" name="description" id="description" class="form-control" placeholder="Description / Official Receipt / Note..." />
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 col-md-6 -->
+            </div><!-- /.row -->
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="checkbox pull-right">
+                  <label>
+                    <input type="checkbox" id="" required /> I have verified all the inputs
+                  </label>
+                </div><!-- /.checkbox -->
+              </div><!-- /.col-sm-12 -->
+            </div><!-- /.row -->
+        </div>
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <input type="hidden" name="key" value="<?=$this->encryption->encrypt('debit')?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-danger">Add Debit</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+
+  <!-- ///////////////////////// Add Debit ////////////////////////////// -->
+  <div class="modal fade" id="AddCredit">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?=form_open('loans/add_ledger')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Add Credit</h4>
+        </div>
+        <div class="modal-body">   
+            <div class="callout callout-info">
+              <p><i class="fa fa-info-circle"></i> All inputs provided are as is final. You cannot undo any action!</p>
+            </div><!-- /.callout callout-info -->
+            <div class="row">
+              <div class="col-sm-4 col-md-3">
+                <label for="code">Code</label>
+                <select name="code" id="code" class="form-control" required>
+                  <option disabled selected>Code...</option>
+                  <?php if ($ledger_credit): ?>
+                  <?php foreach ($ledger_credit as $ldc): ?>
+                    <option value="<?=$ldc['code']?>"><?=$ldc['code']. ' - '. $ldc['description']?></option>
+                  <?php endforeach ?>
+                  <?php endif ?>
+                </select>
+              </div><!-- /.col-sm-4 col-md-4 -->
+              <div class="col-sm-4 col-md-3">
+                <div class="form-group">
+                  <label for="amount">Amount</label>
+                  <input type="text" name="amount" class="form-control" id="amount" placeholder="50.00"  required/>
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 col-md-3 -->
+              <div class="col-sm-4 col-md-6">
+                <div class="form-group">
+                  <label for="description">Description</label>
+                  <input type="text" name="description" id="description" class="form-control" placeholder="Description / Official Receipt / Note..."  required/>
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 col-md-6 -->
+            </div><!-- /.row -->
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="checkbox pull-right">
+                  <label>
+                    <input type="checkbox" id="" required /> I have verified all the inputs
+                  </label>
+                </div><!-- /.checkbox -->
+              </div><!-- /.col-sm-12 -->
+            </div><!-- /.row -->
+        </div>
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <input type="hidden" name="key" value="<?=$this->encryption->encrypt('credit')?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-success">Add Credit</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 
 
   <footer class="main-footer">    
