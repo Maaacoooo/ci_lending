@@ -103,7 +103,7 @@
                 <div class="alert alert-danger alert-dismissible">
                   <button type="button" class="close" data-dismiss="alert" aria-hidden="true">×</button>
                   <h4><i class="icon fa fa-ban"></i> Oops! No Results Found</h4>
-                  The has found no results. If you feel something wrong, please contact the System Administrator.
+                  The system has found no results. If you feel something wrong, please contact the System Administrator.
                 </div>
               </div><!-- /.col-sm-12 -->
             </div><!-- /.row -->   
