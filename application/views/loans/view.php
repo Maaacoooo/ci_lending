@@ -130,16 +130,16 @@
                   <div class="row">
                     <div class="col-md-12">
                       <div class="box box-default">
-                        <div class="box-header"><strong>Loan Ledger</strong></div><!-- /.box-header -->
-                        <div class="box-body">
-                          <div class="row">
-                            <div class="col-sm-12">
+                        <div class="box-header with-border">
+                          <h5 class="box-title">Loan Ledger</h5>
+                          <div class="box-tools pull-right">
                               <div class="btn-group pull-right">
-                                <button type="button" data-toggle="modal" data-target="#AddDebit" class="btn btn-default"><i class="fa fa-plus"></i> Add Debit</button>
-                                <button type="button" data-toggle="modal" data-target="#AddCredit" class="btn btn-default"><i class="fa fa-minus"></i> Add Credit</button>
-                              </div>
-                            </div><!-- /.col-sm-12 -->
-                          </div><!-- /.row -->
+                                <button type="button" data-toggle="modal" data-target="#AddDebit" class="btn btn-sm btn-default"><i class="fa fa-plus"></i> Add Debit</button>
+                                <button type="button" data-toggle="modal" data-target="#AddCredit" class="btn btn-sm btn-default"><i class="fa fa-minus"></i> Add Credit</button>
+                              </div>        
+                          </div><!-- /.box-tools pull-right -->
+                        </div><!-- /.box-header -->
+                        <div class="box-body">
                           <div class="row">
                             <div class="col-sm-12">
                               <hr />
@@ -395,6 +395,35 @@
             <!-- /.tab-content -->
           </div>
           <!-- /.nav-tabs-custom -->
+
+          <div class="row">
+            <div class="col-md-12">
+              <div class="box box-default">
+                <div class="box-header">
+                  <h5 class="box-title"><i class="fa fa-pencil-square-o"></i> Notes</h5> 
+                  <div class="box-tools pull-right">
+                      <button type="button" class="btn btn-default btn-box-tool" data-target="#AddNote" data-toggle="modal"><i class="fa fa-plus"></i> Add Note</button>            
+                  </div><!-- /.box-tools pull-right -->
+                </div><!-- /.box-header -->
+                <div class="box-body">
+                  <?php if ($notes): ?>
+                  <?php foreach ($notes as $note): ?>
+                  <div class="callout callout-info">
+                    <p><em><strong><?=$note['name']?></strong> - <?=$note['created_at']?></em>
+                    <span class="pull-right">
+                      <a href="#" data-toggle="modal" data-target="#UpdateNote<?=$note['id']?>"><i class="fa fa-cog"></i></a>
+                    </span>
+                    </p>
+                    <p><?=$note['description']?></p>
+                  </div><!-- /.callout callout-info --> 
+                  <?php endforeach ?>
+                  <?php else: ?>
+                    <em>No notes found! <a href="#" data-toggle="modal" data-target="#AddNote">Click here to Add a Note!</a></em>
+                  <?php endif ?>
+                </div><!-- /.box-body -->
+              </div><!-- /.box box-default -->
+            </div><!-- /.col-md-12 -->
+          </div><!-- /.row -->
         </div>
         <!-- /.col-md-9 -->
         <div class="col-md-3">
@@ -412,16 +441,24 @@
 
               <p class="text-muted text-center"><?=$info['id']?></p>
 
-              <ul class="list-group list-group-unbordered">
+              <ul class="list-group list-group-unbordered"> 
                 <li class="list-group-item">
-                  <b>Loan Applications</b> <span class="pull-right badge bg-red">Nah</span>
-                </li>       
+                  <b>Loan ID</b> <a class="pull-right"><?=$loan['id']?></a>
+                </li>
                 <li class="list-group-item">
-                  <b>Date Registered</b> <a class="pull-right"><?=$info['created_at']?></a>
+                  <b>Requested Amount</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount'])?></a>
+                </li>
+                <li class="list-group-item">
+                  <b>Date Registered</b> <a class="pull-right"><?=$loan['created_at']?></a>
+                </li>
+                <li class="list-group-item">
+                  <b>Last Activity</b> <a class="pull-right"><?=$loan['updated_at']?></a>
                 </li>  
+                <?php if ($loan['status']==1 && $ledger): ?>
                 <li class="list-group-item">
-                  <a href="#" data-target="#AddLoan" data-toggle="modal" class="btn btn-danger btn-block btn-flat"><i class="fa fa-money"></i> Apply Loan</a>
-                </li>                         
+                  <a href="#" data-target="#AddPayment" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-money"></i> Add Payment</a>
+                </li>
+                <?php endif ?>                         
               </ul>
             </div>
             <!-- /.box-body -->
@@ -563,6 +600,96 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+
+
+
+  <!-- ///////////////////////// Add Note ////////////////////////////// -->
+  <div class="modal fade" id="AddNote">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?=form_open('notes/create')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Create Note</h4>
+        </div>
+        <div class="modal-body">   
+          <div class="form-group">
+            <label for="description">Note Description</label>
+            <textarea name="description" id="description" rows="10" class="form-control"></textarea>
+          </div><!-- /.form-group -->
+        </div>
+        <input type="hidden" name="tag_id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <input type="hidden" name="tag" value="<?=$this->encryption->encrypt('loan')?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-success">Save Note</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <!-- ///////////////////////// Update Note ////////////////////////////// -->
+ <?php if ($notes): ?>
+  <?php foreach ($notes as $note): ?>
+  <div class="modal fade" id="UpdateNote<?=$note['id']?>">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-body">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#" data-toggle="tab" data-target="#update_note<?=$note['id']?>">Update</a></li>
+              <li><a href="#" data-toggle="tab" data-target="#delete_note<?=$note['id']?>">Delete</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="update_note<?=$note['id']?>">
+                <?=form_open('notes/update')?>
+                <div class="form-group">
+                  <label for="description">Note Description</label>
+                  <textarea name="description" id="description" rows="10" class="form-control"><?=$note['description']?></textarea>
+                </div><!-- /.form-group -->
+                <div class="row">
+                  <div class="col-md-12">                    
+                    <input type="hidden" name="id" value="<?=$this->encryption->encrypt($note['id'])?>" />
+                    <button type="submit" class="btn btn-flat btn-warning pull-right">Update</button>
+                  </div><!-- /.col-md-12 -->
+                </div><!-- /.row -->
+                <?=form_close()?>          
+              </div>
+              <div id="delete_note<?=$note['id']?>" class="tab-pane">
+                <?=form_open('notes/delete')?>
+                <div class="checkbox">
+                  <label>
+                    <input type="checkbox" required/>I am sure to delete this Note.
+                  </label>
+                </div><!-- /.checkbox -->
+                <div class="row">
+                  <div class="col-md-12">                    
+                    <input type="hidden" name="id" value="<?=$this->encryption->encrypt($note['id'])?>" />
+                    <button type="submit" class="btn btn-flat btn-danger pull-right">Delete</button>
+                  </div><!-- /.col-md-12 -->
+                </div><!-- /.row -->
+                <?=form_close()?>          
+              </div><!-- /.callout callout-danger -->
+            </div><!-- /.tab-content -->
+          </div><!-- /.nav-tabs-custom -->
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <?php endforeach ?>
+ <?php endif ?>
+
 
 
   <footer class="main-footer">    
