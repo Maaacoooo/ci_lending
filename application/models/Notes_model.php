@@ -55,7 +55,7 @@ Class Notes_Model extends CI_Model {
             }
 
             $this->db->select('
-              users.username,
+              users.username as user,
               users.name,
               notes.id,
               notes.title,
