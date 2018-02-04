@@ -61,7 +61,7 @@ Class Loans_Model extends CI_Model {
      * @param  Int      $is_deleted   if deleted record or not
      * @return Array             [description]
      */
-    function fecth_loans($limit, $id, $search, $status, $acc_id) {
+    function fetch_loans($limit, $id, $search, $status, $acc_id) {
 
             //Search Query
             if($search) {
@@ -70,7 +70,7 @@ Class Loans_Model extends CI_Model {
               $this->db->or_like('borrowers.lastname', $search);;
               $this->db->or_like('borrowers.id', $search);
               $this->db->or_like('loans.id', $search);
-              $this->db->or_like('due_date.id', $search);
+              $this->db->or_like('loans.due_date', $search);
             }            
             
             if(!is_null($limit)) {
@@ -86,6 +86,17 @@ Class Loans_Model extends CI_Model {
             }
 
             $this->db->select('
+                CONCAT(borrowers.firstname, " ", borrowers.lastname) as name,
+                borrowers.img,
+                borrowers.firstname,
+                borrowers.middlename,
+                borrowers.lastname,
+                borrowers.civil_status,
+                borrowers.sex,
+                borrowers.birthdate,
+                borrowers.is_deleted,
+                borrowers.created_at,
+                borrowers.id as borrower_id,
                 loans.id,
                 loans.borrower_id,
                 loans.borrowed_amount,
@@ -96,6 +107,7 @@ Class Loans_Model extends CI_Model {
             ');
 
             $this->db->join('borrowers', 'borrowers.id = loans.borrower_id', 'left');
+            $this->db->order_by('loans.created_at', 'DESC');
 
             $query = $this->db->get("loans");
 
@@ -113,17 +125,23 @@ Class Loans_Model extends CI_Model {
      * @param  Int        $is_deleted   if deleted record or not
      * @return Int         [description]
      */
-    function count_borrowers($search, $is_deleted) {
+    function count_loans($search, $status) {
+        
+        //Search Query
         if($search) {
-            $this->db->like('borrowers.firstname', $search);
-            $this->db->or_like('borrowers.middlename', $search);
-            $this->db->or_like('borrowers.lastname', $search);
-            $this->db->or_like('borrowers.spouse_name', $search);
-            $this->db->or_like('borrowers.id', $search);
+              $this->db->like('borrowers.firstname', $search);
+              $this->db->or_like('borrowers.middlename', $search);
+              $this->db->or_like('borrowers.lastname', $search);;
+              $this->db->or_like('borrowers.id', $search);
+              $this->db->or_like('loans.id', $search);
+              $this->db->or_like('loans.due_date', $search);
+        }   
+        if(!is_null($status)) {
+              $this->db->where('loans.status', $status);
         }
 
-        $this->db->where('is_deleted', $is_deleted);
-        return $this->db->count_all_results("borrowers");
+        $this->db->join('borrowers', 'borrowers.id = loans.borrower_id', 'left');
+        return $this->db->count_all_results("loans");
     }
 
     
