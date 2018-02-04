@@ -100,13 +100,31 @@ Class Borrower_Model extends CI_Model {
               $this->db->like('borrowers.firstname', $search);
               $this->db->or_like('borrowers.middlename', $search);
               $this->db->or_like('borrowers.lastname', $search);
-              $this->db->or_like('borrowers.spouse_name', $search);
+              $this->db->or_like('borrowers_spouse.fname', $search);
+              $this->db->or_like('borrowers_spouse.lname', $search);
+              $this->db->or_like('borrowers_spouse.mname', $search);
               $this->db->or_like('borrowers.id', $search);
             }            
+
+            $this->db->select('
+                CONCAT(borrowers.firstname, " ", borrowers.lastname) as name,
+                borrowers.img,
+                borrowers.firstname,
+                borrowers.middlename,
+                borrowers.lastname,
+                borrowers.civil_status,
+                borrowers.sex,
+                borrowers.birthdate,
+                borrowers.is_deleted,
+                borrowers.created_at,
+                borrowers.id,
+                CONCAT(borrowers_spouse.fname, " ", borrowers_spouse.mname, " ", borrowers_spouse.lname) as spouse
+                ');        
 
             $this->db->where('borrowers.is_deleted', $is_deleted);
             $this->db->limit($limit, (($id-1)*$limit));
 
+            $this->db->join('borrowers_spouse', 'borrowers_spouse.borrower_id = borrowers.id', 'LEFT');
             $query = $this->db->get("borrowers");
 
             if ($query->num_rows() > 0) {
@@ -128,11 +146,14 @@ Class Borrower_Model extends CI_Model {
             $this->db->like('borrowers.firstname', $search);
             $this->db->or_like('borrowers.middlename', $search);
             $this->db->or_like('borrowers.lastname', $search);
-            $this->db->or_like('borrowers.spouse_name', $search);
+            $this->db->or_like('borrowers_spouse.fname', $search);
+            $this->db->or_like('borrowers_spouse.lname', $search);
+            $this->db->or_like('borrowers_spouse.mname', $search);
             $this->db->or_like('borrowers.id', $search);
         }
 
         $this->db->where('is_deleted', $is_deleted);
+        $this->db->join('borrowers_spouse', 'borrowers_spouse.borrower_id = borrowers.id', 'LEFT');
         return $this->db->count_all_results("borrowers");
     }
 
