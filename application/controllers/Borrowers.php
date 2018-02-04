@@ -297,7 +297,14 @@ class Borrowers extends CI_Controller {
 			$data['user'] = $this->user_model->userdetails($userdata['username']); //fetches users record
 
 			//Fetch Data	
-			$data['info']					= $this->borrower_model->view($id);
+			$data['info']	= $this->borrower_model->view($id);
+
+			//Validate if record exist
+			 //IF NO ID OR NO RESULT, REDIRECT
+			if(!$id || !$data['info']['name']) {
+				redirect('borrowers', 'refresh');
+			}	
+			
 			$data['info']['current_addr']	= $this->borrower_model->fetch_addresses($id, 2)[0]['address'];
 
 			$data['addresses']		= $this->borrower_model->fetch_addresses($id);
@@ -315,15 +322,6 @@ class Borrowers extends CI_Controller {
 
 			$data['logs']		= $this->logs_model->fetch_logs('borrower', $id, 50);
 
-			//Validate if record exist
-			 //IF NO ID OR NO RESULT, REDIRECT
-				if(!$id || !$data['info'] || $data['info']['is_deleted']) {
-
-					$notif['error'] = 'Account Deactivated. Please contact your Administrator for Reactivation!';
-		   			$this->sessnotif->setNotif($notif);
-
-					redirect('borrowers', 'refresh');
-			}	
 			
 			$this->load->view('borrower/view', $data);	
 
