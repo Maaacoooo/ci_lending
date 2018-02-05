@@ -3,13 +3,13 @@
 Class Notes_Model extends CI_Model {
 
 
-    function create($tag, $tag_id, $user) {
+    function create($tag, $tag_id, $user, $description, $title = NULL) {
 
         $data = array(
             'tag'         => $tag,
             'tag_id'      => $tag_id,  
-            'title'       => strip_tags($this->input->post('title')),  
-            'description' => strip_tags($this->input->post('description')),  
+            'title'       => $title,  
+            'description' => $description,  
             'user'        => $user
         );
 
@@ -19,11 +19,11 @@ Class Notes_Model extends CI_Model {
     }
 
 
-    function update($id) {
+    function update($id, $description, $title = NULL) {
 
         $data = array(
-            'title'       => strip_tags($this->input->post('title')),  
-            'description' => strip_tags($this->input->post('description'))
+            'title'       => $title,  
+            'description' => $description
         );
 
         $this->db->where('id', $id);

@@ -34,7 +34,10 @@ class Notes extends CI_Controller {
 	        $tag_id = $this->encryption->decrypt($this->input->post('tag_id')); //ID of the loan 
 	        $tag 	= $this->encryption->decrypt($this->input->post('tag')); //ID of the loan 
 
-	        if($this->notes_model->create($tag, $tag_id, $userdata['username'])) {
+	        $description = strip_tags($this->input->post('description'));
+	        $title = strip_tags($this->input->post('title'));
+
+	        if($this->notes_model->create($tag, $tag_id, $userdata['username'], $description, $title)) {
 
 	          $log[] = array(
 	              'user'    =>  $userdata['username'],
@@ -85,7 +88,10 @@ class Notes extends CI_Controller {
 
 	        $id = $this->encryption->decrypt($this->input->post('id')); //ID of the loan 
 
-	        if($this->notes_model->update($id)) {
+	        $description = strip_tags($this->input->post('description'));
+	        $title = strip_tags($this->input->post('title'));
+
+	        if($this->notes_model->update($id, $description, $title)) {
 	          $this->session->set_flashdata('success', 'Note Updated!');
 	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
 	        } else {
