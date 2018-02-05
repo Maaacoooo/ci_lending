@@ -409,10 +409,18 @@
                   <?php if ($notes): ?>
                   <?php foreach ($notes as $note): ?>
                   <div class="callout callout-info">
-                    <p><em><strong><?=$note['name']?></strong> - <?=$note['created_at']?></em>
+                    <p><em><strong>
+                      <?php if ($note['user']): ?>
+                        <?=$note['name']?>
+                      <?php else: ?>
+                        System
+                      <?php endif ?>
+                    </strong> - <?=$note['created_at']?></em>
+                    <?php if ($note['user']==$user['username']): ?>
                     <span class="pull-right">
                       <a href="#" data-toggle="modal" data-target="#UpdateNote<?=$note['id']?>"><i class="fa fa-cog"></i></a>
                     </span>
+                    <?php endif ?>
                     </p>
                     <p><?=$note['description']?></p>
                   </div><!-- /.callout callout-info --> 
@@ -454,11 +462,21 @@
                 <li class="list-group-item">
                   <b>Last Activity</b> <a class="pull-right"><?=$loan['updated_at']?></a>
                 </li>  
+                <?php if($loan['status']==0 && $user['user_level'] > 8): ?>
+                <li class="list-group-item">
+                  <a href="#" data-target="#ApproveLoan" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-check"></i> Approve Loan</a>
+                </li>
+                <?php endif; ?>  
                 <?php if ($loan['status']==1 && $ledger): ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#AddPayment" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-money"></i> Add Payment</a>
                 </li>
-                <?php endif ?>                         
+                <?php elseif(($loan['status']==1 || $loan['status']==0) && $user['user_level'] > 8): ?>
+                <li class="list-group-item">
+                  <a href="#" data-target="#DisapproveLoan" data-toggle="modal" class="btn bg-navy btn-block btn-flat"><i class="fa fa-ban"></i> Disapprove Loan</a>
+                </li>
+                <?php endif; ?>  
+                                       
               </ul>
             </div>
             <!-- /.box-body -->
@@ -473,6 +491,78 @@
   </div>
   <!-- /.content-wrapper -->
 
+
+  <?php if($loan['status']==0 && $user['user_level'] > 8): ?>
+  <!-- ///////////////////////// Approbe Loan ////////////////////////////// -->
+  <div class="modal fade" id="ApproveLoan">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?=form_open('loans/loan_status')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Approve Loan</h4>
+        </div>
+        <div class="modal-body">   
+            <div class="callout callout-info">
+              <p><i class="fa fa-info-circle"></i> You cannot undo any action!</p>
+            </div><!-- /.callout callout-info -->
+            <div class="form-group">
+              <label for="description">Approval Remarks</label>
+              <textarea name="description" class="form-control" id="description" rows="10" required></textarea>
+            </div><!-- /.form-group -->
+        </div>
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <input type="hidden" name="key" value="<?=$this->encryption->encrypt('approve')?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-success"><i class="fa fa-check"></i> Approve Loan</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <?php endif; ?>  
+
+  <?php if ($loan['status']==1 && $ledger): ?>
+
+  <?php elseif(($loan['status']==1 || $loan['status']==0) && $user['user_level'] > 8): ?>
+  <!-- ///////////////////////// Disapprove Loan ////////////////////////////// -->
+  <div class="modal fade" id="DisapproveLoan">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?=form_open('loans/loan_status')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Disapprove Loan</h4>
+        </div>
+        <div class="modal-body">   
+            <div class="callout callout-info">
+              <p><i class="fa fa-info-circle"></i> You cannot undo any action!</p>
+            </div><!-- /.callout callout-info -->
+            <div class="form-group">
+              <label for="description">Disapproval Remarks</label>
+              <textarea name="description" class="form-control" id="description" rows="10" required></textarea>
+            </div><!-- /.form-group -->
+        </div>
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <input type="hidden" name="key" value="<?=$this->encryption->encrypt('disapprove')?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat bg-navy"><i class="fa fa-ban"></i> Disapprove Loan</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <?php endif; ?>     
 
   <!-- ///////////////////////// Add Debit ////////////////////////////// -->
   <div class="modal fade" id="AddDebit">
@@ -636,57 +726,59 @@
   <!-- ///////////////////////// Update Note ////////////////////////////// -->
  <?php if ($notes): ?>
   <?php foreach ($notes as $note): ?>
-  <div class="modal fade" id="UpdateNote<?=$note['id']?>">
-    <div class="modal-dialog">
-      <div class="modal-content">
-        <div class="modal-body">
-          <div class="nav-tabs-custom">
-            <ul class="nav nav-tabs">
-              <li class="active"><a href="#" data-toggle="tab" data-target="#update_note<?=$note['id']?>">Update</a></li>
-              <li><a href="#" data-toggle="tab" data-target="#delete_note<?=$note['id']?>">Delete</a></li>
-            </ul>
-            <div class="tab-content">
-              <div class="tab-pane active" id="update_note<?=$note['id']?>">
-                <?=form_open('notes/update')?>
-                <div class="form-group">
-                  <label for="description">Note Description</label>
-                  <textarea name="description" id="description" rows="10" class="form-control"><?=$note['description']?></textarea>
-                </div><!-- /.form-group -->
-                <div class="row">
-                  <div class="col-md-12">                    
-                    <input type="hidden" name="id" value="<?=$this->encryption->encrypt($note['id'])?>" />
-                    <button type="submit" class="btn btn-flat btn-warning pull-right">Update</button>
-                  </div><!-- /.col-md-12 -->
-                </div><!-- /.row -->
-                <?=form_close()?>          
-              </div>
-              <div id="delete_note<?=$note['id']?>" class="tab-pane">
-                <?=form_open('notes/delete')?>
-                <div class="checkbox">
-                  <label>
-                    <input type="checkbox" required/>I am sure to delete this Note.
-                  </label>
-                </div><!-- /.checkbox -->
-                <div class="row">
-                  <div class="col-md-12">                    
-                    <input type="hidden" name="id" value="<?=$this->encryption->encrypt($note['id'])?>" />
-                    <button type="submit" class="btn btn-flat btn-danger pull-right">Delete</button>
-                  </div><!-- /.col-md-12 -->
-                </div><!-- /.row -->
-                <?=form_close()?>          
-              </div><!-- /.callout callout-danger -->
-            </div><!-- /.tab-content -->
-          </div><!-- /.nav-tabs-custom -->
+    <?php if ($note['user'] == $user['username']): ?>
+      <div class="modal fade" id="UpdateNote<?=$note['id']?>">
+        <div class="modal-dialog">
+          <div class="modal-content">
+            <div class="modal-body">
+              <div class="nav-tabs-custom">
+                <ul class="nav nav-tabs">
+                  <li class="active"><a href="#" data-toggle="tab" data-target="#update_note<?=$note['id']?>">Update</a></li>
+                  <li><a href="#" data-toggle="tab" data-target="#delete_note<?=$note['id']?>">Delete</a></li>
+                </ul>
+                <div class="tab-content">
+                  <div class="tab-pane active" id="update_note<?=$note['id']?>">
+                    <?=form_open('notes/update')?>
+                    <div class="form-group">
+                      <label for="description">Note Description</label>
+                      <textarea name="description" id="description" rows="10" class="form-control"><?=$note['description']?></textarea>
+                    </div><!-- /.form-group -->
+                    <div class="row">
+                      <div class="col-md-12">                    
+                        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($note['id'])?>" />
+                        <button type="submit" class="btn btn-flat btn-warning pull-right">Update</button>
+                      </div><!-- /.col-md-12 -->
+                    </div><!-- /.row -->
+                    <?=form_close()?>          
+                  </div>
+                  <div id="delete_note<?=$note['id']?>" class="tab-pane">
+                    <?=form_open('notes/delete')?>
+                    <div class="checkbox">
+                      <label>
+                        <input type="checkbox" required/>I am sure to delete this Note.
+                      </label>
+                    </div><!-- /.checkbox -->
+                    <div class="row">
+                      <div class="col-md-12">                    
+                        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($note['id'])?>" />
+                        <button type="submit" class="btn btn-flat btn-danger pull-right">Delete</button>
+                      </div><!-- /.col-md-12 -->
+                    </div><!-- /.row -->
+                    <?=form_close()?>          
+                  </div><!-- /.callout callout-danger -->
+                </div><!-- /.tab-content -->
+              </div><!-- /.nav-tabs-custom -->
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+          <!-- /.modal-content -->
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
-        </div>
+        <!-- /.modal-dialog -->
       </div>
-      <!-- /.modal-content -->
-    </div>
-    <!-- /.modal-dialog -->
-  </div>
-  <!-- /.modal -->
+      <!-- /.modal -->
+    <?php endif ?>
   <?php endforeach ?>
  <?php endif ?>
 

@@ -83,7 +83,7 @@ class Loans extends CI_Controller {
 	   		$config['num_links'] = 5;
 			$config['base_url'] = base_url('/loans/pending/');
 			$config["total_rows"] = $this->loans_model->count_loans($data['search'], 0, NULL);
-			$config['per_page'] = 1;				
+			$config['per_page'] = 50;				
 			$this->load->config('pagination'); //LOAD PAGINATION CONFIG
 
 			$this->pagination->initialize($config);
@@ -326,6 +326,13 @@ class Loans extends CI_Controller {
 	}
 
 
+	/**
+	 * ------------------------------------------------------------------------------------------------
+	 * Helpers
+	 * ------------------------------------------------------------------------------------------------
+	 */
+
+
 	public function add_ledger()    {
 
 	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
@@ -397,24 +404,90 @@ class Loans extends CI_Controller {
   }
 
 
-	function test() {
-		
-		var_dump($this->input->post('creditors'));
-	}
+  public function loan_status()    {
 
-	function test2() {
-		include APPPATH.'libraries/Moment/Moment.php';
-		include APPPATH.'libraries/Moment/MomentLocale.php';
-		include APPPATH.'libraries/Moment/MomentPeriodVo.php';
-		include APPPATH.'libraries/Moment/MomentHelper.php';
-		include APPPATH.'libraries/Moment/MomentFromVo.php';
+	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
 
-		$m = new \Moment\Moment();
-$c = $m->cloning()->addDays(45);
+	    if($userdata) {     
+	      //FORM VALIDATION
+	      $this->form_validation->set_rules('id', 'ID', 'trim|required');      
+	      $this->form_validation->set_rules('key', 'Key', 'trim|required');      
+	     
+	       if($this->form_validation->run() == FALSE) {
 
-echo $c->calendar(); // 16
+	        //convert validation errors to flashdata notification
+	          $notif['warning'] = array_values($this->form_validation->error_array());
+	          $this->sessnotif->setNotif($notif);
+	          
+	        redirect($_SERVER['HTTP_REFERER'], 'refresh');
 
-	}
+	      } else {
+
+	        $id  = $this->encryption->decrypt($this->input->post('id')); //ID of the loan 
+	        $key = $this->encryption->decrypt($this->input->post('key')); 
+
+	       	switch ($key) {
+	       		case 'approve':
+	       			$flag = $this->loans_model->update_status($id, 1);
+	       			//update approve data
+	       			$this->loans_model->update_approve($id);
+	       			//logs
+	       			$log_action = 'Approved Loan Request';
+	       			//add note
+	        		$description = strip_tags($this->input->post('description'));
+	       			$description = $userdata['username'] . ': Approved this Loan Request. <br/> Remarks: ' . $description;
+	       			$this->notes_model->create('loan', $id, NULL, $description);
+	       			break;
+
+	       		case 'disapprove':
+	       			//update status
+	       			$flag = $this->loans_model->update_status($id, 2);
+	       			$log_action = 'Disapproved Loan Request';
+	       			//add note
+	        		$description = strip_tags($this->input->post('description'));
+	       			$description = $userdata['username'] . ': Disapproved this Loan Request. <br/> Remarks: ' . $description;
+	       			$this->notes_model->create('loan', $id, NULL, $description);
+	       			break;
+
+	       		case 'close':
+	       			# code...
+	       			break;
+
+	       		case 'cancel':
+	       			# code...
+	       			break;
+	       		
+	       	}
+	        
+
+	        if($flag) {
+
+	          $log[] = array(
+	              'user'    =>  $userdata['username'],
+	              'tag'     =>  'loan',
+	              'tag_id'  =>  $id,
+	              'action'  =>  $log_action
+	              );
+
+	        
+	          //Save Logs/////////////////////////
+	          $this->logs_model->save_logs($log);   
+	          ////////////////////////////////////
+	          $this->session->set_flashdata('success', $log_action);
+	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
+	        } else {
+	          $this->session->set_flashdata('error', 'Error Occured!');
+	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
+	        }
+	      }
+
+	    } else {
+
+	      $this->session->set_flashdata('error', 'You need to login!');
+	      redirect('dashboard/login', 'refresh');
+	    }
+
+  }
 
 
 }

@@ -51,6 +51,22 @@ Class Loans_Model extends CI_Model {
         return $query->row_array();
     }
 
+    function update_status($loan_id, $status) {
+        $this->db->where('id', $loan_id);
+        return $this->db->update('loans', array('status' => $status));
+    }
+
+    /**
+     * Updates the Approved Date Time
+     * @param  [type] $loan_id [description]
+     * @return [type]          [description]
+     */
+    function update_approve($loan_id) {
+
+        $approved = unix_to_human(time(), TRUE, 'eu');
+        $this->db->where('id', $loan_id);
+        return $this->db->update('loans', array('approved_at' => $approved));
+    }
 
     /**
      * Returns a range of array of data as per request
@@ -145,45 +161,6 @@ Class Loans_Model extends CI_Model {
     }
 
     
-    function view_contact($id) {
-        $this->db->where('id', $id);
-        return $this->db->get('borrowers_contacts')->row_array();
-    }
-
-    function delete_contact($id) {
-        $this->db->where('id', $id);
-        return $this->db->delete('borrowers_contacts');
-    }
-
-    function update_contact($id) {
-        $data = array(
-            'value'   => strip_tags($this->input->post('value'))
-            );
-
-         $this->db->where('id', $id);
-         return $this->db->update('borrowers_contacts', $data);
-    }
-
-    function create_contact($acc_id, $type, $value) {
-        $data = array(
-            'borrower_id' => $acc_id,
-            'type'        => $type,
-            'value'   => $value
-            );
-
-         return $this->db->insert('borrowers_contacts', $data);
-    }
-
-    function fetch_contacts($acc_id, $type) {
-        $this->db->where('type', $type);
-        $this->db->where('borrower_id', $acc_id);
-        $query = $this->db->get('borrowers_contacts');
-
-        return $query->result_array();
-    }
-
-
-
 
 
     /**
