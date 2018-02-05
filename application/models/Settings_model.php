@@ -12,7 +12,7 @@ Class Settings_model extends CI_Model
     function setting($id) {
 
              $this->db->select('*');        
-             $this->db->where('key', $id);          
+             $this->db->where('id', $id);          
 
              $query = $this->db->get('settings');
 
@@ -25,10 +25,12 @@ Class Settings_model extends CI_Model
      * @param  String        $grp    The settings_grp 
      * @return String Array          The array of results
      */
-    function fetch_settings($grp) {
+    function fetch_settings($grp = null) {
 
              $this->db->select('*');        
-             $this->db->where('setting_grp', $grp);          
+             if (!is_null($grp)) {
+               $this->db->where('setting_grp', $grp);  
+              }        
 
              $query = $this->db->get('settings');
 
@@ -50,7 +52,7 @@ Class Settings_model extends CI_Model
                 'value'     => $value        
              );
             
-            $this->db->where('key', $key);
+            $this->db->where('id', $key);
             return $this->db->update('settings', $data);     
     }
 
