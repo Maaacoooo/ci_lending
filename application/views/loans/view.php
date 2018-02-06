@@ -476,6 +476,9 @@
                   <a href="#" data-target="#DisapproveLoan" data-toggle="modal" class="btn bg-navy btn-block btn-flat"><i class="fa fa-ban"></i> Disapprove Loan</a>
                 </li>
                 <?php endif; ?>  
+                <li class="list-group-item">
+                  <a href="<?=current_url()?>/print" target="_blank" class="btn btn-primary btn-block btn-flat"><i class="fa fa-print"></i> Print</a>
+                </li>
                                        
               </ul>
             </div>

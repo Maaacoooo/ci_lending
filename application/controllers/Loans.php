@@ -307,7 +307,7 @@ class Loans extends CI_Controller {
 
 			//Validate if record exist
 			 //IF NO ID OR NO RESULT, REDIRECT
-				if(!$data['loan']['borrower_id'] || !$data['info'] || $data['info']['is_deleted']) {
+			if(!$data['loan']['borrower_id'] || !$data['info'] || $data['info']['is_deleted']) {
 
 					$notif['error'] = 'Account Deactivated. Please contact your Administrator for Reactivation!';
 		   			$this->sessnotif->setNotif($notif);
@@ -315,7 +315,11 @@ class Loans extends CI_Controller {
 					redirect('borrowers', 'refresh');
 			}	
 			
-			$this->load->view('loans/view', $data);	
+			if ($this->uri->segment(4)=='print') {
+				$this->load->view('loans/print', $data);	
+			} else {
+				$this->load->view('loans/view', $data);	
+			}
 
 		} else {
 
