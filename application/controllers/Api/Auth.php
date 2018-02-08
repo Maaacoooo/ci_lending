@@ -58,6 +58,39 @@ class Auth extends CI_Controller {
   }
 
 
+  function submitPayment($api_key = null) {
+
+      //change of request
+      if(isset($_GET['api_key'])) {
+        $api_key = $_GET['api_key'];
+      }
+
+      //fetch API KEY AUTH data
+      $api = $this->settings_model->setting('API_KEY_AUTH');
+
+      if($api_key == $api['value']) {
+        
+        if(isset($_POST['id'])) {
+
+          $id = $_POST['id'];
+          $amount =  $_POST['amount'];
+
+          $data['status'] = TRUE;
+          $data['data'] = $_POST;
+
+        }
+
+
+      } else {
+        show_error('Please contact the System Administrator!',403,'Access Denied!');
+      }
+
+
+      echo json_encode($data, JSON_PRETTY_PRINT);
+
+  }
+
+
 
 
 }
