@@ -136,7 +136,7 @@ class Loans extends CI_Controller {
 	   		$config['num_links'] = 5;
 			$config['base_url'] = base_url('/loans/pending/');
 			$config["total_rows"] = $this->loans_model->count_loans($data['search'], 2, NULL);
-			$config['per_page'] = 1;				
+			$config['per_page'] = 50;				
 			$this->load->config('pagination'); //LOAD PAGINATION CONFIG
 
 			$this->pagination->initialize($config);
