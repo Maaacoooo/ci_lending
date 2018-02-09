@@ -96,8 +96,22 @@
                           <td class="bg-warning"><?=$loan['id']?></td>
                           <th>Registered</th>
                           <td class="bg-warning"><?=$loan['created_at']?></td>
-                          <th>Approved</th>
-                          <td class="bg-warning"></td>
+                          <th>Status</th>
+                          <td class="bg-warning">
+                            <?php if ($loan['status']==0): ?>
+                              <span class="badge bg-red">Pending</span>
+                            <?php elseif($loan['status']==1): ?>                      
+                              <?=$loan['approved_at']?>
+                              <span class="badge bg-green">Approved</span>
+                            <?php elseif($loan['status']==2): ?>                      
+                              <span class="badge bg-navy">Declined</span>
+                            <?php elseif($loan['status']==3): ?>                      
+                              <span class="badge bg-blue">Closed</span>
+                            <?php elseif($loan['status']==4): ?>                      
+                              <span class="badge bg-black">Cancelled</span>
+                            <?php endif ?>
+
+                          </td>
                         </tr>
                         <tr>
                           <th>Borrower</th>

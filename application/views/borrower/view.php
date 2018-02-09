@@ -305,7 +305,19 @@
                       <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['borrowed_amount']?></a></td>
                       <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['created_at']?></a></td>
                       <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['due_date']?></a></td>
-                      <td><a href="<?=base_url('loans/view/'.$loan['id'])?>"><?=$loan['status']?></a></td>
+                      <td><a href="<?=base_url('loans/view/'.$loan['id'])?>">
+                        <?php if ($loan['status']==0): ?>
+                          <span class="badge bg-red">Pending</span>
+                        <?php elseif($loan['status']==1): ?>                      
+                          <span class="badge bg-green">Approved</span>
+                        <?php elseif($loan['status']==2): ?>                      
+                          <span class="badge bg-navy">Declined</span>
+                        <?php elseif($loan['status']==3): ?>                      
+                          <span class="badge bg-blue">Closed</span>
+                        <?php elseif($loan['status']==4): ?>                      
+                          <span class="badge bg-black">Cancelled</span>
+                        <?php endif ?>
+                      </a></td>
                     </tr>
                     <?php endforeach ?>
                     <?php endif ?>
@@ -1675,7 +1687,7 @@
                     <div class="col-sm-2">
                       <div class="form-group">
                         <label for="">Amount</label>
-                        <input type="text" name="creditors_amount[]" class="form-control" />
+                        <input type="text" name="creditors_amount[]" class="form-control integer" />
                       </div><!-- /.form-group -->  
                     </div><!-- /.col-sm-2 -->
                     <div class="col-sm-2">

@@ -270,7 +270,7 @@ class Borrowers extends CI_Controller {
 						////////////////////////////////////
 					
 						$this->session->set_flashdata('success', 'Account Registered!');
-						redirect($_SERVER['HTTP_REFERER'], 'refresh');
+						redirect('borrowers/view/'.$acc_id, 'refresh');
 					} else {
 						//failure
 						$this->session->set_flashdata('error', 'Error occured!');
@@ -321,8 +321,12 @@ class Borrowers extends CI_Controller {
 
 			$data['logs']		= $this->logs_model->fetch_logs('borrower', $id, 50);
 			
-			$this->load->view('borrower/view', $data);	
-
+			if ($this->uri->segment(4)=='print') {
+				$data['title'] 		= 'Borrower Account: ' . $data['info']['id'];
+				$this->load->view('borrower/print', $data);	
+			} else {
+				$this->load->view('borrower/view', $data);	
+			}
 		} else {
 
 			$this->session->set_flashdata('error', 'You need to login!');

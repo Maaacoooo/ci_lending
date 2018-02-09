@@ -93,8 +93,14 @@
                   <td><a href="<?=base_url('loans/view/'.$res['id'])?>"><?=$res['id']?>
                     <?php if ($res['status']==0): ?>
                       <span class="badge bg-red">Pending</span>
+                    <?php elseif($res['status']==1): ?>                      
+                      <span class="badge bg-green">Approved</span>
                     <?php elseif($res['status']==2): ?>                      
-                      <span class="badge bg-black">Declined</span>
+                      <span class="badge bg-navy">Declined</span>
+                    <?php elseif($res['status']==3): ?>                      
+                      <span class="badge bg-blue">Closed</span>
+                    <?php elseif($res['status']==4): ?>                      
+                      <span class="badge bg-black">Cancelled</span>
                     <?php endif ?>
                   </a></td>
                   <td><a href="<?=base_url('loans/view/'.$res['id'])?>"><?=moneytize($res['borrowed_amount'])?></a></td>

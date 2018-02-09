@@ -177,6 +177,7 @@ Class Borrower_Model extends CI_Model {
                 borrowers.is_deleted,
                 borrowers.created_at,
                 borrowers.id,
+                borrowers.is_deleted,
                 CONCAT(borrowers_spouse.fname, " ", borrowers_spouse.mname, " ", borrowers_spouse.lname) as spouse_name,
                 borrowers_spouse.id as spouse_id,
                 borrowers_spouse.fname as spouse_fname,
