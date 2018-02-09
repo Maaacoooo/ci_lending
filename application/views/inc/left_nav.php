@@ -88,8 +88,7 @@
         </li>  
 
         <li class="header">ADMIN OPTIONS</li>         
-        <li><a href="<?=base_url('users')?>"><i class="fa fa-users"></i> <span>System Users</span></a></li>
-        <li><a href="<?=base_url('settings')?>"><i class="fa fa-wrench"></i> <span>System Settings</span></a></li>        
+        <li><a href="<?=base_url('users')?>"><i class="fa fa-users"></i> <span>System Users</span></a></li>  
         <?php endif ?>      
 
 
