@@ -352,7 +352,12 @@
               
               <!-- ///////////////////////////////// Settings ///////////////////////////////////// -->
               <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="settings">
-
+                <strong>Account Options</strong>
+                <?php if ($info['is_deleted']==0): ?>
+                  <button class="btn btn-danger">Deactivate Borrower</button>
+                <?php else: ?>
+                  <button class="btn btn-primary">Activate Borrower</button>
+                <?php endif ?>
               </div>
               <!-- /.tab-pane -->
             </div>
@@ -1618,7 +1623,7 @@
               <p><i class="fa fa-info-circle"></i> Please fill up all the important fields</p>
             </div><!-- /.callout callout-info -->       
             <p>
-              <strong><?=$info['name']?></strong> hereby apply for a loan amounting <input type="text" name="loan_amount" /> for a period of 
+              <strong><?=$info['name']?></strong> hereby apply for a loan amounting <input type="text" name="loan_amount" id="loan_amount" /> for a period of 
               <input type="text" name="loan_days"> <br />days at the rate of <input type="text" name="loan_rate" max="100" />% per annum and repayable for only one term.
             </p>
             <hr />
@@ -1632,7 +1637,7 @@
                   <?php $y=1; foreach($income as $inc): ?>
                   <tr>
                     <th><?=$y++.'. '.$inc['title']?></th>
-                    <td width="30%"><input type="text" id="test" class="test" name="income[<?=$inc['id']?>]"/></td>
+                    <td width="30%"><input type="text" id="test" class="integer" name="income[<?=$inc['id']?>]"/></td>
                   </tr>
                   <?php endforeach; ?>
                 </table><!-- /.table table-bordered table-condensed -->
@@ -1644,7 +1649,7 @@
                   <?php $x=1; foreach($expenses as $exp): ?>
                   <tr>
                     <th><?=$x++.'. '.$exp['title']?></th>
-                    <td width="30%"><input type="text" name="expense[<?=$exp['id']?>]"/></td>
+                    <td width="30%"><input type="text" class="integer" name="expense[<?=$exp['id']?>]"/></td>
                   </tr>
                   <?php endforeach; ?>
                 </table><!-- /.table table-bordered table-condensed -->
@@ -1729,16 +1734,26 @@
               $( "#creditors" ).after( creditors );
           });
 
-      $('.test').focus(function(e) {
-              var value = $('#test').val();
+      $('.integer').focusout(function(e) {
+              var value = $(this).val();
               if(!value) {
 
               } else {
                 value = parseFloat(value).toFixed(2);
-                $('#test').val(value);
+                $(this).val(value);
               }
               
           });
+
+      $('#loan_amount').focusout(function(e) {
+              var value = $('#loan_amount').val();
+              if(value) {
+                value = parseFloat(value).toFixed(2);
+                $('#loan_amount').val(value);
+              }
+              
+          });
+
       });
 
     //Initialize input mask
