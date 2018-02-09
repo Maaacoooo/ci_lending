@@ -289,8 +289,8 @@
             <div class="row">
               <div class="col-sm-12">
                 <div class="form-group pull-right">
-                  <label>
-                    <input type="checkbox" class="minimal-red"> Home Address is same with Present Address
+                  <label onclick="sameAddress()">
+                    <input type="checkbox" class="minimal-red" id="sameAddr"> Home Address is same with Present Address
                   </label>
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-12 -->
@@ -653,19 +653,56 @@
     <script src="<?=base_url('assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')?>"></script>
 
     <script type="text/javascript">
-    $('[data-mask]').inputmask()
+    $('[data-mask]').inputmask();
 
     //Red color scheme for iCheck
     $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({
       checkboxClass: 'icheckbox_minimal-red',
       radioClass   : 'iradio_minimal-red'
-    })
+    });
 
     //Date picker
     $('#birthdate, #spouse_bdate, #employ_date, #business_date').datepicker({
       autoclose: true
-    })
+    });
 
+    
+    function sameAddress() {
+      
+      if(document.getElementById("sameAddr").checked == true) {
+
+        console.log("unchecked");
+        //disable fields  
+        
+        document.getElementById("home_bldg").value = "";
+        document.getElementById("home_strt").value = "";
+        document.getElementById("home_brgy").value = "";
+        document.getElementById("home_city").value = "";
+        document.getElementById("home_prov").value = "";
+        document.getElementById("home_zip").value = "";
+        document.getElementById("home_ctry").value = "";  
+        
+
+      } else {
+
+        
+        console.log("checked");
+
+        
+        document.getElementById("home_bldg").value = document.getElementById("addr_bldg").value;
+        document.getElementById("home_strt").value = document.getElementById("addr_strt").value;
+        document.getElementById("home_brgy").value = document.getElementById("addr_brgy").value;
+        document.getElementById("home_city").value = document.getElementById("addr_city").value;
+        document.getElementById("home_prov").value = document.getElementById("addr_prov").value;
+        document.getElementById("home_zip").value = document.getElementById("addr_zip").value;
+        document.getElementById("home_ctry").value = document.getElementById("addr_ctry").value;     
+
+       
+      }
+
+
+    }
+    
     </script>
   
 </body>
