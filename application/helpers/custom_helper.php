@@ -231,8 +231,8 @@
 
             //parse to Int
             $year   = intval($date[2]);
-            $month  = str_pad(intval($date[1]),2,"0",STR_PAD_LEFT);
-            $day    = str_pad(intval($date[0]),2,"0",STR_PAD_LEFT);
+            $month  = str_pad(intval($date[0]),2,"0",STR_PAD_LEFT);
+            $day    = str_pad(intval($date[1]),2,"0",STR_PAD_LEFT);
 
 
 
