@@ -320,11 +320,6 @@ class Borrowers extends CI_Controller {
 			$data['title'] 		= $data['info']['name'];
 
 			$data['logs']		= $this->logs_model->fetch_logs('borrower', $id, 50);
-
-			include APPPATH . '/libraries/Phpqrcode/qrlib.php';
-
-			var_dump(QRcode::png('PHP QR Code :)', 'test.png', 'L', 4, 2));
-
 			
 			$this->load->view('borrower/view', $data);	
 

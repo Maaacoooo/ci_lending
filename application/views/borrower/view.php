@@ -57,6 +57,8 @@
       <div class="row">
         <div class="col-md-3">
 
+
+
           <!-- Profile Image -->
           <div class="box box-danger">
             <div class="box-body box-profile">             
@@ -79,9 +81,10 @@
                 </li>  
                 <li class="list-group-item">
                   <a href="#" data-target="#AddLoan" data-toggle="modal" class="btn btn-danger btn-block btn-flat"><i class="fa fa-money"></i> Apply Loan</a>
-                </li>                         
+                </li>                      
               </ul>
-            </div>
+                  <img src="<?=base_url('code/qr/'.$info['id'].'/8')?>" alt="" class="img-thumbnail" style="margin:auto; display: block" />
+            </div>     
             <!-- /.box-body -->
           </div>
           <!-- /.box -->
