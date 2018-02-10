@@ -9,6 +9,8 @@ class Loans extends CI_Controller {
        $this->load->model('user_model');
        $this->load->model('borrower_model');
        $this->load->model('loans_model');
+
+       $this->load->library('zip');
 	}	
 
 
@@ -304,6 +306,7 @@ class Loans extends CI_Controller {
 			$data['logs']		= $this->logs_model->fetch_logs('loan', $data['loan']['id'], 50);
 
 			$data['notes']		= $this->notes_model->fetch_notes(NULL, NULL, 'loan', $data['loan']['id']);
+			$data['files']		= $this->files_model->fetch_files(NULL, NULL, 'loan', $data['loan']['id']);
 
 			//Validate if record exist
 			 //IF NO ID OR NO RESULT, REDIRECT
@@ -484,6 +487,39 @@ class Loans extends CI_Controller {
 	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
 	        }
 	      }
+
+	    } else {
+
+	      $this->session->set_flashdata('error', 'You need to login!');
+	      redirect('dashboard/login', 'refresh');
+	    }
+
+  }
+
+
+
+  /**
+   * This downloads all the files in the File Archive
+   * @param  [type] $id [description]
+   * @return [type]     [description]
+   */
+  public function download($id)    {
+
+	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+	    if($userdata) {     
+	     	
+	     	$info = $this->loans_model->view($id);
+
+	     	$path = './uploads/borrowers/';
+	     	$path .= $info['borrower_id'];
+	     	$path .= '/loans/';
+	     	$path .= $info['id'];
+
+			$this->zip->read_dir($path, FALSE);
+
+			// Download the file to your desktop. Name it "my_backup.zip"
+			$this->zip->download($info['id'].'_FILES.zip');
 
 	    } else {
 

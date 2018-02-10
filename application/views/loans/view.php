@@ -360,7 +360,38 @@
               
               <!-- //////////////////////////////////// FILE ARCHIVE ///////////////////////////////// -->
               <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="files">
-                  <p>Voila! your file archive!</p>
+                  
+                    <?php if ($files): ?>
+                    <table class="table table-striped table-condensed">
+                    <thead>
+                      <tr>
+                        <th>TITLE</th>
+                        <th>DESCRIPTION</th>
+                        <th>DATE | TIME</th>
+                      </tr>
+                    </thead>
+                    <?php foreach ($files as $file): ?>
+                      <tr>
+                        <td><a href="#" data-toggle="modal" data-target="#file<?=$file['id']?>"><?=$file['title']?></a></td>
+                        <td><a href="#" data-toggle="modal" data-target="#file<?=$file['id']?>"><?=$file['description']?></a></td>
+                        <td><a href="#" data-toggle="modal" data-target="#file<?=$file['id']?>"><?=$file['created_at']?></a></td>
+                      </tr>
+                    <?php endforeach ?>
+                    </table><!-- /.table table-striped table-condensed -->
+                    <div class="row">
+                      <div class="col-sm-12">
+                        <div class="pull-right">
+                          <a href="#" class="btn btn-default" data-toggle="modal" data-target="#AddFile"><i class="fa fa-upload"></i> Upload New File</a>                        
+                          <a href="<?=base_url('loans/download/'.$loan['id'])?>" class="btn btn-default"><i class="fa fa-download"></i> Download Archive</a>
+                        </div><!-- /.pull-right -->                        
+                      </div><!-- /.col-sm-12 -->
+                    </div><!-- /.row -->
+                    <?php else: ?>
+                      <div class="well">
+                        <h4>Opps! No files found!</h4>
+                        <p><a href="#" data-toggle="modal" data-target="#AddFile">Click here</a> to upload a file!</p>
+                      </div><!-- /.well -->
+                    <?php endif ?>
               </div>
               <!-- /.tab-pane -->
               <!-- //////////////////////////////////// ACTIVITY LOGS ///////////////////////////////// -->
@@ -398,11 +429,6 @@
                     No Activity Logs record found in the system
                   </div>
                 <?php endif ?>                
-              </div>
-              <!-- /.tab-pane -->
-              <!-- ///////////////////////////////// SETTING ///////////////////////////////////////////////// -->
-              <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="settings">
-
               </div>
               <!-- /.tab-pane -->
             </div>
@@ -707,6 +733,128 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+
+
+  <!-- ///////////////////////// Add Files ////////////////////////////// -->
+  <div class="modal fade" id="AddFile">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?=form_open_multipart('files/create')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Upload a File</h4>
+        </div>
+        <div class="modal-body">   
+          <div class="form-group">
+            <label for="title">Title</label>
+            <input type="text" name="title" id="title" class="form-control" />
+          </div><!-- /.form-group -->
+          <div class="form-group">
+            <label for="description">File Description</label>
+            <textarea name="description" id="description" rows="5" class="form-control"></textarea>
+          </div><!-- /.form-group -->
+          <fieldset class="group-box">
+            <legend class="group-box-title">File</legend><!-- /.group-box-title -->
+            <div class="row">
+              <div class="col-sm-3">
+                <label for="">Upload File</label>
+              </div><!-- /.col-sm-3 -->
+              <div class="col-sm-5">
+                <input type="file" name="file" id="file">  
+              </div><!-- /.col-sm-5 -->
+            </div><!-- /.row -->    
+           </fieldset><!-- /.group-box -->
+        </div>
+        <input type="hidden" name="p" value="<?=$this->encryption->encrypt('borrowers/'.$info['id'].'/loans/'.$loan['id'])?>" />
+        <input type="hidden" name="tag_id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <input type="hidden" name="tag" value="<?=$this->encryption->encrypt('loan')?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-success"><i class="fa fa-upload"></i> Upload File</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  
+  <!-- ///////////////////////// Files ////////////////////////////// -->
+  <?php if ($files): ?>
+  <?php foreach ($files as $file): ?>
+  <div class="modal fade" id="file<?=$file['id']?>">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title"><?=$file['title']?></h4>
+        </div>
+        <div class="modal-body">   
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active"><a href="#"" data-toggle="tab" data-target="#file_info<?=$file['id']?>">Information</a></li>
+              <li><a href="#" data-toggle="tab" data-target="#file_delete<?=$file['id']?>">Delete</a></li>
+            </ul>
+            <div class="tab-content">
+              <div class="tab-pane active" id="file_info<?=$file['id']?>">
+                <div class="row">
+                  <div class="col-md-12">
+                    <strong>Title</strong>
+                    <p class="text-muted"><?=$file['title']?></p><!-- /.text-muted -->
+                    <hr /> 
+                    <strong>Description</strong>
+                    <p class="text-muted"><?=$file['description']?></p><!-- /.text-muted -->
+                    <hr /> 
+                    <strong>Uploader</strong>
+                    <p class="text-muted"><?=$file['name']?></p><!-- /.text-muted -->
+                    <hr />     
+                    <strong>Uploaded</strong>
+                    <p class="text-muted"><?=$file['created_at']?></p><!-- /.text-muted -->
+                    <hr />   
+                    <a href="<?=base_url('files/download/'.$file['id'])?>" class="btn btn-flat btn-success btn-block"><i class="fa fa-download"></i> Download File</a> 
+                  </div><!-- /.col-md-12 -->
+                </div><!-- /.row -->             
+              </div>
+              <div id="file_delete<?=$file['id']?>" class="tab-pane">
+                <div class="callout callout-danger">
+                  <h4><i class="fa fa-warning"></i> Are you sure to delete <?=$file['title']?>?</h4>
+                  <p>This will be deleted in the database and the storage. This action cannot be undone!</p>
+
+                  <div class="row">
+                    <?=form_open('files/delete')?>
+                    <div class="col-sm-12">
+                      <div class="checkbox">
+                        <label>
+                          <input name="checkbox" type="checkbox" required/> Yes. I am sure to delete this Record.
+                        </label>
+                          <input type="hidden" name="id" value="<?=$this->encryption->encrypt($file['id'])?>" />
+                        <button class="btn btn-danger btn-outline btn-flat btn-sm pull-right"><i class="fa fa-trash"></i> Delete</button>
+                      </div><!-- /.checkbox -->                      
+                    </div><!-- /.col-sm-6 -->
+                    <?=form_close()?>
+                  </div><!-- /.row -->
+                </div><!-- /.callout callout-danger -->
+              </div><!-- /#file_delete.tab-pane -->
+            </div><!-- /.tab-content -->
+          </div><!-- /.nav-tabs-custom -->
+        </div><!-- ./modal-body -->
+        <input type="hidden" name="p" value="<?=$this->encryption->encrypt('borrowers/'.$info['id'].'/loans/'.$loan['id'])?>" />
+        <input type="hidden" name="tag_id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <input type="hidden" name="tag" value="<?=$this->encryption->encrypt('loan')?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+        </div>
+      </div>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+  <?php endforeach ?>
+  <?php endif ?>
 
 
 
