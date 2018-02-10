@@ -828,7 +828,7 @@
                     <div class="col-sm-12">
                       <div class="checkbox">
                         <label>
-                          <input name="checkbox" type="checkbox" required/> Yes. I am sure to delete this Record.
+                          <input name="checkbox" type="checkbox" required/> Yes. I am sure to delete this File.
                         </label>
                           <input type="hidden" name="id" value="<?=$this->encryption->encrypt($file['id'])?>" />
                         <button class="btn btn-danger btn-outline btn-flat btn-sm pull-right"><i class="fa fa-trash"></i> Delete</button>

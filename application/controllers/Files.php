@@ -109,9 +109,28 @@ class Files extends CI_Controller {
 	      } else {
 
 	        $id = $this->encryption->decrypt($this->input->post('id')); //ID of the loan 
+	        $info = $this->files_model->view($id);
 
-	        if($this->notes_model->delete($id)) {
-	          $this->session->set_flashdata('success', 'Note Deleted!');
+	        if($this->files_model->delete($id)) {
+
+	           $log[] = array(
+	              'user'    =>  $userdata['username'],
+	              'tag'     =>  $info['tag'],
+	              'tag_id'  =>  $info['tag_id'],
+	              'action'  =>  'Deleted a file: ' . $info['title']
+	           );
+	        
+	          //Save Logs/////////////////////////
+	          $this->logs_model->save_logs($log);   
+	          ////////////////////////////////////
+	          
+	          //Delete Procedure
+               if(filexist($info['url'])) {
+                  unlink($info['url']); 
+               }
+
+
+	          $this->session->set_flashdata('success', 'File Deleted!');
 	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
 	        } else {
 	          $this->session->set_flashdata('error', 'Error Occured!');
@@ -133,33 +152,17 @@ class Files extends CI_Controller {
 	    $id 		= $this->encryption->decrypt($id); //ID of the loan 
   		$userdata 	= $this->session->userdata('admin_logged_in');
 
-  		$info	= $this->notes_model->view($id);
+  		$info	= $this->files_model->view($id);
 
   		if($info['user'] == $userdata['username']) {
   			return TRUE;
   		} else {
-			$this->form_validation->set_message('check_user', 'You are not allowed to update or delete this note!');
+			$this->form_validation->set_message('check_user', 'You are not allowed to update or delete this file!');
   			return FALSE;
   		}
 
 
 
   }
-
-
-  function test() {
-
-  		$path = './uploads/borrowers/2018-00001/loans/2018-00001-00001/';
-  		$new_path = 'files';
-
-		$this->zip->read_dir($path, FALSE);
-
-		// Download the file to your desktop. Name it "my_backup.zip"
-		$this->zip->download('my_backup.zip');
-
-  }
-
-
-
 
 }
