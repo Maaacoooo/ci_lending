@@ -74,14 +74,23 @@
 
               <ul class="list-group list-group-unbordered">
                 <li class="list-group-item">
-                  <b>Loan Applications</b> <span class="pull-right badge bg-red">Nah</span>
+                  <b>Loan Applications</b> <span class="pull-right badge bg-red"><?php if($loans)echo sizeof($loans);else echo 0;?></span>
                 </li>       
                 <li class="list-group-item">
                   <b>Date Registered</b> <a class="pull-right"><?=$info['created_at']?></a>
                 </li>  
+                <?php if ($active_loan): ?>
+                <li class="list-group-item">
+                  <b>Existing Loan</b> <a href="<?=base_url('loans/view/'.$active_loan['id'])?>" class="pull-right"><?=$active_loan['id']?></a>
+                </li> 
+                <li class="list-group-item">
+                  <a href="<?=base_url('loans/view/'.$active_loan['id'])?>" class="btn btn-success btn-block btn-flat"><i class="fa fa-eye"></i> Check Existing Loan</a>
+                </li>         
+                <?php else: ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#AddLoan" data-toggle="modal" class="btn btn-danger btn-block btn-flat"><i class="fa fa-money"></i> Apply Loan</a>
-                </li>                      
+                </li>                        
+                <?php endif ?>                     
               </ul>
                   <img src="<?=base_url('code/qr/'.$info['id'].'/8')?>" alt="" class="img-thumbnail" style="margin:auto; display: block" />
             </div>     

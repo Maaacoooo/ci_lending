@@ -141,7 +141,7 @@ Class Loans_Model extends CI_Model {
      * @param  Int        $is_deleted   if deleted record or not
      * @return Int         [description]
      */
-    function count_loans($search, $status) {
+    function count_loans($search, $status, $acc_id = NULL) {
         
         //Search Query
         if($search) {
@@ -154,6 +154,10 @@ Class Loans_Model extends CI_Model {
         }   
         if(!is_null($status)) {
               $this->db->where('loans.status', $status);
+        }
+
+        if(!is_null($acc_id)) {
+              $this->db->where('loans.borrower_id', $acc_id);
         }
 
         $this->db->join('borrowers', 'borrowers.id = loans.borrower_id', 'left');

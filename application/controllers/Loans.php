@@ -181,7 +181,7 @@ class Loans extends CI_Controller {
 		if($userdata)	{
 			
 			//FORM VALIDATION
-			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+			$this->form_validation->set_rules('id', 'ID', 'trim|required|callback_check_loans');   
 			$this->form_validation->set_rules('loan_amount', 'Loan Amount', 'trim|required|decimal[2]');   
 			$this->form_validation->set_rules('loan_days', 'Days of Loan', 'trim|required');   
 			$this->form_validation->set_rules('loan_rate', 'Loan Percentage', 'trim|required');   
@@ -271,8 +271,24 @@ class Loans extends CI_Controller {
 	}
 
 
-	public function view($id)		{
+	function check_loans($id) {
 
+		$id 	= $this->encryption->decrypt($id);
+		$rows 	= $this->loans_model->count_loans(NULL, 1, $id);
+
+		//Check if there is an existing loan
+		if($rows >= 1) {
+			if (isset($_POST)) {
+				$this->form_validation->set_message('check_loans', 'An Open Loan record has been found.');				
+			}
+			return FALSE;
+		} else {
+			return TRUE;
+		}
+	}
+
+
+	public function view($id)		{
 
 		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
 
