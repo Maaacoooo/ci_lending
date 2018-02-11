@@ -111,6 +111,8 @@ class Borrowers extends CI_Controller {
 				$this->form_validation->set_rules('spouse_occuaddr', 'Spouse Work Address', 'trim');
 			}
 
+			$this->form_validation->set_rules('sameAddr', 'Same Address', 'trim');
+
 			// current address
 			$this->form_validation->set_rules('addr_bldg', 'Current Address Bldg', 'trim|required');
 			$this->form_validation->set_rules('addr_strt', 'Current Address Street', 'trim|required');
@@ -130,7 +132,7 @@ class Borrowers extends CI_Controller {
 			$this->form_validation->set_rules('home_ctry', 'Home Address Country', 'trim|required');
 
 			//Contacts
-			$this->form_validation->set_rules('email[]', 'Email Address', 'trim');
+			$this->form_validation->set_rules('email[]', 'Email Address', 'trim|valid_email');
 			$this->form_validation->set_rules('contact[]', 'Contact Numbers', 'trim');
 
 			//Educational Attainment
@@ -216,14 +218,20 @@ class Borrowers extends CI_Controller {
 						$contact = $this->input->post('contact');
 						//Loop
 						for ($i=0; $i < sizeof($contact); $i++) { 
-							$this->borrower_model->create_contact($acc_id, 0, $contact[$i]); //save 
+							if ($contact[$i]) {
+								//insert only when there is values on fields
+								$this->borrower_model->create_contact($acc_id, 0, $contact[$i]); //save 								
+							}
 						}
 
 						//Save Emails /////////////
 						$email = $this->input->post('email');
 						//Loop
 						for ($i=0; $i < sizeof($email); $i++) { 
-							$this->borrower_model->create_contact($acc_id, 1, $email[$i]); //save 
+							if ($email[$i]) {
+								//insert only when there is values on fields
+								$this->borrower_model->create_contact($acc_id, 1, $email[$i]); //save 
+							}
 						}
 
 						//Save Education /////////////////////

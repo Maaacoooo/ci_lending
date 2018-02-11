@@ -100,13 +100,13 @@
                   <div class="form-group">
                     <div class="col-xs-6">
                       <label>
-                          <input type="radio" name="sex" value="1" class="minimal-red" required>
+                          <input type="radio" name="sex" value="1" class="minimal-red" <?=set_radio('sex', '1'); ?> required>
                         Male
                       </label>
                     </div><!-- /.col-xs-6 -->
                     <div class="col-xs-6">
                       <label>
-                          <input type="radio" name="sex" value="0" class="minimal-red" required>
+                          <input type="radio" name="sex" value="0" class="minimal-red" <?=set_radio('sex', '0'); ?>  required>
                         Female
                       </label>
                     </div><!-- /.col-xs-6 -->                    
@@ -116,8 +116,8 @@
                   <label for="civil_stat">Civil Status</label>
                   <select name="civil_stat" id="civil_stat" class="form-control" required>
                     <option disabled selected> Select Option...</option>
-                    <option value="Single">Single</option>
-                    <option value="Married">Married</option>
+                    <option value="Single" <?=set_select('civil_stat', 'Single')?>>Single</option>
+                    <option value="Married" <?=set_select('civil_stat', 'Married')?>>Married</option>
                   </select>
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
@@ -171,7 +171,7 @@
             </fieldset><!-- /.group-box -->
           </fieldset>
           <br />
-          <fieldset id="spouse_field" class="">
+          <fieldset id="spouse_field" <?php if(!set_select('civil_stat', 'Married'))echo'class="hidden"';?>>
             <legend>Spouse Information</legend>
             <div class="form-group">
               <div class="row">
@@ -290,7 +290,7 @@
               <div class="col-sm-12">
                 <div class="form-group pull-right">
                   <label onclick="sameAddress()">
-                    <input type="checkbox" class="minimal-red" id="sameAddr"> Home Address is same with Present Address
+                    <input type="checkbox" name="sameAddr" class="minimal-red" id="sameAddr" <?=set_checkbox('sameAddr'); ?>> Home Address is same with Present Address
                   </label>
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-12 -->
@@ -405,25 +405,25 @@
                   <div class="form-group">
                     <div class="col-xs-3">
                       <label>
-                        <input type="radio" name="educ_level" value="0" class="minimal-red" required>
+                        <input type="radio" name="educ_level" value="0" class="minimal-red" required <?=set_radio('educ_level', '0'); ?>>
                         Elem. Grad
                       </label>
                     </div><!-- /.col-xs-3 -->
                     <div class="col-xs-3">
                       <label>
-                        <input type="radio" name="educ_level" value="1" class="minimal-red" required>
+                        <input type="radio" name="educ_level" value="1" class="minimal-red" required <?=set_radio('educ_level', '1'); ?>>
                         High Sch. Grad
                       </label>
                     </div><!-- /.col-xs-4 --> 
                     <div class="col-xs-3">
                       <label>
-                        <input type="radio" name="educ_level" value="2" class="minimal-red" required>
+                        <input type="radio" name="educ_level" value="2" class="minimal-red" required <?=set_radio('educ_level', '2'); ?>>
                         College Grad
                       </label>
                     </div><!-- /.col-xs-3 --> 
                     <div class="col-xs-3">
                       <label>
-                        <input type="radio" name="educ_level" value="3" class="minimal-red" required>
+                        <input type="radio" name="educ_level" value="3" class="minimal-red" required <?=set_radio('educ_level', '3'); ?>>
                         Undergrad
                       </label>
                     </div><!-- /.col-xs-3 --> 
@@ -435,7 +435,7 @@
                   <div class="col-sm-12">
                     <div class="form-group">
                       <label for="educ_school">Last School Attended / Graduated</label>
-                      <input type="text" name="educ_school" id="educ_school" class="form-control" placeholder="School / University / Academy" />
+                      <input type="text" name="educ_school" id="educ_school" class="form-control" placeholder="School / University / Academy"  value="<?=set_value('educ_school')?>"/>
                     </div><!-- /.form-group -->
                   </div><!-- /.col-sm-12 -->
                 </div><!-- /.row -->
@@ -443,13 +443,13 @@
                   <div class="col-sm-12 col-md-6">
                     <div class="form-group">
                       <label for="educ_course">Course / Track</label>
-                      <input type="text" name="educ_course" id="educ_course" class="form-control" placeholder="Course / Track / Level" />
+                      <input type="text" name="educ_course" id="educ_course" class="form-control" placeholder="Course / Track / Level"  value="<?=set_value('educ_course')?>"/>
                     </div><!-- /.form-group -->
                   </div><!-- /.col-sm-12 col-md-6 -->
                   <div class="col-sm-12 col-md-6">
                     <div class="form-group">
                       <label for="educ_year">Year Attended</label>
-                      <input type="text" name="educ_year" id="educ_year" class="form-control" placeholder="Attended / Graduated" />
+                      <input type="text" name="educ_year" id="educ_year" class="form-control" placeholder="Attended / Graduated"  value="<?=set_value('educ_year')?>"/>
                     </div><!-- /.form-group -->
                   </div><!-- /.col-sm-12 col-md-6 -->
                 </div><!-- /.row -->
@@ -470,13 +470,13 @@
                   <div class="form-group">
                     <div class="col-xs-7">
                       <label>
-                          <input type="radio" name="employ_grp" value="1" class="minimal-red">
+                          <input type="radio" name="employ_grp" value="1" class="minimal-red" <?=set_radio('employ_grp', '1'); ?>>
                         Government
                       </label>
                     </div><!-- /.col-xs-6 -->
                     <div class="col-xs-5">
                       <label>
-                          <input type="radio" name="employ_grp" value="0" class="minimal-red">
+                          <input type="radio" name="employ_grp" value="0" class="minimal-red" <?=set_radio('employ_grp', '0'); ?>>
                         Private
                       </label>
                     </div><!-- /.col-xs-6 -->                    
@@ -591,7 +591,7 @@
               <div class="col-md-6 col-sm-12">
                 <div class="form-group">
                   <label for="notes">Notes / Remarks</label>
-                  <textarea name="notes" id="notes" rows="5" class="form-control"></textarea>
+                  <textarea name="notes" id="notes" rows="5" class="form-control"><?=set_value('notes')?></textarea>
                 </div><!-- /.form-group -->
                 <fieldset class="group-box">
                   <legend class="group-box-title">Applicant's Picture</legend><!-- /.group-box-title -->
@@ -665,6 +665,20 @@
     $('#birthdate, #spouse_bdate, #employ_date, #business_date').datepicker({
       autoclose: true
     });
+
+
+   $(document).ready(function(){
+      $('#civil_stat').change(function(e) {
+              var stat = $('#civil_stat').val();
+
+              if(stat == "Married") {
+                $('#spouse_field').removeClass();
+              } else {
+                $('#spouse_field').addClass('hidden');
+              }
+
+          });
+      });
 
     
     function sameAddress() {
