@@ -71,14 +71,19 @@
             <thead>
               <tr>
                 <th width="8%"></th>
+                <th width="8%"></th>
                 <th>Name</th>
-                <th>Spouse</th>
                 <th>Active Loans</th>
               </tr>
             </thead>
             <tbody>
               <?php foreach ($results as $res): ?>
                 <tr>
+                  <td>
+                    <a href="<?=base_url('borrowers/view/'.$res['id'])?>">
+                        <img class="profile-user-img img-responsive" src="<?=base_url('code/qr/'.$res['id'].'/5')?>" alt="User profile picture">                     
+                    </a>
+                  </td>
                   <td>
                     <a href="<?=base_url('borrowers/view/'.$res['id'])?>">
                       <?php if (filexist($res['img']) && $res['img']): ?>
@@ -88,9 +93,18 @@
                       <?php endif ?>
                     </a>
                   </td>
-                  <td><a href="<?=base_url('borrowers/view/'.$res['id'])?>"><?=$res['lastname'].', '.$res['firstname']?></a></td>
-                  <td><a href="<?=base_url('borrowers/view/'.$res['id'])?>"><?=$res['spouse']?></a></td>
-                  <td><a href="<?=base_url('borrowers/view/'.$res['id'])?>"><?=$res['id']?></a></td>
+                  <td>
+                    <a href="<?=base_url('borrowers/view/'.$res['id'])?>"><?=$res['lastname'].', '.$res['firstname']?><br />
+                      <span class="badge bg-blue"><?=$res['id']?></span>
+                    </a>
+                  </td>
+                  <td>
+                    <?php if ($res['loan_id']): ?>
+                      <a href="<?=base_url('loans/view/'.$res['loan_id'])?>"><?=moneytize($res['borrowed_amount'])?> <i class="fa fa-sm fa-external-link-square"></i></a>
+                    <?php else: ?>
+                      <a href="<?=base_url('borrowers/view/'.$res['id'])?>"><span class="badge bg-green">Open for Application</span></a>
+                    <?php endif ?>
+                  </td>
                 </tr>
               <?php endforeach; ?>
             </tbody>                       

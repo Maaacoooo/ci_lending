@@ -118,12 +118,15 @@ Class Borrower_Model extends CI_Model {
                 borrowers.is_deleted,
                 borrowers.created_at,
                 borrowers.id,
-                CONCAT(borrowers_spouse.fname, " ", borrowers_spouse.mname, " ", borrowers_spouse.lname) as spouse
+                CONCAT(borrowers_spouse.fname, " ", borrowers_spouse.mname, " ", borrowers_spouse.lname) as spouse,
+                loans.id as loan_id,
+                loans.borrowed_amount
                 ');        
 
             $this->db->where('borrowers.is_deleted', $is_deleted);
             $this->db->limit($limit, (($id-1)*$limit));
 
+            $this->db->join('loans', 'loans.borrower_id = borrowers.id AND loans.status = 1', 'LEFT');
             $this->db->join('borrowers_spouse', 'borrowers_spouse.borrower_id = borrowers.id', 'LEFT');
             $query = $this->db->get("borrowers");
 
@@ -203,8 +206,11 @@ Class Borrower_Model extends CI_Model {
                 borrowers_educ.level as educ_level,
                 borrowers_educ.course as educ_course,
                 borrowers_educ.school as educ_school,
-                borrowers_educ.year as educ_year
+                borrowers_educ.year as educ_year,
+                loans.id as loan_id,
+                loans.borrowed_amount
                 ');        
+             $this->db->join('loans', 'loans.borrower_id = borrowers.id AND loans.status = 1', 'LEFT');
              $this->db->join('borrowers_educ', 'borrowers_educ.borrower_id = borrowers.id', 'LEFT');
              $this->db->join('borrowers_spouse', 'borrowers_spouse.borrower_id = borrowers.id', 'LEFT');
              $this->db->join('borrowers_address', 'borrowers_address.id = borrowers.bplace', 'LEFT');

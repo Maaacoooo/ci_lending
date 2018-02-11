@@ -79,12 +79,12 @@
                 <li class="list-group-item">
                   <b>Date Registered</b> <a class="pull-right"><?=$info['created_at']?></a>
                 </li>  
-                <?php if ($active_loan): ?>
+                <?php if ($info['loan_id']): ?>
                 <li class="list-group-item">
-                  <b>Existing Loan</b> <a href="<?=base_url('loans/view/'.$active_loan['id'])?>" class="pull-right"><?=$active_loan['id']?></a>
+                  <b>Existing Loan</b> <a href="<?=base_url('loans/view/'.$info['loan_id'])?>" class="pull-right"><?=$info['loan_id']?></a>
                 </li> 
                 <li class="list-group-item">
-                  <a href="<?=base_url('loans/view/'.$active_loan['id'])?>" class="btn btn-success btn-block btn-flat"><i class="fa fa-eye"></i> Check Existing Loan</a>
+                  <a href="<?=base_url('loans/view/'.$info['loan_id'])?>" class="btn btn-success btn-block btn-flat"><i class="fa fa-eye"></i> Check Existing Loan</a>
                 </li>         
                 <?php else: ?>
                 <li class="list-group-item">
@@ -1626,6 +1626,7 @@
   <!-- /.modal -->
 
 
+  <?php if (!$info['loan_id']): ?>
   <!-- ///////////////////////// Apply Loans ////////////////////////////// -->
   <div class="modal fade" id="AddLoan">
     <div class="modal-dialog modal-lg">
@@ -1730,6 +1731,7 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+  <?php endif ?>
 
 
 

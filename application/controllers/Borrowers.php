@@ -321,7 +321,6 @@ class Borrowers extends CI_Controller {
 			$data['businesses']		= $this->borrower_model->fetch_works($id, NULL);
 
 			$data['loans']			= $this->loans_model->fetch_loans(NULL, NULL, NULL, NULL, $id);
-			$data['active_loan']	= $this->loans_model->fetch_loans(NULL, NULL, NULL, 1, $id)[0];
 
 			$data['expenses']		= $this->loans_model->fetch_expenses();
 			$data['income']			= $this->loans_model->fetch_income();
