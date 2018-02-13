@@ -84,6 +84,58 @@ Class Borrower_Model extends CI_Model {
 
 
 
+    function Update_profpic($acc_id) {
+
+
+        $info = $this->view($acc_id);
+
+
+        //Remove Profile Pic
+            if ($this->input->post('remove')) { //remove old img
+                if(filexist($info['img'])) {
+                  unlink($info['img']); //removes the file
+                }    
+
+                return $this->db->update('borrowers', array('img' => ''), array('id'=>$acc_id));                  
+              }
+
+        //Process Image Upload
+            if($_FILES['img']['name'] != NULL)  {     
+
+                //remove old img
+                if(filexist($info['img'])) {
+                  unlink($info['img']); //removes the file
+                }    
+
+                $path = checkDir('./uploads/borrowers/'.$acc_id.'/'); //the path to upload
+
+                $config['upload_path'] = $path;
+                $config['allowed_types'] = 'gif|jpg|png'; 
+                $config['encrypt_name'] = TRUE;                        
+
+                $this->load->library('upload', $config);
+                $this->upload->initialize($config);         
+                
+                $field_name = "img";
+                $this->upload->do_upload($field_name);
+
+                $upload_data = $this->upload->data();
+
+                $filepath = $path . $upload_data['file_name'];
+
+                if ($this->upload->display_errors()) {
+                    return FALSE;
+                }
+
+                //Update row 
+                return $this->db->update('borrowers', array('img' => $filepath), array('id'=>$acc_id));
+            } 
+
+            return FALSE;
+    }
+
+
+
 
     /**
      * Returns a range of array of data as per request

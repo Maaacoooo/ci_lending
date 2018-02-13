@@ -375,10 +375,11 @@
               <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="settings">
                 <strong>Account Options</strong>
                 <?php if ($info['is_deleted']==0): ?>
-                  <button class="btn btn-danger">Deactivate Borrower</button>
+                  <button class="btn btn-danger" data-toggle="modal" data-target="#ActivateBorrower"><i class="fa fa-lock"></i> Deactivate Borrower</button>
                 <?php else: ?>
-                  <button class="btn btn-primary">Activate Borrower</button>
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#ActivateBorrower"><i class="fa fa-check"></i> Activate Borrower</button>
                 <?php endif ?>
+                  <button class="btn btn-primary" data-toggle="modal" data-target="#ChangeProfile"><i class="fa fa-image"></i> Change Profile</button>
               </div>
               <!-- /.tab-pane -->
             </div>
@@ -1732,6 +1733,54 @@
   </div>
   <!-- /.modal -->
   <?php endif ?>
+
+  <!-- ///////////////////////////// Profile //////////////////////////////////// -->
+
+  <div class="modal fade" id="ChangeProfile">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <?=form_open_multipart('borrowers/Update_Picture')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Change Profile Image</h4>
+        </div>
+        <div class="modal-body">          
+            <div class="row">
+              <div class="col-sm-12">
+                <fieldset class="group-box">
+                  <legend class="group-box-title">Update Profile Picture</legend><!-- /.group-box-title -->
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <input type="file" name="img" id="img">  
+                    </div><!-- /.col-sm-12 -->
+                  </div><!-- /.row -->    
+                </fieldset><!-- /.group-box -->
+              </div><!-- /.col-sm-12 -->
+            </div><!-- /.row -->
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="checkbox pull-right">
+                  <label>
+                    <input type="checkbox" name="remove" id="" /> Remove Profile Picture
+                  </label>
+                </div><!-- /.checkbox -->
+              </div><!-- /.col-sm-12 -->
+            </div><!-- /.row -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-primary">Save</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
 
 
 
