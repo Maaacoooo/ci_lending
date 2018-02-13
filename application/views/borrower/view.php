@@ -86,7 +86,7 @@
                 <li class="list-group-item">
                   <a href="<?=base_url('loans/view/'.$info['loan_id'])?>" class="btn btn-success btn-block btn-flat"><i class="fa fa-eye"></i> Check Existing Loan</a>
                 </li>         
-                <?php else: ?>
+                <?php elseif(!$info['is_deleted']): ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#AddLoan" data-toggle="modal" class="btn btn-danger btn-block btn-flat"><i class="fa fa-money"></i> Apply Loan</a>
                 </li>                        
@@ -102,6 +102,13 @@
         </div>
         <!-- /.col -->
         <div class="col-md-9">
+          <?php if ($info['is_deleted']): ?>
+          <div class="callout callout-danger">
+            <h4 class="title"><i class="fa fa-lock"></i> Account Deactivated</h4>
+            <p>This account is currently deactivated. To change this, go to <em>Settings Tab > Activate Borrower</em></p>
+          </div><!-- /.callout callout-danger -->
+          <?php endif ?>
+
           <div class="nav-tabs-custom">
             <ul class="nav nav-tabs">
               <li <?php if(!($flash_settings))echo'class="active"'?>><a href="#personal" data-toggle="tab">Account Information</a></li>
@@ -1774,6 +1781,49 @@
           <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-flat btn-primary">Save</button>
         </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+
+  <!-- ///////////////////////////// Activate Borrower //////////////////////////////////// -->
+
+  <div class="modal fade" id="ActivateBorrower">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <?=form_open_multipart('borrowers/Update_Activation')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">
+            <?php if ($info['is_deleted']==0): ?>
+               Deactivate Borrower
+            <?php else: ?>
+              Activate Borrower
+            <?php endif ?>
+          </h4>
+        </div>
+        <div class="modal-body">          
+            <div class="row">
+              <div class="col-sm-12">
+                <?php if ($info['is_deleted']==0): ?>
+                  <button class="btn btn-danger btn-lg" style="margin:auto; display: block" data-toggle="modal" data-target="#ActivateBorrower">
+                    <i class="fa fa-lock"></i> Deactivate Borrower
+                  </button>
+                <?php else: ?>
+                  <button class="btn btn-primary btn-lg" style="margin:auto; display: block" data-toggle="modal" data-target="#ActivateBorrower">
+                    <i class="fa fa-check"></i> Activate Borrower
+                  </button>
+                <?php endif ?>
+              </div><!-- /.col-sm-12 -->
+            </div><!-- /.row -->
+        </div><!-- /.modal-body -->
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
       </div>
       <?=form_close()?>
       <!-- /.modal-content -->

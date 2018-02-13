@@ -101,6 +101,8 @@
                   <td>
                     <?php if ($res['loan_id']): ?>
                       <a href="<?=base_url('loans/view/'.$res['loan_id'])?>"><?=moneytize($res['borrowed_amount'])?> <i class="fa fa-sm fa-external-link-square"></i></a>
+                    <?php elseif($res['is_deleted']): ?>
+                      <a href="<?=base_url('borrowers/view/'.$res['id'])?>"><span class="badge">Deactivated</span></a>
                     <?php else: ?>
                       <a href="<?=base_url('borrowers/view/'.$res['id'])?>"><span class="badge bg-green">Open for Application</span></a>
                     <?php endif ?>

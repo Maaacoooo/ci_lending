@@ -96,7 +96,7 @@ Class Borrower_Model extends CI_Model {
                   unlink($info['img']); //removes the file
                 }    
 
-                return $this->db->update('borrowers', array('img' => ''), array('id'=>$acc_id));                  
+                return $this->db->update('borrowers', array('img' => NULL), array('id'=>$acc_id));                  
               }
 
         //Process Image Upload
@@ -132,6 +132,13 @@ Class Borrower_Model extends CI_Model {
             } 
 
             return FALSE;
+    }
+
+
+    function update_activation($acc_id, $status) {
+
+        return $this->db->update('borrowers', array('is_deleted' => $status), array('id'=>$acc_id));
+
     }
 
 
@@ -723,108 +730,5 @@ Class Borrower_Model extends CI_Model {
     }
 
 
-
-    /**
-     * -----------------------------------------------------------------------------------------------------------------------
-     */
-    
-
-    /**
-     * Fetches the Gallery Images of an Item
-     * @param  [type] $item_id [description]
-     * @return [type]          [description]
-     */
-    function fetch_gallery($item_id) {
-             $this->db->select('*');        
-             $this->db->where('item_id', $item_id);              
-
-             $query = $this->db->get('item_gallery');
-
-             return $query->result_array();
-    }
-
-    /**
-     * Uploads a Gallery Image of an Item
-     * @param  [type] $item_id [description]
-     * @return [type]          [description]
-     */
-    function upload_gallery($item_id) {
-
-        //Process Image Upload
-        if($_FILES['img']['name'] != NULL)  {       
-
-
-                $path = checkDir('./uploads/items/'.$item_id.'/gallery/'); //the path to upload
-
-                $upl_config['upload_path'] = $path;
-                $upl_config['allowed_types'] = 'gif|jpg|png'; 
-                $upl_config['encrypt_name'] = TRUE;                        
-
-                $this->load->library('upload', $upl_config);
-                $this->upload->initialize($upl_config);         
-                
-                $field_name = "img";
-                $this->upload->do_upload($field_name);
-
-                $upload_data = $this->upload->data();
-
-                $filepath = $path . $upload_data['file_name']; //overwrite variable
-
-                $data = array(              
-                'item_id' => $item_id,  
-                'img'     => $filepath  
-             );
-
-            // Set Watermark ////////////////////////////////////////////////////
-            $wm_config['quality'] = '100%';
-            $wm_config['wm_text'] = 'Copyright '.APP_NAME.' '.date('Y');
-            $wm_config['wm_type'] = 'text';
-            $wm_config['wm_font_path'] = './system/fonts/arial.ttf';
-            $wm_config['wm_font_size'] = '16';
-            $wm_config['wm_font_color'] = 'ffffff';
-            $wm_config['wm_vrt_alignment'] = 'bottom';
-            $wm_config['wm_hor_alignment'] = 'left';
-            $wm_config['source_image'] = $filepath; 
-            /////////////////////////////////////////////////////////////////////
-
-            $this->image_lib->initialize($wm_config);            
-            $this->image_lib->watermark();
-
-            return $this->db->insert('item_gallery', $data);   
-            
-        }
-        return false; 
-
-    }
-
-    /**
-     * Returns the row array of the Gallery item
-     * @param  int    $id   Gallery Item ID
-     * @return [type]     [description]
-     */
-    function view_gallery($id) {
-             $this->db->select('*');        
-             $this->db->where('id', $id);              
-
-             $query = $this->db->get('item_gallery');
-
-             return $query->row_array();
-    }
-
-    /**
-     * Deletes the file and row data of the Gallery Item
-     * @param  [type] $id [description]
-     * @return [type]     [description]
-     */
-    function delete_gallery($id) {
-            
-            $file = $this->view_gallery($id);
-            //check if picture exist
-            if(filexist($file['img'])) {
-              unlink($file['img']);
-            }
-
-            return $this->db->delete('item_gallery', array('id' => $id));
-    }
 
 }

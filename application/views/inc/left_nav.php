@@ -32,7 +32,7 @@
           <ul class="treeview-menu">
             <li><a href="<?=base_url('borrowers')?>"><i class="fa fa-circle-o"></i> Account List</a></li>
             <li><a href="<?=base_url('borrowers/create')?>"><i class="fa fa-circle-o"></i> Register New Account</a></li>
-            <li><a href="<?=base_url('borrowers')?>"><i class="fa fa-circle-o"></i> Disabled Accounts</a></li>
+            <li><a href="<?=base_url('borrowers/index/deactivated')?>"><i class="fa fa-circle-o"></i> Deactivated Accounts</a></li>
 
           </ul>
         </li>   

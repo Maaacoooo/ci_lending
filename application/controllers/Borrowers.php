@@ -18,34 +18,42 @@ class Borrowers extends CI_Controller {
 	 * ---------------------------------------------------------------------------------------------------------
 	 */
 
-	public function index()		{
+	public function index($page = NULL)		{
 
 		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
 
 		if($userdata)	{
 
-			$data['title'] 		= 'Borrowers Accounts';
 			$data['site_title'] = APP_NAME;
 			$data['user'] 		= $this->user_model->userdetails($userdata['username']); //fetches users record
 
 			//Search 
 			$data['search'] = $this->input->get('search', TRUE);
 
+			if($page == 'deactivated') {
+				$data['title'] 		= 'Deactivated Accounts';
+				$status = 1;
+			} else {
+				$data['title'] 	= 'Borrowers Accounts';
+				$page = 'activated';
+				$status = 0;
+			}
+
 			//Paginated data				            
 	   		$config['num_links'] = 5;
-			$config['base_url'] = base_url('/borrowers/index/');
-			$config["total_rows"] = $this->borrower_model->count_borrowers($data['search'], 0, NULL);
-			$config['per_page'] = 50;				
+			$config['base_url'] = base_url('/borrowers/index/'.$page);
+			$config["total_rows"] = $this->borrower_model->count_borrowers($data['search'], $status);
+			$config['per_page'] = 20;				
 			$this->load->config('pagination'); //LOAD PAGINATION CONFIG
 
 			$this->pagination->initialize($config);
-		    if($this->uri->segment(3)){
-		       $page = ($this->uri->segment(3)) ;
+		    if($this->uri->segment(4)){
+		       $page = ($this->uri->segment(4)) ;
 		  	}	else 	{
 		       $page = 1;		               
 		    }
 
-		    $data["results"] = $this->borrower_model->fetch_borrowers($config["per_page"], $page, $data['search'], 0, NULL);
+		    $data["results"] = $this->borrower_model->fetch_borrowers($config["per_page"], $page, $data['search'], $status);
 		    $str_links = $this->pagination->create_links();
 		    $data["links"] = explode('&nbsp;',$str_links );
 
@@ -513,6 +521,68 @@ class Borrowers extends CI_Controller {
 		              	$log_action = "Updated Picture";
 		              }
 
+					
+					// Log function
+					$log[] = array(
+								'user' 		=> 	$userdata['username'],
+								'tag' 		=> 	'borrower',
+								'tag_id'	=> 	$acc_id,
+								'action' 	=> 	$log_action
+					);
+					
+					// Save Logs 
+					$this->logs_model->save_logs($log);	
+					//Set Flashdata Notif
+					$this->session->set_flashdata('success', $log_action);
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');	
+				}					
+				
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+	public function Update_Activation()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{
+			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');    
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+		   		//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the row			
+				$info   = $this->borrower_model->view($acc_id);	
+
+				if($info['is_deleted']) {
+					$status = 0;
+				} else {
+					$status = 1;
+				}
+
+				if($this->borrower_model->update_activation($acc_id, $status)) {
+
+					if ($status) {
+						$log_action = 'Deactivated Borrower Account';
+					} else {
+						$log_action = 'Activated Borrower Account';
+					}
 					
 					// Log function
 					$log[] = array(
