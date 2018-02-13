@@ -45,8 +45,7 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Overall List</a></li>
-            <li><a href="<?=base_url('loans/pending')?>"><i class="fa fa-circle-o"></i> Pending Applications</a></li>
-            <li><a href="<?=base_url('loans/collection')?>"><i class="fa fa-circle-o"></i> For Collection</a></li>
+            <li><a href="<?=base_url('loans/pending')?>"><i class="fa fa-circle-o"></i> Pending Applications</a></li> 
             <li><a href="<?=base_url('loans/overdue')?>"><i class="fa fa-circle-o"></i> Over-Due Loans</a></li>
             <li><a href="<?=base_url('loans/declined')?>"><i class="fa fa-circle-o"></i> Declined</a></li>
           </ul>
@@ -63,9 +62,6 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Due Collection</a></li>
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Overdue Collection</a></li>
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Today's Collection Report</a></li>
             <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Weekly Report</a></li>
             <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Monthly Report</a></li>
             <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Annual Report</a></li>
