@@ -299,6 +299,17 @@ class Loans extends CI_Controller {
 
 			//Fetch Data	
 			$data['loan']					= $this->loans_model->view($id);
+
+			//Validate if record exist
+			 //IF NO ID OR NO RESULT, REDIRECT
+			if(!$data['loan']) {
+
+					$notif['error'] = 'No Record Found!';
+		   			$this->sessnotif->setNotif($notif);
+
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			}	
+
 			$data['info']					= $this->borrower_model->view($data['loan']['borrower_id']);
 			$data['info']['current_addr']	= $this->borrower_model->fetch_addresses($data['loan']['borrower_id'], 2)[0]['address'];
 
@@ -323,16 +334,7 @@ class Loans extends CI_Controller {
 
 			$data['notes']		= $this->notes_model->fetch_notes(NULL, NULL, 'loan', $data['loan']['id']);
 			$data['files']		= $this->files_model->fetch_files(NULL, NULL, 'loan', $data['loan']['id']);
-
-			//Validate if record exist
-			 //IF NO ID OR NO RESULT, REDIRECT
-			if(!$data['loan']['borrower_id'] || !$data['info'] || $data['info']['is_deleted']) {
-
-					$notif['error'] = 'Account Deactivated. Please contact your Administrator for Reactivation!';
-		   			$this->sessnotif->setNotif($notif);
-
-					redirect('borrowers', 'refresh');
-			}	
+			
 			
 			if ($this->uri->segment(4)=='print') {
 				$this->load->view('loans/print', $data);	
