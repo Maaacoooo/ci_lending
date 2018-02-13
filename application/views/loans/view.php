@@ -62,8 +62,8 @@
               <li <?php if(!($flash_settings))echo'class="active"'?>><a href="#application" data-toggle="tab">Application Information</a></li>
               <li><a href="#personal" data-toggle="tab">Account Information</a></li>
               <li><a href="#files" data-toggle="tab">File Archive</a></li>
+              <li><a href="#payments" data-toggle="tab">Payments</a></li>
               <li><a href="#activity" data-toggle="tab">Activity Logs</a></li>
-              <li <?php if($flash_settings)echo'class="active"'?>><a href="#settings" data-toggle="tab">Settings</a></li>
             </ul>
             <div class="tab-content">
 
@@ -394,8 +394,43 @@
                     <?php endif ?>
               </div>
               <!-- /.tab-pane -->
-              <!-- //////////////////////////////////// ACTIVITY LOGS ///////////////////////////////// -->
+              <!-- //////////////////////////////////// ACTIVITY LOGS ///////////////////////////////// -->              
+              <div class="tab-pane" id="payments">
+                <h4 class="title">Payments</h4>
+                <?php if ($logs): ?>
+                <table class="table table-condensed">
+                  <thead>
+                    <tr>
+                      <th>#</th>
+                      <th>PAYEE</th>
+                      <th>DESCRIPTION</th>
+                      <th>AMOUNT</th>
+                      <th>DATE | TIME</th>
+                      <th>USER</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <?php foreach ($payments as $pay): ?>
+                    <tr>
+                      <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=$pay['id']?></a></td>
+                      <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=$pay['payee']?></a></td>
+                      <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=ellipsize($pay['description'], 20, 1)?></a></td>
+                      <td class="bg-danger"><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=moneytize($pay['amount'])?></a></td>
+                      <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=$pay['created_at']?></a></td>
+                      <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><span class="badge bg-blue"><?=$pay['name']?></span></a></td>
+                    </tr>
+                    <?php endforeach ?>
+                  </tbody>
+                </table><!-- /.table table-condensed -->
+                <?php else: ?>
+                  <div class="alert alert-warning">               
+                    <h4><i class="icon fa fa-warning"></i> No records found!</h4>         
+                    No Activity Logs record found in the system
+                  </div>
+                <?php endif ?>                
+              </div>
               <!-- /.tab-pane -->
+              <!-- //////////////////////////////////// ACTIVITY LOGS ///////////////////////////////// -->              
               <div class="tab-pane" id="activity">
                 <h4 class="title">Last Activity</h4>
                 <?php if ($logs): ?>
@@ -636,7 +671,7 @@
               <div class="col-sm-4 col-md-3">
                 <div class="form-group">
                   <label for="amount">Amount</label>
-                  <input type="text" name="amount" class="form-control" id="amount" placeholder="50.00" />
+                  <input type="text" name="amount" class="form-control integer" id="amount" placeholder="50.00" />
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-4 col-md-3 -->
               <div class="col-sm-4 col-md-6">
@@ -700,7 +735,7 @@
               <div class="col-sm-4 col-md-3">
                 <div class="form-group">
                   <label for="amount">Amount</label>
-                  <input type="text" name="amount" class="form-control" id="amount" placeholder="50.00"  required/>
+                  <input type="text" name="amount" class="form-control integer" id="amount" placeholder="50.00"  required/>
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-4 col-md-3 -->
               <div class="col-sm-4 col-md-6">
@@ -949,6 +984,55 @@
 
 
 
+ <!-- ///////////////////////// Add Note ////////////////////////////// -->
+  <div class="modal fade" id="AddPayment">
+    <div class="modal-dialog">
+      <div class="modal-content">
+        <?=form_open('payments/create')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Add Payment</h4>
+        </div>
+        <div class="modal-body">   
+          <div class="row">
+            <div class="col-sm-12 col-md-4">
+              <div class="form-group">
+                <label for="amount">Amount</label>
+                <input type="text" name="amount" id="amount" class="form-control input-lg integer" placeholder="500.00" />
+              </div><!-- /.form-group -->
+            </div><!-- /.col-sm-12 col-md-4 -->
+            <div class="col-sm-12 col-md-8">
+              <div class="form-group">
+                <label for="receipt">Receipt / Invoice No.</label>
+                <input type="text" name="receipt" id="receipt" class="form-control" placeholder="#1234567890" />
+              </div><!-- /.form-group -->
+              <div class="form-group">
+                <label for="payee">Payee</label>
+                <input type="text" name="payee" id="payee" class="form-control" placeholder="Borrower's Name...." value="<?=$info['name']?>"  required/>
+              </div><!-- /.form-group -->
+            </div><!-- /.col-sm-12 col-md-8 -->
+          </div><!-- /.row -->
+          <div class="form-group">
+            <label for="description">Description</label>
+            <textarea name="description" id="description" rows="3" class="form-control"></textarea>
+          </div><!-- /.form-group -->
+        </div>
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-success">Save Note</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+
+
   <footer class="main-footer">    
     <?php $this->load->view('inc/footer')?>    
   </footer>
@@ -982,6 +1066,17 @@
               
           });
       });
+
+    $('.integer').focusout(function(e) {
+              var value = $(this).val();
+              if(!value) {
+
+              } else {
+                value = parseFloat(value).toFixed(2);
+                $(this).val(value);
+              }
+              
+    });
 
     //Initialize input mask
     $('[data-mask]').inputmask();

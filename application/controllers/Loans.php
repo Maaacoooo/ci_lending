@@ -9,6 +9,7 @@ class Loans extends CI_Controller {
        $this->load->model('user_model');
        $this->load->model('borrower_model');
        $this->load->model('loans_model');
+       $this->load->model('payments_model');
 
        $this->load->library('zip');
 	}	
@@ -334,6 +335,7 @@ class Loans extends CI_Controller {
 
 			$data['notes']		= $this->notes_model->fetch_notes(NULL, NULL, 'loan', $data['loan']['id']);
 			$data['files']		= $this->files_model->fetch_files(NULL, NULL, 'loan', $data['loan']['id']);
+			$data['payments']	= $this->payments_model->fetch_payments(NULL, NULL, $data['loan']['id']);
 			
 			
 			if ($this->uri->segment(4)=='print') {
@@ -384,16 +386,18 @@ class Loans extends CI_Controller {
 	        $key = $this->encryption->decrypt($this->input->post('key')); //ID of the key 
 
 	       	$amount = abs(strip_tags($this->input->post('amount')));
+	       	$description = strip_tags($this->input->post('description'));
+	       	$code = strip_tags($this->input->post('code'));
 
 	        switch ($key) {
 	          case 'credit':
-	            $flag = $this->loans_model->add_ledger($id, $amount, $userdata['username']);
+	            $flag = $this->loans_model->add_ledger($id, $amount, $userdata['username'], $description, $code);
 	            $log_action = 'Added a Credit Record';
 	            break;
 
 	          case 'debit':
 	            # code...
-	            $flag = $this->loans_model->add_ledger($id, (($amount)*-1), $userdata['username']);
+	            $flag = $this->loans_model->add_ledger($id, (($amount)*-1), $userdata['username'], $description, $code);
 	            $log_action = 'Added a Debit Record';
 	            break;	
 	        }

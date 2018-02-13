@@ -307,7 +307,7 @@ Class Loans_Model extends CI_Model {
     }
 
 
-    function add_ledger($loan_id, $amount, $user) {
+    function add_ledger($loan_id, $amount, $user, $description, $code) {
 
           $debit  = 0;
           $credit = 0;
@@ -323,8 +323,8 @@ Class Loans_Model extends CI_Model {
 
           $data = array(
             'loan_id'     => $loan_id,
-            'code'        => strip_tags($this->input->post('code')),
-            'description' => strip_tags($this->input->post('description')),
+            'code'        => $code,
+            'description' => $description,
             'debit'       => $debit,
             'credit'      => $credit,
             'user'        => $user

@@ -6,8 +6,8 @@ Class Payments_Model extends CI_Model {
 
     function generateID() {
 
-        $total_rows = $this->db->count_all('payments');
-        return date('Y').'-'.prettyID(($total_rows + 1), 5);  
+        $total_rows = $this->db->count_all('loans_payments');
+        return 'PAY'. date('Y').'-'.prettyID(($total_rows + 1), 5);  
     }
 
 
@@ -21,12 +21,12 @@ Class Payments_Model extends CI_Model {
             'amount'      => $amount,
             'payee'       => $payee,            
             'description' => $description,  
-            'loan_id'     => $receipt,
+            'receipt'     => $receipt,
             'loan_id'     => $loan_id,
             'user'        => $user
         );
 
-        $this->db->insert('payments', $data);
+        $this->db->insert('loans_payments', $data);
 
         return $id;
     }
@@ -34,7 +34,7 @@ Class Payments_Model extends CI_Model {
 
     function view($id) {
         $this->db->where('id', $id);
-        $query = $this->db->get('payments');
+        $query = $this->db->get('loans_payments');
 
         return $query->row_array();
     }
@@ -50,23 +50,22 @@ Class Payments_Model extends CI_Model {
             $this->db->select('
               users.username as user,
               users.name,
-              payments.id,
-              payments.title,
-              payments.receipt,
-              payments.amount,
-              payments.payee,
-              payments.description,
-              payments.created_at
+              loans_payments.id,
+              loans_payments.receipt,
+              loans_payments.amount,
+              loans_payments.payee,
+              loans_payments.description,
+              loans_payments.created_at
               ');
-            $this->db->join('users', 'users.username = payments.user', 'left');
+            $this->db->join('users', 'users.username = loans_payments.user', 'left');
 
             if($loan_id) {
                 $this->db->where('loan_id', $loan_id);
             }
 
-            $this->db->order_by('payments.created_at', 'DESC');
+            $this->db->order_by('loans_payments.created_at', 'DESC');
 
-            $query = $this->db->get("payments");
+            $query = $this->db->get("loans_payments");
 
             if ($query->num_rows() > 0) {
                 return $query->result_array();
@@ -81,7 +80,7 @@ Class Payments_Model extends CI_Model {
          if($loan_id) {
             $this->db->where('loan_id', $loan_id);
         }
-        return $this->db->count_all_results("payments");
+        return $this->db->count_all_results("loans_payments");
     }
 
 
