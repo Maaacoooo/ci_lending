@@ -179,7 +179,7 @@
         if(is_null($currency)) {
             $currency = APP_CURRENCY; //system defaults 
         }
-        $digits = decimalize($digits);
+        $digits = number_format($digits, 2, '.', ',');
         return $currency . ' ' . $digits;
     }
 
