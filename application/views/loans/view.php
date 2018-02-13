@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html>
 <head>
@@ -1065,7 +1064,13 @@
               }
               
           });
-      });
+
+      <?php if($pay_id): ?>
+        $('body').ready(function(e) {      
+            window.open("<?=base_url('payments/view/'.$pay_id.'/print')?>", "_blank", "toolbar=no, location=yes, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, width=1000, height=400");
+        });
+      <?php endif; ?>
+    });
 
     $('.integer').focusout(function(e) {
               var value = $(this).val();

@@ -33,6 +33,18 @@ Class Payments_Model extends CI_Model {
 
 
     function view($id) {
+        $this->db->select('
+              users.username as user,
+              users.name,
+              loans_payments.id,
+              loans_payments.loan_id,
+              loans_payments.receipt,
+              loans_payments.amount,
+              loans_payments.payee,
+              loans_payments.description,
+              loans_payments.created_at
+              ');
+        $this->db->join('users', 'users.username = loans_payments.user', 'left');
         $this->db->where('id', $id);
         $query = $this->db->get('loans_payments');
 

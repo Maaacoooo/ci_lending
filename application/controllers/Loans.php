@@ -299,7 +299,8 @@ class Loans extends CI_Controller {
 			$data['user'] = $this->user_model->userdetails($userdata['username']); //fetches users record
 
 			//Fetch Data	
-			$data['loan']					= $this->loans_model->view($id);
+			$data['loan']	= $this->loans_model->view($id);
+			$data['pay_id'] = $this->session->flashdata('pay_id');
 
 			//Validate if record exist
 			 //IF NO ID OR NO RESULT, REDIRECT

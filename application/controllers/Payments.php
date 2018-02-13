@@ -44,8 +44,10 @@ class Payments extends CI_Controller {
 
 	        $payment_id = $this->payments_model->create($id, $amount, $payee, $description, $receipt, $userdata['username']);
 
+	        
 	        if($payment_id) {
-
+			//payment markup
+	        $this->session->set_flashdata('pay_id', $payment_id);
 	        //Add to Ledger 
 	        $this->loans_model->add_ledger($id, $amount, $userdata['username'], 'Payment #'.$payment_id, 'CPAY');
 
@@ -157,13 +159,41 @@ class Payments extends CI_Controller {
   }
 
 
-  function test() {
+  public function view($id = NULL)		{
 
-	    echo number_format('1000', 2, '.', ',');
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
 
+		if($userdata)	{
 
+			$data['site_title'] = APP_NAME;
+			$data['user'] = $this->user_model->userdetails($userdata['username']); //fetches users record
 
-  }
+			$data['info']	= $this->payments_model->view($id);	
+			$data['title']	= 'Payment Invoice: ' . $data['info']['id'];		
+
+			//Validate if record exist
+			 //IF NO ID OR NO RESULT, REDIRECT
+			 
+			if(!$data['info']) {
+				$notif['error'] = 'No Record Found!';
+		   		$this->sessnotif->setNotif($notif);
+
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+			}			
+			
+			if ($this->uri->segment(4)=='print') {
+				$this->load->view('payments/print', $data);	
+			} else {
+				$this->load->view('payments/view', $data);	
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
 
 
 }
