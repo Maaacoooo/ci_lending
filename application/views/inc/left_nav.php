@@ -78,9 +78,6 @@
           </a>
           <ul class="treeview-menu">
             <li><a href="<?=base_url('expenses')?>"><i class="fa fa-circle-o"></i> Expenses Record</a></li>
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Weekly Report</a></li>
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Monthly Report</a></li>
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Annual Report</a></li>
           </ul>
         </li>  
 

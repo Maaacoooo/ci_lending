@@ -36,22 +36,37 @@ Class Expenses_model extends CI_Model {
               $this->db->or_like('receipt', $search);
             }  
 
-            
             if(!is_null($limit)) {
-                $this->db->limit($limit, (($id-1)*$limit));
+               if (!is_null($id)) {
+                  $this->db->limit($limit, (($id-1)*$limit));
+               } else {
+                 $this->db->limit($limit);
+               }
             }
 
-            if(($date)) {
-               $arr_date = (explode("-",$date));
-               $str_from = str_replace(" ", "", ($arr_date[0]));
-               $str_to = str_replace(" ", "", ($arr_date[1]));
 
-               $arr_from = explode('/', $str_from);
-               $from = $arr_from[2].'-'.$arr_from[0].'-'.$arr_from[1];
+            if(!is_null($date)) {
+               switch ($date) {
+                 case 'now':
+                   $from = unix_to_human(strtotime("today"), TRUE,'eu');
+                   $to   = unix_to_human(strtotime("tomorrow"), TRUE,'eu');
+                   $this->db->where('store_expenses.created_at BETWEEN "'.$from.'" AND "'.$to.'"');
+                   break;
+                 
+                 default:
+                   $arr_date = (explode("-",$date));
+                   $str_from = str_replace(" ", "", ($arr_date[0]));
+                   $str_to = str_replace(" ", "", ($arr_date[1]));
 
-               $arr_to = explode('/', $str_to);
-               $to = $arr_to[2].'-'.$arr_to[0].'-'.$arr_to[1] . ' 23:59:59';
-               $this->db->where('store_expenses.created_at BETWEEN "'.$from.'" AND "'.$to.'"');
+                   $arr_from = explode('/', $str_from);
+                   $from = $arr_from[2].'-'.$arr_from[0].'-'.$arr_from[1];
+
+                   $arr_to = explode('/', $str_to);
+                   $to = $arr_to[2].'-'.$arr_to[0].'-'.$arr_to[1] . ' 23:59:59';
+                   $this->db->where('store_expenses.created_at BETWEEN "'.$from.'" AND "'.$to.'"');
+
+                   break;
+               }
 
             }
 

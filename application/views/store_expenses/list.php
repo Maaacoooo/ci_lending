@@ -144,35 +144,35 @@
         </div>
         <div class="modal-body">   
           <div class="row">
-          	<div class="col-md-8 col-sm-6">
-          		<div class="form-group">
-	          	   <label for="payee">Payee</label>
-	          	   <input type="text" name="payee" id="payee" class="form-control" placeholder="Redwoods Lending..." required="" />
-	      	  	</div><!-- /.form-group -->
-          	</div><!-- /.col-md-8 col-sm-6 -->
-          	<div class="col-md-4 col-sm-6">
-          	  <div class="form-group">
-	          	<label for="amount">Amount</label>
-	          	<input type="text" name="amount" id="amount" class="form-control" placeholder="500.00..." required="" />
-	      	  </div><!-- /.form-group -->
-          	</div><!-- /.col-md-4 col-sm-6 -->
+            <div class="col-md-8 col-sm-6">
+              <div class="form-group">
+                 <label for="payee">Payee</label>
+                 <input type="text" name="payee" id="payee" class="form-control" placeholder="Redwoods Lending..." required="" />
+              </div><!-- /.form-group -->
+            </div><!-- /.col-md-8 col-sm-6 -->
+            <div class="col-md-4 col-sm-6">
+              <div class="form-group">
+              <label for="amount">Amount</label>
+              <input type="text" name="amount" id="amount" class="form-control" placeholder="500.00..." required="" />
+            </div><!-- /.form-group -->
+            </div><!-- /.col-md-4 col-sm-6 -->
           </div><!-- /.row -->
           <div class="form-group">
-          	<label for="receipt">Receipt</label>
-          	<input type="text" name="receipt" id="receipt" class="form-control" placeholder="Official Receipt / Sales Invoice / Serial # / Delivery Receipt..." />
-      	  </div><!-- /.form-group -->
+            <label for="receipt">Receipt</label>
+            <input type="text" name="receipt" id="receipt" class="form-control" placeholder="Official Receipt / Sales Invoice / Serial # / Delivery Receipt..." />
+          </div><!-- /.form-group -->
           <div class="form-group">
             <label for="description">Description</label>
             <textarea name="description" id="description" rows="5" class="form-control" required></textarea>
           </div><!-- /.form-group -->
           <div class="row">
-          	<div class="col-sm-12">
-          		<div class="checkbox pull-right">
+            <div class="col-sm-12">
+              <div class="checkbox pull-right">
                   <label>
                     <input type="checkbox" required/>I have verified all inputs.
                   </label>
                 </div><!-- /.checkbox -->
-          	</div><!-- /.col-sm-12 -->
+            </div><!-- /.col-sm-12 -->
           </div><!-- /.row -->
         </div>
         <div class="modal-footer">
@@ -187,8 +187,7 @@
   </div>
   <!-- /.modal -->
 
-
-   <!-- ///////////////////////// Add Expense ////////////////////////////// -->
+   <!-- ///////////////////////// Print Expense ////////////////////////////// -->
   <div class="modal fade" id="PrintReport">
     <div class="modal-dialog">
       <div class="modal-content modal-sm">

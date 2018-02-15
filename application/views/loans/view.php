@@ -396,7 +396,7 @@
               <!-- //////////////////////////////////// ACTIVITY LOGS ///////////////////////////////// -->              
               <div class="tab-pane" id="payments">
                 <h4 class="title">Payments</h4>
-                <?php if ($logs): ?>
+                <?php if ($payments): ?>
                 <table class="table table-condensed">
                   <thead>
                     <tr>
@@ -422,9 +422,9 @@
                   </tbody>
                 </table><!-- /.table table-condensed -->
                 <?php else: ?>
-                  <div class="alert alert-warning">               
+                  <div class="well">               
                     <h4><i class="icon fa fa-warning"></i> No records found!</h4>         
-                    No Activity Logs record found in the system
+                    No Payment Records found in the system.
                   </div>
                 <?php endif ?>                
               </div>
@@ -983,7 +983,7 @@
 
 
 
- <!-- ///////////////////////// Add Note ////////////////////////////// -->
+ <!-- ///////////////////////// Add Payment ////////////////////////////// -->
   <div class="modal fade" id="AddPayment">
     <div class="modal-dialog">
       <div class="modal-content">
@@ -1020,7 +1020,7 @@
         <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
         <div class="modal-footer">
           <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
-          <button type="submit" class="btn btn-flat btn-success">Save Note</button>
+          <button type="submit" class="btn btn-flat btn-success">Add Payment</button>
         </div>
       </div>
       <?=form_close()?>

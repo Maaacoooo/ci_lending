@@ -7,6 +7,9 @@ class Dashboard extends CI_Controller {
 	public function __construct()	{
 		parent::__construct();		
        $this->load->model('user_model');
+       $this->load->model('expenses_model');
+       $this->load->model('loans_model');
+       $this->load->model('payments_model');
 	}	
 
 
@@ -20,11 +23,27 @@ class Dashboard extends CI_Controller {
 			$data['site_title'] = APP_NAME;
 			$data['user'] = $this->user_model->userdetails($userdata['username']); //fetches users record
 
-			$data['passwordverify'] = $this->user_model->check_user($userdata['username'], 'Inventory2017'); //boolean - returns false if default password
+			$data['passwordverify'] = $this->user_model->check_user($userdata['username'], APP_DEFAULT_PASS); //boolean - returns false if default password
 
-		
-			$this->load->view('blank', $data);					
+			if ($data['user']['user_level'] >= 10) {
+				//Administrator Account
+				$data['logs']		= $this->logs_model->fetch_logs(NULL, NULL, 15);
+				$data['payments']	= $this->payments_model->fetch_payments(11, NULL, NULL, NULL, 'now');
+				$data['expenses']	= $this->expenses_model->fetch_expenses(11, NULL, NULL, 'now');
+		    	$data["pendings"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, 0, NULL);
 
+				$this->load->view('dashboard/admin_dashboard', $data);		
+
+			} elseif ($data['user']['user_level'] >= 8) {
+				//Teller Account
+				$this->load->view('dashboard/teller_dashboard', $data);		
+
+			} elseif($data['user']['user_level'] >= 6) {
+				//Collector Account 
+				$this->load->view('blank', $data);				
+
+			}
+			
 
 		} else {
 
