@@ -62,9 +62,10 @@
             </span>
           </a>
           <ul class="treeview-menu">
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Weekly Report</a></li>
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Monthly Report</a></li>
-            <li><a href="<?=base_url('loans')?>"><i class="fa fa-circle-o"></i> Annual Report</a></li>
+            <li><a href="<?=base_url('payments/')?>"><i class="fa fa-circle-o"></i> Payments</a></li>
+            <li><a href="<?=base_url('payments/index/weekly')?>"><i class="fa fa-circle-o"></i> Weekly Report</a></li>
+            <li><a href="<?=base_url('payments/index/monthly')?>"><i class="fa fa-circle-o"></i> Monthly Report</a></li>
+            <li><a href="<?=base_url('payments/index/annual')?>"><i class="fa fa-circle-o"></i> Annual Report</a></li>
           </ul>
         </li>  
 
