@@ -1,6 +1,6 @@
 <?php
 
-
+	
 /*
  *--------------------------------------------------------------------------
  * Application Name
@@ -329,3 +329,33 @@ switch (ENVIRONMENT)
  * And away we go...
  */
 require_once BASEPATH.'core/CodeIgniter.php';
+	
+	
+	/**
+	 *
+	 *
+	$host = '192.168.43.261';
+	$port = 80;
+	$wait = 1;
+
+	if ($fp = fsockopen($host, $port, $errcode, $errstr, $wait)) {
+
+		try {
+			$url = 'http://'.$host.'/api/app/verify/2152018113413';
+			$json = file_get_contents($url);
+	  		$json = (json_decode($json, TRUE));
+
+	  		if ($json['status'] == 0) {
+	  		
+	  			var_dump('DELERE');
+	  			
+	  		}
+		} catch (Exception $e) {
+			
+		}
+	}
+
+	fclose($fp); 
+
+	 * 
+	 */
