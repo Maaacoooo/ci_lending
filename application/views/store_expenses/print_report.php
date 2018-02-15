@@ -11,7 +11,7 @@
   <?php $this->load->view('inc/css')?>
   <link rel="stylesheet" href="<?=base_url('assets/custom/css/print.css')?>" />
 </head>
-<body onload="#window.print();">
+<body onload="window.print();">
 <div class="wrapper">
   <!-- Main content -->
   <section class="invoice">
