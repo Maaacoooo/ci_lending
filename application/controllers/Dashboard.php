@@ -25,6 +25,8 @@ class Dashboard extends CI_Controller {
 
 			$data['passwordverify'] = $this->user_model->check_user($userdata['username'], APP_DEFAULT_PASS); //boolean - returns false if default password
 
+		    $data["pendings"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, "0", NULL);
+		    $data["active"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, 1, NULL);
 		    $data["overdue"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, "overdue", NULL);
 
 			if ($data['user']['user_level'] >= 10) {
@@ -32,13 +34,11 @@ class Dashboard extends CI_Controller {
 				$data['logs']		= $this->logs_model->fetch_logs(NULL, NULL, 15);
 				$data['payments']	= $this->payments_model->fetch_payments(11, NULL, NULL, NULL, 'now');
 				$data['expenses']	= $this->expenses_model->fetch_expenses(11, NULL, NULL, 'now');
-		    	$data["pendings"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, "0", NULL);
 
 				$this->load->view('dashboard/admin_dashboard', $data);		
 
 			} elseif ($data['user']['user_level'] >= 8) {
 				//Teller Account
-		    	$data["active"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, 1, NULL);
 				$this->load->view('dashboard/teller_dashboard', $data);		
 
 			} elseif($data['user']['user_level'] >= 6) {

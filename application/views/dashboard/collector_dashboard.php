@@ -77,10 +77,9 @@
 
       <div class="row">
         <div class="col-lg-9 col-sm-12">
-          <!-- Default box -->
-          <div class="box">
+          <div class="box box-danger">
             <div class="box-header with-border">
-              <h3 class="box-title">Title</h3>
+              <h3 class="box-title">Overdue Loans</h3>
 
               <div class="box-tools pull-right">
                 <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
@@ -89,11 +88,80 @@
               </div>
             </div>
             <div class="box-body">
-              Start creating your amazing application!
+               <?php if ($overdue): ?>
+              <div class="box-body table-responsive no-padding">
+                <table class="table table-striped table-condensed">             
+                  <tbody>
+                    <?php foreach ($overdue as $od): ?>
+                      <tr>
+                        <td><a href="<?=base_url('loans/view/'.$od['id'])?>"><?=$od['lastname'].', '.$od['firstname']?></a></td>
+                        <td><a href="<?=base_url('loans/view/'.$od['id'])?>"><?=$od['id']?></a></td>
+                        <td><a href="<?=base_url('loans/view/'.$od['id'])?>"><?=moneytize($od['borrowed_amount'])?> <span class="badge bg-red">OVERDUE</span></a></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>                       
+                </table><!-- /.table table-bordered -->
+              </div><!-- /.box-body -->
+              <?php else: ?>
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="well">
+                        <strong><i class="icon fa fa-ban"></i> Oops! No Results Found</strong><br />
+                        The has found no results. If you feel something wrong, please contact the System Administrator.
+                      </div>
+                    </div><!-- /.col-sm-12 -->
+                  </div><!-- /.row -->   
+                </div><!-- /.box-body -->     
+              <?php endif; ?>             
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
-              Footer
+            </div>
+            <!-- /.box-footer-->
+          </div>
+          <!-- /.box -->
+
+          <div class="box box-success">
+            <div class="box-header with-border">
+              <h3 class="box-title">Active Loans</h3>
+
+              <div class="box-tools pull-right">
+                <button type="button" class="btn btn-box-tool" data-widget="collapse" data-toggle="tooltip"
+                        title="Collapse">
+                  <i class="fa fa-minus"></i></button>      
+              </div>
+            </div>
+            <div class="box-body">
+              <?php if ($active): ?>
+              <div class="box-body table-responsive no-padding">
+                <table class="table table-striped table-condensed">             
+                  <tbody>
+                    <?php foreach ($active as $res): ?>
+                      <tr>
+                        <td><a href="<?=base_url('loans/view/'.$res['id'])?>"><?=$res['lastname'].', '.$res['firstname']?></a></td>
+                        <td><a href="<?=base_url('loans/view/'.$res['id'])?>"><?=$res['id']?></a></td>
+                        <td><a href="<?=base_url('loans/view/'.$res['id'])?>"><?=moneytize($res['borrowed_amount'])?></a></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>                       
+                </table><!-- /.table table-bordered -->
+              </div><!-- /.box-body -->
+              <?php else: ?>
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="well">
+                        <strong><i class="icon fa fa-ban"></i> Oops! No Results Found</strong><br />
+                        The has found no results. If you feel something wrong, please contact the System Administrator.
+                      </div>
+                    </div><!-- /.col-sm-12 -->
+                  </div><!-- /.row -->   
+                </div><!-- /.box-body -->     
+              <?php endif; ?>             
+            </div>
+            <!-- /.box-body -->
+            <div class="box-footer">
             </div>
             <!-- /.box-footer-->
           </div>
