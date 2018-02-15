@@ -285,7 +285,7 @@ class Payments extends CI_Controller {
 			}			
 			
 			if ($this->uri->segment(4)=='print') {
-				$this->load->view('payments/print', $data);	
+				$this->load->view('payments/print_invoice', $data);	
 			} else {
 				$this->load->view('payments/view', $data);	
 			}
