@@ -70,8 +70,15 @@ Class Logs_model extends CI_Model
                 $this->db->limit($limit);
             }
 
-            $this->db->where('tag', $tag);
-            $this->db->where('tag_id', $tag_id);
+            if (!is_null($tag)) {
+                $this->db->where('tag', $tag);
+            }
+            if (!is_null($tag_id)) {
+                $this->db->where('tag_id', $tag_id);
+            }
+            
+
+            $this->db->join('users', 'users.username = logs.user', 'left');
             $this->db->order_by('date_time', 'DESC');
 
             $query = $this->db->get("logs");
