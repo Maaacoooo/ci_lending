@@ -94,7 +94,17 @@ Class Loans_Model extends CI_Model {
             }
 
             if(!is_null($status)) {
-                $this->db->where('loans.status', $status);
+
+              switch ($status) {
+                        case 'overdue':
+                          $this->db->where('loans.status', 1); //approved status
+                          $this->db->where('loans.due_date <= NOW()');
+                          break;
+                        
+                        default:
+                          $this->db->where('loans.status', $status); //approved status                          
+                          break;
+                      }        
             }
 
             if(!is_null($acc_id)) {
@@ -153,8 +163,18 @@ Class Loans_Model extends CI_Model {
               $this->db->or_like('loans.due_date', $search);
         }   
         if(!is_null($status)) {
-              $this->db->where('loans.status', $status);
-        }
+
+              switch ($status) {
+                        case 'overdue':
+                          $this->db->where('loans.status', 1); //approved status
+                          $this->db->where('loans.due_date <= NOW()');
+                          break;
+                        
+                        default:
+                          $this->db->where('loans.status', $status); //approved status                          
+                          break;
+                      }        
+            }
 
         if(!is_null($acc_id)) {
               $this->db->where('loans.borrower_id', $acc_id);

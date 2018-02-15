@@ -27,3 +27,9 @@
 .table-dark-border tr td, .table-dark-border tr th {
 	border: 1px solid #424242;
 }
+
+.img-center, .center {
+	display: block;
+	margin: auto;
+	text-align: center;
+}

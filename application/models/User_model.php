@@ -49,6 +49,7 @@ Class User_model extends CI_Model
               users.contact,
               users.img,
               users.is_deleted,
+              users.pin,
               usertypes.user_level,
               usertypes.title as usertype
               ');        
@@ -276,7 +277,6 @@ Class User_model extends CI_Model
                 $filename = ''; //set to null
             }
 
-
             //Process Image Upload
               if($_FILES['img']['name'] != NULL)  { 
 
@@ -334,6 +334,20 @@ Class User_model extends CI_Model
       
             $data = array(           
                 'password'  => password_hash($this->input->post('newpass'), PASSWORD_DEFAULT)          
+             );
+            
+            $this->db->where('username', $user);
+            return $this->db->update('users', $data);          
+        
+    }
+
+
+
+
+     function update_pin($user, $pin) {          
+      
+            $data = array(           
+                'pin'  => $pin          
              );
             
             $this->db->where('username', $user);

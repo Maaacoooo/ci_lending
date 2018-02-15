@@ -25,22 +25,25 @@ class Dashboard extends CI_Controller {
 
 			$data['passwordverify'] = $this->user_model->check_user($userdata['username'], APP_DEFAULT_PASS); //boolean - returns false if default password
 
+		    $data["overdue"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, "overdue", NULL);
+
 			if ($data['user']['user_level'] >= 10) {
 				//Administrator Account
 				$data['logs']		= $this->logs_model->fetch_logs(NULL, NULL, 15);
 				$data['payments']	= $this->payments_model->fetch_payments(11, NULL, NULL, NULL, 'now');
 				$data['expenses']	= $this->expenses_model->fetch_expenses(11, NULL, NULL, 'now');
-		    	$data["pendings"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, 0, NULL);
+		    	$data["pendings"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, "0", NULL);
 
 				$this->load->view('dashboard/admin_dashboard', $data);		
 
 			} elseif ($data['user']['user_level'] >= 8) {
 				//Teller Account
+		    	$data["active"] 	= $this->loans_model->fetch_loans(NULL, NULL, NULL, 1, NULL);
 				$this->load->view('dashboard/teller_dashboard', $data);		
 
 			} elseif($data['user']['user_level'] >= 6) {
 				//Collector Account 
-				$this->load->view('blank', $data);				
+				$this->load->view('dashboard/collector_dashboard', $data);				
 
 			}
 			
@@ -130,49 +133,70 @@ class Dashboard extends CI_Controller {
 	}
 
 
-	public function test()		{
+	public function check_collector() {
 
-		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+		$data['user'] = $this->user_model->userdetails($userdata['username']); //fetches users record
 
-		if($userdata)	{
-
-			$data['title'] = 'Dashboard';
-			$data['site_title'] = APP_NAME;
-			$data['user'] = $this->user_model->userdetails($userdata['username']); //fetches users record
-
-			$nope['success'] = "HAHAHAHAHHAHAHA PUTA EJdklsajdklasjdkljakldj";
-			//$nope['success'] = "HAHAHAHAHHAHAHA PUTA EJdklsajdklasjdkljakldj";
-			$this->sessnotif->setNotif($nope);
-			//$this->sessnotif->setNotif($nope);
-			//$this->sessnotif->setNotif($nope);
-			//$this->sessnotif->setNotif($nope);
-			//$this->sessnotif->setNotif($nope);
-
-			$wow['warning'] = "Lorem ipsum dolor sit amet.";
-			$this->sessnotif->setNotif($wow);
-			//$this->sessnotif->setNotif($wow);
-
-			$peste['error'] = "HAHAHAHHAHAHA";		
-			$this->sessnotif->setNotif($peste);				
-			//$this->sessnotif->setNotif($peste);				
-			$peste2['error'] = "Lorem Perspiciatis neque distinctio tempora eveniet iure, vitae ipsum rem totam accusantium ullam, natus veritatis eius earum?";
-			$this->sessnotif->setNotif($peste2);
-
-			 
-
-			var_dump($this->session->flashdata());
-
-			
-			$this->load->view('blank', $data);					
-
-
+		if($data['user']['user_level'] == 6) {	
+			return TRUE;
 		} else {
-
-			$this->session->set_flashdata('error', 'You need to login!');
-			redirect('dashboard/login', 'refresh');
+			$this->form_validation->set_message('check_collector', 'Your Account is not a Collector Account');
+			return FALSE;
 		}
-
 	}
+
+
+	public function change_pin()    {
+
+	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+	    if($userdata) {     
+	      //FORM VALIDATION
+	      $this->form_validation->set_rules('pin', 'PIN', 'trim|required|callback_check_collector|is_unique[users.pin]');    
+	     
+	       if($this->form_validation->run() == FALSE) {
+
+	        //convert validation errors to flashdata notification
+	          $notif['warning'] = array_values($this->form_validation->error_array());
+	          $this->sessnotif->setNotif($notif);
+	          
+	        redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+	      } else {
+
+	      	$pin = strip_tags($this->input->post('pin'));
+
+	        if($this->user_model->update_pin($userdata['username'], $pin)) {
+
+
+	          $log[] = array(
+	              'user'    =>  $userdata['username'],
+	              'tag'     =>  '',
+	              'tag_id'  =>  '',
+	              'action'  =>  'Updated Access Pin'
+	              );
+
+	        
+	          //Save Logs/////////////////////////
+	          $this->logs_model->save_logs($log);   
+	          ////////////////////////////////////
+	          	
+	          $this->session->set_flashdata('success', 'Access Pin Updated!');
+	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
+	        } else {
+	          $this->session->set_flashdata('error', 'Error Occured!');
+	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
+	        }
+	      }
+
+	    } else {
+
+	      $this->session->set_flashdata('error', 'You need to login!');
+	      redirect('dashboard/login', 'refresh');
+	    }
+
+  }
 
 
 }

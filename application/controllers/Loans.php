@@ -85,7 +85,7 @@ class Loans extends CI_Controller {
 			//Paginated data				            
 	   		$config['num_links'] = 5;
 			$config['base_url'] = base_url('/loans/pending/');
-			$config["total_rows"] = $this->loans_model->count_loans($data['search'], 0, NULL);
+			$config["total_rows"] = $this->loans_model->count_loans($data['search'], "0", NULL);
 			$config['per_page'] = 50;				
 			$this->load->config('pagination'); //LOAD PAGINATION CONFIG
 
@@ -96,7 +96,60 @@ class Loans extends CI_Controller {
 		       $page = 1;		               
 		    }
 
-		    $data["results"] = $this->loans_model->fetch_loans($config["per_page"], $page, $data['search'], 0, NULL);
+		    $data["results"] = $this->loans_model->fetch_loans($config["per_page"], $page, $data['search'], "0", NULL);
+		    $str_links = $this->pagination->create_links();
+		    $data["links"] = explode('&nbsp;',$str_links );
+
+		    //ITEM NUMBERING
+		    $data['per_page'] = $config['per_page'];
+		    $data['page'] = $page;
+
+		    //GET TOTAL RESULT
+		    $data['total_result'] = $config["total_rows"];
+		    //END PAGINATION		
+		    
+			$this->load->view('loans/list', $data);
+		    
+		
+			
+		
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
+	public function overdue()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{
+
+			$data['title'] 		= 'Pending Applications';
+			$data['site_title'] = APP_NAME;
+			$data['user'] 		= $this->user_model->userdetails($userdata['username']); //fetches users record
+
+			//Search 
+			$data['search'] = $this->input->get('search', TRUE);
+
+			//Paginated data				            
+	   		$config['num_links'] = 5;
+			$config['base_url'] = base_url('/loans/overdue/');
+			$config["total_rows"] = $this->loans_model->count_loans($data['search'], "overdue", NULL);
+			$config['per_page'] = 50;				
+			$this->load->config('pagination'); //LOAD PAGINATION CONFIG
+
+			$this->pagination->initialize($config);
+		    if($this->uri->segment(3)){
+		       $page = ($this->uri->segment(3)) ;
+		  	}	else 	{
+		       $page = 1;		               
+		    }
+
+		    $data["results"] = $this->loans_model->fetch_loans($config["per_page"], $page, $data['search'], "overdue", NULL);
 		    $str_links = $this->pagination->create_links();
 		    $data["links"] = explode('&nbsp;',$str_links );
 

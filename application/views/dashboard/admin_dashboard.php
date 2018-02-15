@@ -135,7 +135,32 @@
               </div>
             </div>
             <div class="box-body">
-              Start creating your amazing application!
+               <?php if ($overdue): ?>
+              <div class="box-body table-responsive no-padding">
+                <table class="table table-striped table-condensed">             
+                  <tbody>
+                    <?php foreach ($overdue as $od): ?>
+                      <tr>
+                        <td><a href="<?=base_url('loans/view/'.$od['id'])?>"><?=$od['lastname'].', '.$od['firstname']?></a></td>
+                        <td><a href="<?=base_url('loans/view/'.$od['id'])?>"><?=$od['id']?></a></td>
+                        <td><a href="<?=base_url('loans/view/'.$od['id'])?>"><?=moneytize($od['borrowed_amount'])?> <span class="badge bg-red">OVERDUE</span></a></td>
+                      </tr>
+                    <?php endforeach; ?>
+                  </tbody>                       
+                </table><!-- /.table table-bordered -->
+              </div><!-- /.box-body -->
+              <?php else: ?>
+                <div class="box-body">
+                  <div class="row">
+                    <div class="col-sm-12">
+                      <div class="well">
+                        <strong><i class="icon fa fa-ban"></i> Oops! No Results Found</strong><br />
+                        The has found no results. If you feel something wrong, please contact the System Administrator.
+                      </div>
+                    </div><!-- /.col-sm-12 -->
+                  </div><!-- /.row -->   
+                </div><!-- /.box-body -->     
+              <?php endif; ?>             
             </div>
             <!-- /.box-body -->
             <div class="box-footer">
