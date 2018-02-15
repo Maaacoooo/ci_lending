@@ -66,7 +66,7 @@ Class User_model extends CI_Model
       
             $data = array(              
                 'username'  => $username,  
-                'password'  => password_hash('Inventory2017', PASSWORD_DEFAULT),  //Default Password
+                'password'  => password_hash(APP_DEFAULT_PASS, PASSWORD_DEFAULT),  //Default Password
                 'name'      => strip_tags($this->input->post('name')),  
                 'email'     => strip_tags($this->input->post('email')),  
                 'contact'   => strip_tags($this->input->post('contact')),  
@@ -118,7 +118,7 @@ Class User_model extends CI_Model
     function reset_password($user) {
 
         $data = array(            
-                'password'  => password_hash('Inventory2017', PASSWORD_DEFAULT)  //Default Password
+                'password'  => password_hash(APP_DEFAULT_PASS, PASSWORD_DEFAULT)  //Default Password
              );
             $this->db->where('username', $user);            
             

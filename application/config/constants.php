@@ -11,6 +11,7 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 */
 define('APP_NAME', 'RedWoods Lending'); // Application name 
 define('APP_CURRENCY', 'PHP'); // Application Currency 
+define('APP_DEFAULT_PASS', 'redwoods');
 
 /*
 |--------------------------------------------------------------------------
