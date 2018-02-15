@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 10, 2018 at 01:58 AM
+-- Generation Time: Feb 14, 2018 at 11:11 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -48,8 +48,11 @@ CREATE TABLE `borrowers` (
 --
 
 INSERT INTO `borrowers` (`id`, `firstname`, `middlename`, `lastname`, `sex`, `civil_status`, `birthdate`, `education`, `spouse`, `bplace`, `img`, `created_at`, `updated_at`, `is_deleted`) VALUES
-('2018-00001', 'Maco', 'Gallemit', 'Cortes', 1, 'Married', '1997-06-10', 1, 1, 1, './uploads/borrowers/2018-00001/2bd7746fcfea81d90a357069fe9b222d.jpg', '2018-02-08 20:37:15', '2018-02-09 10:35:41', 0),
-('2018-00002', 'Eric', 'Test', 'Yap', 1, 'Single', '1994-06-14', 2, NULL, NULL, NULL, '2018-02-09 19:34:31', '2018-02-09 11:34:32', 0);
+('2018-00001', 'Maco', 'Gallemit', 'Cortes', 1, 'Married', '1997-06-10', 1, 1, 1, './uploads/borrowers/2018-00001/fe6743eb2074556d20c9dcc7184e2620.jpg', '2018-02-08 20:37:15', '2018-02-13 06:19:44', 0),
+('2018-00002', 'Eric', 'Test', 'Yap', 1, 'Single', '1994-06-14', 2, NULL, NULL, NULL, '2018-02-09 19:34:31', '2018-02-13 07:16:56', 1),
+('2018-00003', 'asdasdasda', 'asdad', 'asdadasdsa', 1, 'Single', '2018-02-11', 3, NULL, NULL, NULL, '2018-02-11 10:33:26', '2018-02-13 07:16:59', 1),
+('2018-00004', 'asdadasdas', 'sd', 'asdasd', 1, 'Single', '2018-02-11', 4, NULL, NULL, './uploads/borrowers/2018-00004/7abd192c50a516b340d75d25a6a0571a.jpg', '2018-02-11 16:24:00', '2018-02-11 08:24:00', 0),
+('2018-00005', 'asdasdas', 'dasdasda', 'asdasdasd', 1, 'Single', '2018-02-11', 5, NULL, NULL, NULL, '2018-02-11 16:29:03', '2018-02-11 08:29:03', 0);
 
 -- --------------------------------------------------------
 
@@ -80,7 +83,16 @@ INSERT INTO `borrowers_address` (`id`, `borrower_id`, `type`, `building`, `stree
 (3, '2018-00001', 2, 'Polanco Koi', 'Nat\'l Highway', 'Lingasad', 'Polanco', '7101', 'Zamboanga del Norte', 'Philippines'),
 (4, '2018-00002', 0, 'yadghas', 'hjghjgh', 'ghjghjg', 'Salug', '7101', 'Zamboanga del Norte', 'Philippines'),
 (5, '2018-00002', 1, 'akldskjdkasjk', 'adlkjasjd', 'adlkjaskdj', 'adkljaskdj', '34567', 'aldkjaskldj', 'Philippines'),
-(6, '2018-00002', 2, 'akldskjdkasjk', 'adlkjasjd', 'adlkjaskdj', 'adkljaskdj', '34567', 'aldkjaskldj', 'Philippines');
+(6, '2018-00002', 2, 'akldskjdkasjk', 'adlkjasjd', 'adlkjaskdj', 'adkljaskdj', '34567', 'aldkjaskldj', 'Philippines'),
+(7, '2018-00003', 0, 'asdadasdas', 'sadsadas', 'dasdasd', 'asdad', '12312', 'sadsada', 'Philippines'),
+(8, '2018-00003', 1, 'sadasdadada', 'adasdasd', 'asdasdsad', 'asdasdas', '3234', 'dasdasdsa', 'Philippines'),
+(9, '2018-00003', 2, 'sadasdadada', 'adasdasd', 'asdasdsad', 'asdasdas', '3234', 'dasdasdsa', 'Philippines'),
+(10, '2018-00004', 0, 'asdsa', 'dasdas', 'dasdasd', 'asdsad', 'dasdasd', 'asda', 'Philippines'),
+(11, '2018-00004', 1, 'asdasd', 'asdad', 'asdasd', 'asdasd', 'asdas', 'dasd', 'Philippines'),
+(12, '2018-00004', 2, 'asdasd', 'asdad', 'asdasd', 'asdasd', 'asdas', 'dasd', 'Philippines'),
+(13, '2018-00005', 0, 'asdasd', 'sadad', 'adadas', 'dasdas', 'dsadas', 'dsada', 'Philippines'),
+(14, '2018-00005', 1, 'asdas', 'dasdad', 'aafsadfa', 'cvxdvxc', '34', 'fdfd', 'Philippines'),
+(15, '2018-00005', 2, 'asdas', 'dasdad', 'aafsadfa', 'cvxdvxc', '34', 'fdfd', 'Philippines');
 
 -- --------------------------------------------------------
 
@@ -111,7 +123,20 @@ INSERT INTO `borrowers_contacts` (`id`, `borrower_id`, `type`, `value`) VALUES
 (9, '2018-00002', 0, ''),
 (10, '2018-00002', 1, 'maco.techdepot@gmail.com'),
 (11, '2018-00002', 1, ''),
-(12, '2018-00002', 1, '');
+(12, '2018-00002', 1, ''),
+(13, '2018-00003', 0, '(213) 123-123_'),
+(14, '2018-00003', 0, ''),
+(15, '2018-00003', 0, ''),
+(16, '2018-00003', 1, '1asdasdasd@gmail.com'),
+(17, '2018-00003', 1, '1asdasdasd@gmail.com'),
+(18, '2018-00003', 1, '1asdasdasd@gmail.com'),
+(19, '2018-00004', 0, '(123) 131-2312'),
+(22, '2018-00004', 1, 'asdasdas@asd.com'),
+(23, '2018-00004', 1, ''),
+(24, '2018-00004', 1, ''),
+(25, '2018-00005', 0, '(231) 231-2312'),
+(26, '2018-00005', 1, 'dfadsasdsadasd@asd.com'),
+(27, '2018-00005', 1, 'asdasdad@axc.com');
 
 -- --------------------------------------------------------
 
@@ -134,7 +159,10 @@ CREATE TABLE `borrowers_educ` (
 
 INSERT INTO `borrowers_educ` (`id`, `borrower_id`, `level`, `school`, `course`, `year`) VALUES
 (1, '2018-00001', 3, 'STI Dipolog', 'BSCS', '2018'),
-(2, '2018-00002', 0, 'STI', 'BSCS', '2018');
+(2, '2018-00002', 0, 'STI', 'BSCS', '2018'),
+(3, '2018-00003', 0, 'sadasdas', 'asdasdsa', '123'),
+(4, '2018-00004', 2, 'STI Dipolog', 'BSCS', '2018'),
+(5, '2018-00005', 1, 'STI Dipolog', 'BSCS', '2017');
 
 -- --------------------------------------------------------
 
@@ -189,7 +217,10 @@ CREATE TABLE `borrowers_work` (
 INSERT INTO `borrowers_work` (`id`, `borrower_id`, `type`, `employer_business`, `position_nature`, `address`, `date_started`, `date_ended`, `tel_no`, `status`, `remarks`) VALUES
 (1, '2018-00001', NULL, 'Tech Depot', 'Tech Firm', 'Dipolog City', '2016-07-06', NULL, '(905) 820-8455', '', ''),
 (2, '2018-00001', 0, 'Strategic Technologies', 'Regional Sales Representative', 'China Town, 999 Bldg, #64, Bacolod City', '2013-10-04', NULL, '(032) 221-5545', 'N/A', 'N/A'),
-(3, '2018-00002', 1, 'BFP', 'Fire Officer I', 'asdasdasdasd', '2018-02-16', NULL, '(234) 567-8945', '', '');
+(3, '2018-00002', 1, 'BFP', 'Fire Officer I', 'asdasdasdasd', '2018-02-16', NULL, '(234) 567-8945', '', ''),
+(4, '2018-00003', 1, 'sdadsa', 'dsadas', 'asdsadsad', '2010-02-09', NULL, '(213) 123-1231', 'asdadasd', ''),
+(5, '2018-00004', 0, 'asdsadasdsad', 'asdada', 'sada', '2018-02-13', NULL, '(213) 123-1232', 'adasdas', ''),
+(6, '2018-00005', 1, 'asdas', 'dasdas', 'asdasda', '2018-01-29', NULL, '(231) 232-1312', 'daasds', '');
 
 -- --------------------------------------------------------
 
@@ -209,12 +240,23 @@ CREATE TABLE `ci_sessions` (
 --
 
 INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-('79nqa3o9a5t0nghqvuu7mqrp5eq34mqt', '::1', 1518094027, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531383039333737313b6572726f727c733a31383a22596f75206e65656420746f206c6f67696e21223b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a32383a225570646174656420506572736f6e616c20496e666f726d6174696f6e223b),
-('lck76gbb444q9rbqlpinrptet6dan77h', '::1', 1518130949, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531383133303834383b6572726f727c733a31383a22596f75206e65656420746f206c6f67696e21223b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a32383a225570646174656420506572736f6e616c20496e666f726d6174696f6e223b),
-('ob9a84ld3llprjmgjpfe56q4gqn93c7f', '::1', 1518161188, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531383136313135343b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a32333a225570646174656420612053706f757365205265636f7264223b),
-('7t19s5cvldurpoajeac8fh0tushcdm62', '::1', 1518176079, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531383137353939363b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a31393a224163636f756e74205265676973746572656421223b),
-('fl1andcvvhnoir3j96pgdhkaq8n3p1do', '::1', 1518198071, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531383139373930393b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a32303a2241646465642061204465626974205265636f7264223b),
-('gv34oeu9gfdvidq5i4t77aj6uatmpclj', '::1', 1518224261, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531383232343135363b6572726f727c733a31383a22596f75206e65656420746f206c6f67696e21223b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a31333a2246696c652044656c6574656421223b);
+('9dblsennp8o4ggdplt7cpds6t9402s61', '::1', 1518603027, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531383630323834353b6572726f727c733a31383a22596f75206e65656420746f206c6f67696e21223b737563636573737c733a31393a2257656c636f6d65206261636b2061646d696e21223b7761726e696e677c613a313a7b693a303b733a35343a2254686520416d6f756e74206669656c64206d75737420636f6e7461696e2061206e756d6265722067726561746572207468616e20302e223b7d61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d);
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `collections`
+--
+
+CREATE TABLE `collections` (
+  `id` int(11) NOT NULL,
+  `loan_id` varchar(255) DEFAULT NULL,
+  `amount` decimal(10,2) DEFAULT NULL,
+  `schedule` date DEFAULT NULL,
+  `status` tinyint(1) DEFAULT NULL,
+  `user` varchar(255) DEFAULT NULL,
+  `approved_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1;
 
 -- --------------------------------------------------------
 
@@ -319,7 +361,9 @@ CREATE TABLE `loans` (
 --
 
 INSERT INTO `loans` (`id`, `borrower_id`, `borrowed_amount`, `due_date`, `borrowed_percentage`, `description`, `status`, `approved_at`, `created_at`, `updated_at`) VALUES
-('2018-00001-00001', '2018-00001', '50000.00', '2018-10-04', '12.00', NULL, 1, '2018-02-10 01:32:18', '2018-02-10 00:44:37', '2018-02-09 17:32:18');
+('2018-00001-00001', '2018-00001', '50000.00', '2018-10-04', '12.00', NULL, 2, '2018-02-10 01:32:18', '2018-02-10 00:44:37', '2018-02-11 13:35:35'),
+('2018-00001-00002', '2018-00001', '50000.00', '2018-10-04', '12.00', NULL, 1, '2018-02-11 21:35:02', '2018-02-11 21:35:02', '2018-02-11 13:35:46'),
+('2018-00002-00003', '2018-00002', '50000.00', '2018-07-04', '20.00', NULL, 2, '0000-00-00 00:00:00', '2018-02-11 21:38:44', '2018-02-13 07:40:32');
 
 -- --------------------------------------------------------
 
@@ -341,7 +385,8 @@ CREATE TABLE `loans_creditors` (
 --
 
 INSERT INTO `loans_creditors` (`id`, `loan_id`, `fullname`, `address`, `amount`, `remarks`) VALUES
-(1, '2018-00001-00001', 'Testing', 'Test', '500.00', 'test');
+(1, '2018-00001-00001', 'Testing', 'Test', '500.00', 'test'),
+(2, '2018-00002-00003', '', '', '0.00', '');
 
 -- --------------------------------------------------------
 
@@ -366,7 +411,13 @@ INSERT INTO `loans_expense` (`id`, `loan_id`, `expense_id`, `amount`) VALUES
 (3, '2018-00001-00001', 3, '1000.00'),
 (4, '2018-00001-00001', 4, '500.00'),
 (5, '2018-00001-00001', 5, '0.00'),
-(6, '2018-00001-00001', 6, '500.00');
+(6, '2018-00001-00001', 6, '500.00'),
+(7, '2018-00002-00003', 1, '5000.00'),
+(8, '2018-00002-00003', 2, '5000.00'),
+(9, '2018-00002-00003', 3, '12000.00'),
+(10, '2018-00002-00003', 4, '1200.00'),
+(11, '2018-00002-00003', 5, '23000.00'),
+(12, '2018-00002-00003', 6, '8000.00');
 
 -- --------------------------------------------------------
 
@@ -390,7 +441,12 @@ INSERT INTO `loans_income` (`id`, `loan_id`, `income_id`, `amount`) VALUES
 (2, '2018-00001-00001', 2, '7000.00'),
 (3, '2018-00001-00001', 3, '3000.00'),
 (4, '2018-00001-00001', 4, '1000.00'),
-(5, '2018-00001-00001', 5, '2500.00');
+(5, '2018-00001-00001', 5, '2500.00'),
+(6, '2018-00002-00003', 1, '12000.00'),
+(7, '2018-00002-00003', 2, '2000.00'),
+(8, '2018-00002-00003', 3, '200.00'),
+(9, '2018-00002-00003', 4, '2000.00'),
+(10, '2018-00002-00003', 5, '3500.00');
 
 -- --------------------------------------------------------
 
@@ -414,7 +470,29 @@ CREATE TABLE `loans_ledger` (
 --
 
 INSERT INTO `loans_ledger` (`id`, `loan_id`, `code`, `description`, `debit`, `credit`, `created_at`, `user`) VALUES
-(1, '2018-00001-00001', 'DISB', 'asdasdasdasdasdasd', '500.00', '0.00', '2018-02-10 01:41:11', 'admin');
+(1, '2018-00001-00002', 'DISB', 'asdasdasdasdasdasd', '500.00', '0.00', '2018-02-10 01:41:11', 'admin'),
+(2, '2018-00001-00002', NULL, 'DISB', '500.00', '0.00', '2018-02-13 16:36:17', 'admin'),
+(3, '2018-00001-00002', 'DISB', 'TEST', '500.00', '0.00', '2018-02-13 16:36:51', 'admin'),
+(4, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00002', '0.00', '500.00', '2018-02-13 16:45:48', 'admin'),
+(5, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00003', '0.00', '100.00', '2018-02-13 17:15:16', 'admin'),
+(6, '2018-00001-00002', 'DISB', 'Disbursement 2', '10000.00', '0.00', '2018-02-13 17:18:36', 'admin'),
+(7, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00004', '0.00', '5000.00', '2018-02-13 17:18:53', 'admin'),
+(8, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00005', '0.00', '500.00', '2018-02-13 23:49:50', 'admin'),
+(9, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00006', '0.00', '500.00', '2018-02-13 23:51:11', 'admin'),
+(10, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00007', '0.00', '100.00', '2018-02-13 23:52:04', 'admin'),
+(11, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00008', '0.00', '0.00', '2018-02-13 23:53:22', 'admin'),
+(12, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00009', '0.00', '500.00', '2018-02-13 23:53:31', 'admin'),
+(13, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00010', '0.00', '1111.00', '2018-02-13 23:53:59', 'admin'),
+(14, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00011', '0.00', '1111.00', '2018-02-13 23:55:04', 'admin'),
+(15, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00012', '0.00', '111.00', '2018-02-13 23:55:47', 'admin'),
+(16, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00013', '0.00', '100.00', '2018-02-13 23:58:33', 'admin'),
+(17, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00014', '0.00', '500.00', '2018-02-13 23:59:41', 'admin'),
+(18, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00015', '0.00', '100.00', '2018-02-14 00:04:31', 'admin'),
+(19, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00016', '0.00', '100.00', '2018-02-14 00:05:01', 'admin'),
+(20, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00017', '0.00', '0.00', '2018-02-14 00:05:26', 'admin'),
+(21, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00018', '0.00', '1000.00', '2018-02-14 00:05:55', 'admin'),
+(22, '2018-00001-00002', 'CPAY', 'Payment #PAY2018-00019', '0.00', '1000.00', '2018-02-14 00:06:34', 'admin'),
+(23, '2018-00001-00002', 'DISB', 'Final Disbursement', '35000.00', '0.00', '2018-02-14 13:40:38', 'admin');
 
 -- --------------------------------------------------------
 
@@ -433,23 +511,50 @@ CREATE TABLE `loans_ledger_codes` (
 --
 
 INSERT INTO `loans_ledger_codes` (`code`, `type`, `description`) VALUES
+('CPAY', 'credit', 'Pay on Counter '),
 ('DISB', 'debit', 'Disbursement');
 
 -- --------------------------------------------------------
 
 --
--- Table structure for table `loans_payment`
+-- Table structure for table `loans_payments`
 --
 
-CREATE TABLE `loans_payment` (
+CREATE TABLE `loans_payments` (
   `id` varchar(255) NOT NULL,
   `loan_id` varchar(255) DEFAULT NULL,
   `payee` varchar(255) DEFAULT NULL,
+  `receipt` varchar(255) DEFAULT NULL,
+  `description` varchar(255) DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL,
-  `official_receipt` varchar(255) DEFAULT NULL,
-  `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
-  `user_id` int(11) DEFAULT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=latin1;
+  `user` varchar(255) DEFAULT NULL,
+  `created_at` datetime DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
+
+--
+-- Dumping data for table `loans_payments`
+--
+
+INSERT INTO `loans_payments` (`id`, `loan_id`, `payee`, `receipt`, `description`, `amount`, `user`, `created_at`) VALUES
+('PAY2018-00001', '2018-00001-00002', 'Maco Cortes', NULL, 'TEST', '500.00', 'admin', '2018-02-13 16:44:28'),
+('PAY2018-00002', '2018-00001-00002', 'Maco Cortes', '1234567890', 'TEST', '500.00', 'admin', '2018-02-13 16:45:48'),
+('PAY2018-00003', '2018-00001-00002', 'Maco Cortes', '1234567891111', 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Odio quaerat, error, consequatur cum voluptatem eum. Veniam iste maiores, inventore mollitia est temporibus, harum reprehenderit omnis quis quaerat consequuntur fugiat nemo.', '100.00', 'admin', '2018-02-13 17:15:16'),
+('PAY2018-00004', '2018-00001-00002', 'Maco Cortes', '098765434567', 'CHAROOOTTT', '5000.00', 'admin', '2018-02-13 17:18:53'),
+('PAY2018-00005', '2018-00001-00002', 'Maco Cortes', '937738472', '', '500.00', 'admin', '2018-02-13 23:49:50'),
+('PAY2018-00006', '2018-00001-00002', 'Maco Cortes', '', '', '500.00', 'admin', '2018-02-13 23:51:11'),
+('PAY2018-00007', '2018-00001-00002', 'Maco Cortes', '', '', '100.00', 'admin', '2018-02-13 23:52:04'),
+('PAY2018-00008', '2018-00001-00002', 'Maco Cortes', '', 'qweqe', '0.00', 'admin', '2018-02-13 23:53:22'),
+('PAY2018-00009', '2018-00001-00002', 'Maco Cortes', '', 'asdasd', '500.00', 'admin', '2018-02-13 23:53:31'),
+('PAY2018-00010', '2018-00001-00002', 'Maco Cortes', '', '', '1111.00', 'admin', '2018-02-13 23:53:59'),
+('PAY2018-00011', '2018-00001-00002', 'Maco Cortes', 'd', 'sddd', '1111.00', 'admin', '2018-02-13 23:55:04'),
+('PAY2018-00012', '2018-00001-00002', 'Maco Cortes', '', '', '111.00', 'admin', '2018-02-13 23:55:47'),
+('PAY2018-00013', '2018-00001-00002', 'Lorra', '', '', '100.00', 'admin', '2018-02-13 23:58:33'),
+('PAY2018-00014', '2018-00001-00002', 'Lorem Ipsum', 'TEST', 'TEST', '500.00', 'admin', '2018-02-13 23:59:41'),
+('PAY2018-00015', '2018-00001-00002', 'Maco Cortes', '', '', '100.00', 'admin', '2018-02-14 00:04:31'),
+('PAY2018-00016', '2018-00001-00002', 'Maco Cortes', '', '', '100.00', 'admin', '2018-02-14 00:05:01'),
+('PAY2018-00017', '2018-00001-00002', 'Maco Cortes', '', '', '0.00', 'admin', '2018-02-14 00:05:26'),
+('PAY2018-00018', '2018-00001-00002', 'Maco Cortes', '', '', '1000.00', 'admin', '2018-02-14 00:05:55'),
+('PAY2018-00019', '2018-00001-00002', 'Maco Cortes', '3456789', 'ssdasdsd', '1000.00', 'admin', '2018-02-14 00:06:34');
 
 -- --------------------------------------------------------
 
@@ -523,7 +628,63 @@ INSERT INTO `logs` (`id`, `user`, `tag`, `tag_id`, `action`, `ip_address`, `user
 (48, 'admin', 'loan', '2018-00001-00001', 'Deleted a file: 03_LCD_Slide_Handout_1(3).pdf', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-10 00:56:57'),
 (49, 'admin', 'loan', '2018-00001-00001', 'Deleted a file: ', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-10 00:57:10'),
 (50, 'admin', 'loan', '2018-00001-00001', 'Deleted a file: ', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-10 00:57:31'),
-(51, 'admin', 'loan', '2018-00001-00001', 'Deleted a file: Joseph2.jpg', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-10 00:57:40');
+(51, 'admin', 'loan', '2018-00001-00001', 'Deleted a file: Joseph2.jpg', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-10 00:57:40'),
+(52, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 01:31:43'),
+(53, 'admin', 'borrower', '2018-00003', 'Account Registration', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 02:33:26'),
+(54, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 08:16:42'),
+(55, 'admin', 'borrower', '2018-00004', 'Account Registration', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 08:24:00'),
+(56, 'admin', 'borrower', '2018-00004', 'Deleted Contact Information: ', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 08:24:15'),
+(57, 'admin', 'borrower', '2018-00004', 'Deleted Contact Information: ', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 08:24:18'),
+(58, 'admin', 'borrower', '2018-00005', 'Account Registration', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 08:29:03'),
+(59, 'admin', 'loan', '2018-00002-00003', 'Loan Application - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 13:38:44'),
+(60, 'admin', 'borrower', '2018-00002', 'Loan Application - ID:2018-00002-00003 - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-11 13:38:44'),
+(61, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-12 15:33:57'),
+(62, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-12 22:04:34'),
+(63, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 02:48:42'),
+(64, 'admin', 'borrower', '2018-00001', 'Updated Picture', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 05:52:49'),
+(65, 'admin', 'borrower', '2018-00001', 'Updated Picture', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 05:54:15'),
+(66, 'admin', 'borrower', '2018-00001', 'Removed Picture', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 06:00:38'),
+(67, 'admin', 'borrower', '2018-00001', 'Updated Picture', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 06:00:48'),
+(68, 'admin', ' ', ' ', 'User Logged In', '192.168.254.174', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-13 06:24:33'),
+(69, 'admin', 'user', 'roxanne', 'User Registration', '192.168.254.174', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-13 06:29:01'),
+(70, 'admin', ' ', ' ', 'User Logged In', '192.168.254.174', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-13 06:29:38'),
+(71, 'roxanne', ' ', ' ', 'User Logged In', '192.168.254.174', 'Mozilla/5.0 (Windows NT 6.3; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/63.0.3239.132 Safari/537.36', '2018-02-13 06:31:11'),
+(72, 'admin', 'borrower', '2018-00002', 'Updated Picture', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:03:07'),
+(73, 'admin', 'borrower', '2018-00002', 'Removed Picture', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:03:12'),
+(74, 'admin', 'borrower', '2018-00003', 'Activated Borrower Account', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:05:04'),
+(75, 'admin', 'borrower', '2018-00003', 'Deactivated Borrower Account', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:05:10'),
+(76, 'admin', 'borrower', '2018-00003', 'Activated Borrower Account', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:05:14'),
+(77, 'admin', 'loan', '2018-00002-00003', 'Disapproved Loan Request', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:40:32'),
+(78, 'admin', 'loan', '2018-00001-00002', 'Uploaded a File', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:49:07'),
+(79, 'admin', 'loan', '2018-00001-00002', 'Uploaded a File', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:49:24'),
+(80, 'admin', 'loan', '2018-00001-00002', 'Deleted a file: 03_LCD_Slide_Handout_1(3).pdf', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:55:44'),
+(81, 'admin', 'loan', '2018-00001-00002', 'Deleted a file: Joseph2.jpg', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 07:55:55'),
+(82, 'admin', 'loan', '2018-00001-00002', 'Added a Debit Record', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 08:36:17'),
+(83, 'admin', 'loan', '2018-00001-00002', 'Added a Debit Record', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 08:36:51'),
+(84, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 08:45:48'),
+(85, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 09:15:16'),
+(86, 'admin', 'loan', '2018-00001-00002', 'Added a Debit Record', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 09:18:36'),
+(87, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 09:18:53'),
+(88, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 14:30:49'),
+(89, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:49:50'),
+(90, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:51:11'),
+(91, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:52:04'),
+(92, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:53:22'),
+(93, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:53:31'),
+(94, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:53:59'),
+(95, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:55:04'),
+(96, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:55:47'),
+(97, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:58:33'),
+(98, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 15:59:41'),
+(99, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 16:04:31'),
+(100, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 16:05:01'),
+(101, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 16:05:26'),
+(102, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 16:05:55'),
+(103, 'admin', 'loans', '2018-00001-00002', 'Submitted a Payment', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 16:06:34'),
+(104, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-13 23:12:18'),
+(105, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-14 03:25:16'),
+(106, 'admin', 'loan', '2018-00001-00002', 'Added a Debit Record', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-14 05:40:38'),
+(107, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.140 Safari/537.36', '2018-02-14 09:51:49');
 
 -- --------------------------------------------------------
 
@@ -548,7 +709,8 @@ CREATE TABLE `notes` (
 
 INSERT INTO `notes` (`id`, `tag`, `tag_id`, `title`, `description`, `created_at`, `updated_at`, `user`) VALUES
 (1, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: Naaaaaaaahhh', '2018-02-10 01:32:18', NULL, NULL),
-(2, 'loan', '2018-00001-00001', 'Testing test', 'test', '2018-02-10 07:10:51', NULL, 'admin');
+(2, 'loan', '2018-00001-00001', 'Testing test', 'test', '2018-02-10 07:10:51', NULL, 'admin'),
+(3, 'loan', '2018-00002-00003', NULL, 'admin: Disapproved this Loan Request. <br/> Remarks: Naaaaaaaaaaaaaaaahhh', '2018-02-13 15:40:32', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -610,8 +772,9 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`username`, `password`, `name`, `email`, `contact`, `usertype`, `img`, `created_at`, `updated_at`, `is_deleted`) VALUES
-('admin', '$2y$10$mt9rqihNCu6CVMnAcyqOreGwmO4yh2rgD9zvODgvxcpcDHvMIMcm6', 'Administrator', 'admin@admin.com', '1234567890', 'Administrator', './uploads/users/admin/b770d94c8b5e5d9b17c109db881469d8.png', '2017-09-27 15:22:36', '2018-02-05 14:35:29', 0),
-('test', '$2y$10$L/bwEx4n7YP2.JlGciB22.VM9q3xxb/um1EvFi2eUN4GzA3uamUsS', 'NICE OBNE ', 'nice.nice@nice.com', '1132101223', '2nd Account', './uploads/users/Maikoo/4e828ac7e7d00fa179d8bb9a2553b183.png', '2017-11-22 22:41:23', '2017-12-01 16:48:58', 0);
+('admin', '$2y$10$mt9rqihNCu6CVMnAcyqOreGwmO4yh2rgD9zvODgvxcpcDHvMIMcm6', 'Administrator', 'admin@admin.com', '1234567890', 'Administrator', './uploads/users/admin/b770d94c8b5e5d9b17c109db881469d8.png', '2017-09-27 15:22:36', '2018-02-14 10:08:03', 0),
+('roxanne', '$2y$10$6CiCt9aZYXxSXg/SbZqAROpLMMJX6PCYb8JEKtH/BrgwK3bRkkof.', 'mananquil', 'roxannemananquil14@gmail.com', '09124835154', 'Teller', './uploads/users/roxanne/405fe948e3c13ead014260d6702c63d8.JPG', '2018-02-13 14:29:01', '2018-02-13 06:29:01', 0),
+('test', '$2y$10$L/bwEx4n7YP2.JlGciB22.VM9q3xxb/um1EvFi2eUN4GzA3uamUsS', 'NICE OBNE ', 'nice.nice@nice.com', '1132101223', 'Teller', './uploads/users/Maikoo/4e828ac7e7d00fa179d8bb9a2553b183.png', '2017-11-22 22:41:23', '2017-12-01 16:48:58', 0);
 
 -- --------------------------------------------------------
 
@@ -641,8 +804,9 @@ CREATE TABLE `usertypes` (
 --
 
 INSERT INTO `usertypes` (`title`, `user_level`) VALUES
-('2nd Account', 8),
-('Administrator', 10);
+('Administrator', 10),
+('Collector', 6),
+('Teller', 8);
 
 --
 -- Indexes for dumped tables
@@ -694,6 +858,14 @@ ALTER TABLE `borrowers_work`
 --
 ALTER TABLE `ci_sessions`
   ADD KEY `ci_sessions_timestamp` (`timestamp`) USING BTREE;
+
+--
+-- Indexes for table `collections`
+--
+ALTER TABLE `collections`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `FKCollectionLoan` (`loan_id`),
+  ADD KEY `FKCollectionUser` (`user`);
 
 --
 -- Indexes for table `expenses`
@@ -760,11 +932,12 @@ ALTER TABLE `loans_ledger_codes`
   ADD PRIMARY KEY (`code`);
 
 --
--- Indexes for table `loans_payment`
+-- Indexes for table `loans_payments`
 --
-ALTER TABLE `loans_payment`
+ALTER TABLE `loans_payments`
   ADD PRIMARY KEY (`id`),
-  ADD KEY `FKLoans` (`loan_id`);
+  ADD KEY `FKLoanPayments` (`loan_id`),
+  ADD KEY `FKPaymentUser` (`user`);
 
 --
 -- Indexes for table `logs`
@@ -821,17 +994,17 @@ ALTER TABLE `usertypes`
 -- AUTO_INCREMENT for table `borrowers_address`
 --
 ALTER TABLE `borrowers_address`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 --
 -- AUTO_INCREMENT for table `borrowers_contacts`
 --
 ALTER TABLE `borrowers_contacts`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 --
 -- AUTO_INCREMENT for table `borrowers_educ`
 --
 ALTER TABLE `borrowers_educ`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `borrowers_spouse`
 --
@@ -841,7 +1014,12 @@ ALTER TABLE `borrowers_spouse`
 -- AUTO_INCREMENT for table `borrowers_work`
 --
 ALTER TABLE `borrowers_work`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+--
+-- AUTO_INCREMENT for table `collections`
+--
+ALTER TABLE `collections`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `expenses`
 --
@@ -851,7 +1029,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 --
 -- AUTO_INCREMENT for table `income`
 --
@@ -861,32 +1039,32 @@ ALTER TABLE `income`
 -- AUTO_INCREMENT for table `loans_creditors`
 --
 ALTER TABLE `loans_creditors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 --
 -- AUTO_INCREMENT for table `loans_expense`
 --
 ALTER TABLE `loans_expense`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 --
 -- AUTO_INCREMENT for table `loans_income`
 --
 ALTER TABLE `loans_income`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `loans_ledger`
 --
 ALTER TABLE `loans_ledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=52;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=108;
 --
 -- AUTO_INCREMENT for table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `store_expenses`
 --
@@ -932,6 +1110,13 @@ ALTER TABLE `borrowers_work`
   ADD CONSTRAINT `FKBorrowerWork` FOREIGN KEY (`borrower_id`) REFERENCES `borrowers` (`id`) ON UPDATE CASCADE;
 
 --
+-- Constraints for table `collections`
+--
+ALTER TABLE `collections`
+  ADD CONSTRAINT `FKCollectionLoan` FOREIGN KEY (`loan_id`) REFERENCES `loans` (`id`),
+  ADD CONSTRAINT `FKCollectionUser` FOREIGN KEY (`user`) REFERENCES `users` (`username`);
+
+--
 -- Constraints for table `files`
 --
 ALTER TABLE `files`
@@ -972,10 +1157,11 @@ ALTER TABLE `loans_ledger`
   ADD CONSTRAINT `FKledget_codes` FOREIGN KEY (`code`) REFERENCES `loans_ledger_codes` (`code`);
 
 --
--- Constraints for table `loans_payment`
+-- Constraints for table `loans_payments`
 --
-ALTER TABLE `loans_payment`
-  ADD CONSTRAINT `FKLoans` FOREIGN KEY (`loan_id`) REFERENCES `loans` (`id`);
+ALTER TABLE `loans_payments`
+  ADD CONSTRAINT `FKLoanPayments` FOREIGN KEY (`loan_id`) REFERENCES `loans` (`id`),
+  ADD CONSTRAINT `FKPaymentUser` FOREIGN KEY (`user`) REFERENCES `users` (`username`);
 
 --
 -- Constraints for table `logs`
