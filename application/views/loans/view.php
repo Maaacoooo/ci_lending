@@ -51,8 +51,15 @@
             $flash_valid =  validation_errors();                 
          ?>                       
         <?=$this->sessnotif->showNotif()?>
+        <?php if ($loan['status']==1 && $loan['due_date'] <= unix_to_human(now(), 'eu', TRUE)):?>
+          <div class="callout callout-danger">
+            <h4><i class="fa fa-warning"></i> OVERDUE</h4>
+            <p>This Loan Application is on its due! Please Remind the Borrower</p>
+          </div><!-- /.callout callout-danger -->
+        <?php endif ?>
         </div><!-- /.col-xs-12 -->
       </div><!-- /.row -->
+
 
       <div class="row">        
         <div class="col-md-9">

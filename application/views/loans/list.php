@@ -102,7 +102,10 @@
                     <?php elseif($res['status']==4): ?>                      
                       <span class="badge bg-black">Cancelled</span>
                     <?php endif ?>
-                  </a></td>
+                    <?php if ($res['status']==1 && $res['due_date'] <= unix_to_human(now(), 'eu', TRUE)):?>
+                      <span class="badge bg-red">OVERDUE</span>
+                    <?php endif ?>
+                              </a></td>
                   <td><a href="<?=base_url('loans/view/'.$res['id'])?>"><?=moneytize($res['borrowed_amount'])?></a></td>
                   <td><a href="<?=base_url('loans/view/'.$res['id'])?>"><?=$res['created_at']?></a></td>
                 </tr>
