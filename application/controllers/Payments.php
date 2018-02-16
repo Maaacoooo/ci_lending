@@ -153,6 +153,7 @@ class Payments extends CI_Controller {
 	        $this->session->set_flashdata('pay_id', $payment_id);
 	        //Add to Ledger 
 	        $this->loans_model->add_ledger($id, $amount, $userdata['username'], 'Payment #'.$payment_id, 'CPAY');
+	        	
 
 	          $log[] = array(
 	              'user'    =>  $userdata['username'],

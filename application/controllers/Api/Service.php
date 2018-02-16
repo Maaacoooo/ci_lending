@@ -15,17 +15,133 @@ class Service extends CI_Controller {
 	}
 
 
-  function GenerateFees() {
+  /**
+   * Automatic Add on Ledger - FEES AND PENALTY
+   */
+  function GenerateFees($api_key = NULL) {
+
+
+      $data = NULL;
+
+      //change of request
+      if(isset($_GET['api_key'])) {
+        $api_key = $_GET['api_key'];
+      }
+
+      //fetch API KEY AUTH data
+      $api = $this->settings_model->setting('API_KEY_AUTH');
+
+      if($api_key == $api['value']) {
+
+          $date = date('d');
+
+          $from = unix_to_human(strtotime('15 days ago'), 'eu', TRUE);
+          $to = unix_to_human(strtotime('now'), 'eu', TRUE);
+
+          $data = $this->loans_model->fetch_active_loans($from, $to);
+        
+          if ($date == 4 || $date == 19) {
+            foreach ($data as $d) {
+                echo $d['name'];
+                //Add Penalty to Ledger
+                  $this->loans_model->add_ledger($d['loan_id'], (((($d['borrowed_amount'])*0.05))*-1), NULL, 'Automatic Fees Applied by the System', 'PNTY');
+                
+
+                //Save Logs  ///////////////////////////          
+                  $log[] = array(
+                      'user'    =>  NULL,
+                      'tag'     =>  'loan',
+                      'tag_id'  =>  $d['loan_id'],
+                      'action'  =>  'Penalty Applied'
+                      );         
+
+                  $this->logs_model->save_logs($log);   
+
+                //Send SMS Notification  /////////////////////
+                $message = "Hi ".$d['name']."! You failed to pay the scheduled payment. As a result of that, an automatic penalty of 5%(".moneytize(($d['borrowed_amount'])*0.05).") has been applied.
+          ".COMPANY_NAME;
+                $number = $d['contacts'];
+
+                  $this->smsgateway->sendMessageToNumber($number, $message, SMS_DEVICE); //Send SMS
+              }
+
+          }
+
+      } else {
+        show_error('Please contact the System Administrator!',403,'Access Denied!');
+      }
+
+
+      echo json_encode($data, JSON_PRETTY_PRINT); 
+
 
   }
 
-  function DoSMSReminderBulk() {
+  /**
+   * Do An SMS Command
+   * @param [type] $request [description]
+   */
+  function DoSMSReminder($request = NULL, $api) {
+    switch ($request) {
+      case 'payment':
+        
+         $data = NULL;
 
+          //change of request
+          if(isset($_GET['api_key'])) {
+            $api_key = $_GET['api_key'];
+          }
+
+          //fetch API KEY AUTH data
+          $api = $this->settings_model->setting('API_KEY_AUTH');
+
+          if($api_key == $api['value']) {
+
+              $date = date('d');
+
+              $from = unix_to_human(strtotime('15 days ago'), 'eu', TRUE);
+              $to = unix_to_human(strtotime('now'), 'eu', TRUE);
+
+              $data = $this->loans_model->fetch_active_loans($from, $to);
+            
+              if ($date == 12 || $date == 28) {
+                foreach ($data as $d) {
+                    echo $d['name'];
+                  
+
+                    //Save Logs  ///////////////////////////          
+                      $log[] = array(
+                          'user'    =>  NULL,
+                          'tag'     =>  'loan',
+                          'tag_id'  =>  $d['loan_id'],
+                          'action'  =>  'Sent SMS Notification'
+                          );         
+
+                      $this->logs_model->save_logs($log);   
+
+                    //Send SMS Notification  /////////////////////
+                    $message = "Hi ".$d['name']."! How is your day? We would like to remind you for the payment of your loan application.  
+              ".COMPANY_NAME;
+                    $number = $d['contacts'];
+
+                      $this->smsgateway->sendMessageToNumber($number, $message, SMS_DEVICE); //Send SMS
+                  }
+
+              }
+
+          } else {
+            show_error('Please contact the System Administrator!',403,'Access Denied!');
+          }
+
+
+          echo json_encode($data, JSON_PRETTY_PRINT); 
+
+        break;      
+      default:
+        # code...
+        break;
+    }
   }
-
-  function DoEmailReminderBulk() {
-
-  )
 
 
 }

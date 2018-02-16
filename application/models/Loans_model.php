@@ -359,23 +359,55 @@ Class Loans_Model extends CI_Model {
 
   function fetch_active_loans($from = null, $to = null) {
         
-
+    
          $this->db->select('
                 CONCAT(borrowers.firstname, " ", borrowers.lastname) as name,
-                GROUP_CONCAT(borrowers_contacts.value) as number,
                 borrowers.id as borrower_id,
                 loans.id as loan_id,
+                loans.borrowed_amount
             ');
-
-
         $this->db->join('borrowers', 'borrowers.id = loans.borrower_id', 'left');
-        $this->db->join('borrowers_contacts', 'borrowers_contacts.borrower_id = borrowers.id AND borrowers_contacts.type != 1', 'left');
-        $this->db->join('loans_payments', 'loans_payments.loan_id = loans.id AND loans_payments.id="PAY2018-00001"', 'inner');
-
-        $this->db->group_by('borrowers.id');
-        //$this->db->where('loans_payments.created_at BETWEEN "'.$from.'" AND "'.$to.'"');
         $this->db->where('loans.status = 1');
-        return $this->db->get('loans')->result_array();
+        $this->db->where('DATE(loans.due_date) > DATE(now())');
+        $loan_data = $this->db->get('loans')->result_array(); 
+
+        $loan_arr = array();
+        if ($loan_data) {
+            foreach ($loan_data as $ld) {
+              $ld['contacts'] = array_values($this->fetch_contacts($ld['borrower_id'], 0));
+              $loan_arr[] = $ld;  
+            }      
+
+
+            return $loan_arr;
+        }
+
+        return FALSE;
+
+        //Another Query
+        
+  }
+
+  function fetch_contacts($borrower_id, $type) {
+      $this->db->select('(value) as contact');
+      $this->db->where('type', $type);
+      $this->db->where('borrower_id', $borrower_id);
+      $query = ($this->db->get('borrowers_contacts')->result_array());
+
+      $data = array();
+      foreach ($query as $quer) {
+        $data[] = $quer['contact'];
+      }
+
+      return $data;
+  }
+
+
+  function count_payments_week($loan_id, $from, $to) {
+        $this->db->select('*');
+        $this->db->where('loan_id', $loan_id);
+        $this->db->where('loans_payments.created_at BETWEEN "'.$from.'" AND "'.$to.'"');
+        return $this->db->count_all_results('loans_payments');
   }
 
 

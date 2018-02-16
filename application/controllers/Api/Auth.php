@@ -4,6 +4,10 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 
 class Auth extends CI_Controller {
 
+  /**
+   * Intended for Android Authentication
+   */
+
 	public function __construct()	{
 		parent::__construct();		
        $this->load->model('user_model');
@@ -29,18 +33,39 @@ class Auth extends CI_Controller {
 
       if($api_key == $api['value']) {
 
-        $user = $this->input->post('username');
-        $pass = $this->input->post('password');
+        $pin = $this->input->post('userqr');
 
-        $user_info = $this->user_model->check_user($user, $pass);
+        if ($pin) {
+          $user_info = $this->user_model->pin_login($pin);
 
-        if ($user_info) {
-          $data["error"] = FALSE;
-          $data["uid"] = $user_info["pin"];
-          $data["user"]["name"] = $user_info["name"];
-          $data["user"]["email"] = $user_info["email"];
-          $data["user"]["created_at"] = $user_info["created_at"];
-          $data["user"]["updated_at"] = $user_info["updated_at"];
+          if ($user_info) {
+            $data["error"] = FALSE;
+            $data["uid"] = $user_info["pin"];
+            $data["user"]["name"] = $user_info["name"];
+            $data["user"]["email"] = $user_info["email"];
+            $data["user"]["created_at"] = $user_info["created_at"];
+            $data["user"]["updated_at"] = $user_info["updated_at"];
+          } else {
+            $data['error'] = TRUE;
+            $data['error_msg'] = 'Login Failed. No User Found!';
+          }
+        } else {
+          $user = $this->input->post('email');
+          $pass = $this->input->post('password');
+
+          $user_info = $this->user_model->check_user($user, $pass);
+
+          if ($user_info) {
+            $data["error"] = FALSE;
+            $data["uid"] = $user_info["pin"];
+            $data["user"]["name"] = $user_info["name"];
+            $data["user"]["email"] = $user_info["email"];
+            $data["user"]["created_at"] = $user_info["created_at"];
+            $data["user"]["updated_at"] = $user_info["updated_at"];
+          } else {
+            $data['error'] = TRUE;
+            $data['error_msg'] = 'Login Failed. No User Found!';
+          }
         }
 
 
@@ -82,9 +107,14 @@ class Auth extends CI_Controller {
 
          if($payment_id) {
 
-            $data['response'] = TRUE;
             $this->loans_model->add_ledger($loan['loan_id'], $amount, $user['username'], 'Payment #'.$payment_id.' via App Pay', 'APAY');
 
+             $data['error'] = false; 
+             $data['message'] = 'Payment saved successfully'; 
+
+         } else {
+              $data['error'] = true; 
+              $data['message'] = 'Please try later';
          }
 
       } else {
@@ -95,8 +125,6 @@ class Auth extends CI_Controller {
       echo json_encode($data, JSON_PRETTY_PRINT);
 
   }
-
-
 
 
 }

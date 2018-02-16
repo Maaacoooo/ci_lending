@@ -5,12 +5,9 @@
         static $baseUrl = "https://smsgateway.me";
 
 
-        function __construct() {
-        	$email = 'maco.techdepot@gmail.com';
-         	$password = 'barret82';
-         	
-            $this->email = $email;
-            $this->password = $password;
+        function __construct() {         	
+            $this->email = SMS_EMAIL;
+            $this->password = SMS_PASS;
         }
 
         function createContact ($name,$number) {

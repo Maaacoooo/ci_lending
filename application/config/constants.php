@@ -9,9 +9,15 @@ defined('BASEPATH') OR exit('No direct script access allowed');
 | This are the global default variables of the system
 |
 */
-define('APP_NAME', 'RedWoods Lending'); // Application name 
+define('COMPANY_NAME', 'RedWoods Lending Investors Corp.'); // Company name 
+define('APP_NAME', 'RedWoods Lending System'); // Application name 
 define('APP_CURRENCY', 'PHP'); // Application Currency 
 define('APP_DEFAULT_PASS', 'redwoods');
+
+//SMSGateway Defaults
+define('SMS_DEVICE', 78983);
+define('SMS_EMAIL', 'yappytheartist@gmail.com');
+define('SMS_PASS', 'thesis123456');
 
 /*
 |--------------------------------------------------------------------------

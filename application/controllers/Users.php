@@ -68,7 +68,7 @@ class Users extends CI_Controller {
 			if($data['user']['user_level'] >= 10) {
 
 				if($this->form_validation->run() == FALSE)	{
-					$this->load->view('user/list', $data);
+					$this->load->view('user/list', $data); //Load View
 				} else {	
 
 					$username = strip_tags($this->input->post('username')); //the username

@@ -3,8 +3,9 @@
 Class User_model extends CI_Model
 {
 
-    function fetch_pins() {
-      return $this->db->get('users_pin')->result_array();
+    function pin_login($pin) {
+      $this->db->where('pin', $pin);
+      return $this->db->get('users')->row_array();
     }
 
      function check_user($user, $pass) {
