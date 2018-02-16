@@ -578,6 +578,7 @@ Class Borrower_Model extends CI_Model {
     }
 
     function create_contact($acc_id, $type, $value) {
+
         $data = array(
             'borrower_id' => $acc_id,
             'type'        => $type,

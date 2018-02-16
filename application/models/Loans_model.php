@@ -357,6 +357,10 @@ Class Loans_Model extends CI_Model {
     }
 
 
+  /**
+   * -----------------------------------------------------------------------------------
+   * Used By SMS
+   */
   function fetch_active_loans($from = null, $to = null) {
         
     
@@ -388,7 +392,7 @@ Class Loans_Model extends CI_Model {
         
   }
 
-  function fetch_contacts($borrower_id, $type) {
+  function fetch_contacts($borrower_id, $type = 0) {
       $this->db->select('(value) as contact');
       $this->db->where('type', $type);
       $this->db->where('borrower_id', $borrower_id);
@@ -396,7 +400,8 @@ Class Loans_Model extends CI_Model {
 
       $data = array();
       foreach ($query as $quer) {
-        $data[] = $quer['contact'];
+        $data[] =  safeContact($quer['contact']);
+
       }
 
       return $data;

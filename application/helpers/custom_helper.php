@@ -260,6 +260,23 @@
 
 
 
+    function safeContact($str) {
+
+
+        $str = preg_replace('/[^0-9]/', '', $str);
+
+        if(strlen($str)==10) {
+            $str = '+63'.$str;
+        } else {
+            return FALSE;
+        }
+
+        return $str;
+    }
+
+
+
+
   
 
 

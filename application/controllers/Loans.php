@@ -691,21 +691,4 @@ class Loans extends CI_Controller {
 
   }
 
-
-  function test() {
-  	//GET Due Date with Moment //////////////////////////////////////////
-				include APPPATH.'libraries/Moment/Moment.php';
-				include APPPATH.'libraries/Moment/MomentLocale.php';
-				include APPPATH.'libraries/Moment/MomentPeriodVo.php';
-				include APPPATH.'libraries/Moment/MomentHelper.php';
-				include APPPATH.'libraries/Moment/MomentFromVo.php';
-
-				$loan_days = "2"; //number of days input
-
-				$due_date = date('Y-m-d',strtotime($loan_days." days"));
-
-				var_dump($due_date);
-  }
-
-
 }
