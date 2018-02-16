@@ -199,4 +199,17 @@ class Dashboard extends CI_Controller {
   }
 
 
+
+  function test() {
+  	$this->load->library('smsgateway');
+
+  	$deviceID = 78962;
+	$number = '+639058208455';
+	$message = 'Paulixxx';
+
+	//Please note options is no required and can be left out
+		var_dump($this->smsgateway->sendMessageToNumber($number, $message, $deviceID));
+	}
+
+
 }
