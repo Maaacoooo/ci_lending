@@ -278,7 +278,7 @@ class Loans extends CI_Controller {
 				$loan_days = strip_tags($this->input->post('loan_days')); //number of days input
 
 				$moment = new \Moment\Moment();
-				$due_date = dateform($moment->cloning()->addDays($loan_days)->calendar());
+				$due_date = date('Y-m-d',strtotime($loan_days." days"));
 
 
 				$loan_id = $this->loans_model->create($acc_id, $due_date); //Loan ID
@@ -378,7 +378,7 @@ class Loans extends CI_Controller {
 					$notif['error'] = 'No Record Found!';
 		   			$this->sessnotif->setNotif($notif);
 
-					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+					redirect('loans', 'refresh');
 			}	
 
 			$data['info']					= $this->borrower_model->view($data['loan']['borrower_id']);
@@ -689,6 +689,22 @@ class Loans extends CI_Controller {
 	      redirect('dashboard/login', 'refresh');
 	    }
 
+  }
+
+
+  function test() {
+  	//GET Due Date with Moment //////////////////////////////////////////
+				include APPPATH.'libraries/Moment/Moment.php';
+				include APPPATH.'libraries/Moment/MomentLocale.php';
+				include APPPATH.'libraries/Moment/MomentPeriodVo.php';
+				include APPPATH.'libraries/Moment/MomentHelper.php';
+				include APPPATH.'libraries/Moment/MomentFromVo.php';
+
+				$loan_days = "2"; //number of days input
+
+				$due_date = date('Y-m-d',strtotime($loan_days." days"));
+
+				var_dump($due_date);
   }
 
 
