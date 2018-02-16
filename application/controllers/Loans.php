@@ -55,7 +55,11 @@ class Loans extends CI_Controller {
 		    $data['total_result'] = $config["total_rows"];
 		    //END PAGINATION		
 		    
-			$this->load->view('loans/list', $data);
+			if($data['user']['user_level'] > 6) {
+				$this->load->view('loans/list', $data);
+			} else {
+				show_error('Oops! Your account does not have the privilege to view the content. Please Contact the Administrator', 403, 'Access Denied!');
+			}
 		    
 		
 			
@@ -108,7 +112,11 @@ class Loans extends CI_Controller {
 		    $data['total_result'] = $config["total_rows"];
 		    //END PAGINATION		
 		    
-			$this->load->view('loans/list', $data);
+			if($data['user']['user_level'] > 6) {
+				$this->load->view('loans/list', $data);
+			} else {
+				show_error('Oops! Your account does not have the privilege to view the content. Please Contact the Administrator', 403, 'Access Denied!');
+			}
 		    
 		
 			
@@ -161,7 +169,11 @@ class Loans extends CI_Controller {
 		    $data['total_result'] = $config["total_rows"];
 		    //END PAGINATION		
 		    
-			$this->load->view('loans/list', $data);
+			if($data['user']['user_level'] > 6) {
+				$this->load->view('loans/list', $data);
+			} else {
+				show_error('Oops! Your account does not have the privilege to view the content. Please Contact the Administrator', 403, 'Access Denied!');
+			}
 		    
 		
 			
@@ -214,7 +226,11 @@ class Loans extends CI_Controller {
 		    $data['total_result'] = $config["total_rows"];
 		    //END PAGINATION		
 		    
-			$this->load->view('loans/list', $data);
+			if($data['user']['user_level'] > 6) {
+				$this->load->view('loans/list', $data);
+			} else {
+				show_error('Oops! Your account does not have the privilege to view the content. Please Contact the Administrator', 403, 'Access Denied!');
+			}
 		    
 		
 			
@@ -391,12 +407,15 @@ class Loans extends CI_Controller {
 			$data['files']		= $this->files_model->fetch_files(NULL, NULL, 'loan', $data['loan']['id']);
 			$data['payments']	= $this->payments_model->fetch_payments(NULL, NULL, $data['loan']['id']);
 			
-			
-			if ($this->uri->segment(4)=='print') {
-				$this->load->view('loans/print', $data);	
+			if($data['user']['user_level'] > 6) {
+				if ($this->uri->segment(4)=='print') {
+					$this->load->view('loans/print', $data);	
+				} else {
+					$this->load->view('loans/view', $data);	
+				}
 			} else {
-				$this->load->view('loans/view', $data);	
-			}
+				show_error('Oops! Your account does not have the privilege to view the content. Please Contact the Administrator', 403, 'Access Denied!');
+			}			
 
 		} else {
 
@@ -641,20 +660,28 @@ class Loans extends CI_Controller {
   public function download($id)    {
 
 	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
-
+	    $data['user'] = $this->user_model->userdetails($userdata['username']);
 	    if($userdata) {     
+
+
+	    	if($data['user']['user_level'] > 6) {
+				$info = $this->loans_model->view($id);
+
+		     	$path = './uploads/borrowers/';
+		     	$path .= $info['borrower_id'];
+		     	$path .= '/loans/';
+		     	$path .= $info['id'];
+
+				$this->zip->read_dir($path, FALSE);
+
+				// Download the file to your desktop. Name it "my_backup.zip"
+				$this->zip->download($info['id'].'_FILES.zip');
+
+			} else {
+				show_error('Oops! Your account does not have the privilege to view the content. Please Contact the Administrator', 403, 'Access Denied!');
+			}
 	     	
-	     	$info = $this->loans_model->view($id);
-
-	     	$path = './uploads/borrowers/';
-	     	$path .= $info['borrower_id'];
-	     	$path .= '/loans/';
-	     	$path .= $info['id'];
-
-			$this->zip->read_dir($path, FALSE);
-
-			// Download the file to your desktop. Name it "my_backup.zip"
-			$this->zip->download($info['id'].'_FILES.zip');
+	     	
 
 	    } else {
 
