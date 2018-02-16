@@ -9,51 +9,47 @@ class Auth extends CI_Controller {
        $this->load->model('user_model');
        $this->load->model('settings_model');
        $this->load->model('loans_model');
+       $this->load->model('payments_model');
+       $this->load->model('borrower_model');
 	}
 
 
-  function getAllPins($api_key = null) {
 
-  		//change of request
-  		if(isset($_GET['api_key'])) {
-  			$api_key = $_GET['api_key'];
-  		}
+   function authUser($api_key = null) {
 
-  		//fetch API KEY AUTH data
-  		$api = $this->settings_model->setting('API_KEY_AUTH');
+      $data = NULL;
 
+      //change of request
+      if(isset($_GET['api_key'])) {
+        $api_key = $_GET['api_key'];
+      }
 
-  		if($api_key == $api['value']) {
-  			$data = $this->user_model->fetch_pins();
-  		} else {
-  			show_error('Please contact the System Administrator!',403,'Access Denied!');
-  		}
+      //fetch API KEY AUTH data
+      $api = $this->settings_model->setting('API_KEY_AUTH');
 
+      if($api_key == $api['value']) {
 
-  		echo json_encode($data, JSON_PRETTY_PRINT);
+        $user = $this->input->post('username');
+        $pass = $this->input->post('password');
 
-  }
+        $user_info = $this->user_model->check_user($user, $pass);
 
-
-  function getAllBorrowers($api_key = null) {
-
-  		//change of request
-  		if(isset($_GET['api_key'])) {
-  			$api_key = $_GET['api_key'];
-  		}
-
-  		//fetch API KEY AUTH data
-  		$api = $this->settings_model->setting('API_KEY_AUTH');
+        if ($user_info) {
+          $data["error"] = FALSE;
+          $data["uid"] = $user_info["pin"];
+          $data["user"]["name"] = $user_info["name"];
+          $data["user"]["email"] = $user_info["email"];
+          $data["user"]["created_at"] = $user_info["created_at"];
+          $data["user"]["updated_at"] = $user_info["updated_at"];
+        }
 
 
-  		if($api_key == $api['value']) {
-  			$data = $this->loans_model->fetch_loans(NULL, NULL, NULL, 1, NULL);
-  		} else {
-  			show_error('Please contact the System Administrator!',403,'Access Denied!');
-  		}
+      } else {
+        show_error('Please contact the System Administrator!',403,'Access Denied!');
+      }
 
 
-  		echo json_encode($data, JSON_PRETTY_PRINT);
+      echo json_encode($data, JSON_PRETTY_PRINT);
 
   }
 
@@ -69,17 +65,27 @@ class Auth extends CI_Controller {
       $api = $this->settings_model->setting('API_KEY_AUTH');
 
       if($api_key == $api['value']) {
-        
-        if(isset($_POST['id'])) {
+      
 
-          $id = $_POST['id'];
-          $amount =  $_POST['amount'];
+         $borrower_id = $this->input->post('clientid');
+         $payee = $this->input->post('clientname');
+         $amount = $this->input->post('pamount');
+         $description = $this->input->post('description');
+         $paymentdate = $this->input->post('pdate');
 
-          $data['status'] = TRUE;
-          $data['data'] = $_POST;
+         $loan = $this->borrower_model->view($borrower_id);
+         $user = $this->payments_model->check_pin_user($this->input->post('uid'));
 
-        }
+         $description = $description . " Payment Submitted from RedWoods App -" . $paymentdate;
 
+         $payment_id = $this->payments_model->create($loan['loan_id'], $amount, $payee, $description, '', $user['username']);
+
+         if($payment_id) {
+
+            $data['response'] = TRUE;
+            $this->loans_model->add_ledger($loan['loan_id'], $amount, $user['username'], 'Payment #'.$payment_id.' via App Pay', 'APAY');
+
+         }
 
       } else {
         show_error('Please contact the System Administrator!',403,'Access Denied!');

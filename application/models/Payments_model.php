@@ -10,6 +10,11 @@ Class Payments_Model extends CI_Model {
         return 'PAY'. date('Y').'-'.prettyID(($total_rows + 1), 5);  
     }
 
+    function check_pin_user($pin) {
+        $this->db->where('pin', $pin);
+        return $this->db->get('users')->row_array();
+    }
+
 
     function create($loan_id, $amount, $payee, $description, $receipt, $user) {
 

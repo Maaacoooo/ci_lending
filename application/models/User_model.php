@@ -24,8 +24,7 @@ Class User_model extends CI_Model
                     return $result;
                 } else {
                     return FALSE;
-                }
-                
+                }                
                
              }   else   {
 

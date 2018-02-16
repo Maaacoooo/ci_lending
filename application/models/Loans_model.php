@@ -357,6 +357,28 @@ Class Loans_Model extends CI_Model {
     }
 
 
+  function fetch_active_loans($from = null, $to = null) {
+        
+
+         $this->db->select('
+                CONCAT(borrowers.firstname, " ", borrowers.lastname) as name,
+                GROUP_CONCAT(borrowers_contacts.value) as number,
+                borrowers.id as borrower_id,
+                loans.id as loan_id,
+            ');
+
+
+        $this->db->join('borrowers', 'borrowers.id = loans.borrower_id', 'left');
+        $this->db->join('borrowers_contacts', 'borrowers_contacts.borrower_id = borrowers.id AND borrowers_contacts.type != 1', 'left');
+        $this->db->join('loans_payments', 'loans_payments.loan_id = loans.id AND loans_payments.id="PAY2018-00001"', 'inner');
+
+        $this->db->group_by('borrowers.id');
+        //$this->db->where('loans_payments.created_at BETWEEN "'.$from.'" AND "'.$to.'"');
+        $this->db->where('loans.status = 1');
+        return $this->db->get('loans')->result_array();
+  }
+
+
    
 
 
