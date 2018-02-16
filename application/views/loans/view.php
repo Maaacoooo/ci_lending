@@ -517,6 +517,12 @@
         <!-- /.col-md-9 -->
         <div class="col-md-3">
 
+          <div class="box box-danger">
+            <div class="box-body">
+              <img src="<?=base_url('code/qr/'.$info['id'].'/8')?>" alt="" class="img-thumbnail" style="margin:auto; display: block" />
+            </div><!-- /.box-body -->
+          </div><!-- /.box box-danger -->
+
           <!-- Profile Image -->
           <div class="box box-danger">
             <div class="box-body box-profile">             

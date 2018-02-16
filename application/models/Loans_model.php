@@ -45,6 +45,19 @@ Class Loans_Model extends CI_Model {
 
 
     function view($id) {
+        $this->db->select('
+          loans.id,
+          loans.borrower_id,
+          loans.borrowed_amount,
+          loans.due_date,
+          loans.borrowed_percentage,
+          loans.description,
+          loans.status,
+          loans.approved_at,
+          loans.created_at,
+          loans.updated_at,
+          CONCAT(borrowers.firstname, " ", borrowers.lastname) as name');
+        $this->db->join('borrowers', 'borrowers.id = loans.borrower_id', 'left');
         $this->db->where('loans.id', $id);
         $query = $this->db->get('loans');
 

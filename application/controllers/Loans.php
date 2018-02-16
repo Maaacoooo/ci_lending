@@ -539,6 +539,14 @@ class Loans extends CI_Controller {
 	        		$description = strip_tags($this->input->post('description'));
 	       			$description = $userdata['username'] . ': Approved this Loan Request. <br/> Remarks: ' . $description;
 	       			$this->notes_model->create('loan', $id, NULL, $description);
+
+	       			$info = $this->loans_model->view($id);
+	       			 //Send SMS Notification  /////////////////////
+		             $message = "Hi ".$info['name']."! Your Loan Application ".$info['id']." has been approved! Thank you for patronizing ".COMPANY_NAME;
+
+		             $number = $this->loans_model->fetch_contacts($info['borrower_id']);
+		             $data['sms'] = $this->smsgateway->sendMessageToNumber($number, $message, SMS_DEVICE); //Send SMS
+
 	       			break;
 
 	       		case 'disapprove':
@@ -634,6 +642,15 @@ class Loans extends CI_Controller {
 	          //Save Logs/////////////////////////
 	          $this->logs_model->save_logs($log);   
 	          ////////////////////////////////////
+
+
+	         //Send SMS Notification  /////////////////////
+             $message = "Hi ".$info['name']."! This is to inform that you have received a disbursement amounting ".moneytize($info['borrowed_amount']-$charge)."
+              ".COMPANY_NAME;
+
+             $number = $this->loans_model->fetch_contacts($info['borrower_id']);
+             $data['sms'] = $this->smsgateway->sendMessageToNumber($number, $message, SMS_DEVICE); //Send SMS
+	          
 	          $this->session->set_flashdata('success', 'Added a Disbursement Record!');
 	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
 	        } else {
