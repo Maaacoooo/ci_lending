@@ -512,7 +512,7 @@ class Loans extends CI_Controller {
 	       	switch ($key) {
 	       		case 'approve':
 	       			$flag = $this->loans_model->update_status($id, 1);
-	       			//update approve data
+	       			//update approve date
 	       			$this->loans_model->update_approve($id);
 	       			//logs
 	       			$log_action = 'Approved Loan Request';
@@ -557,6 +557,65 @@ class Loans extends CI_Controller {
 	          $this->logs_model->save_logs($log);   
 	          ////////////////////////////////////
 	          $this->session->set_flashdata('success', $log_action);
+	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
+	        } else {
+	          $this->session->set_flashdata('error', 'Error Occured!');
+	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
+	        }
+	      }
+
+	    } else {
+
+	      $this->session->set_flashdata('error', 'You need to login!');
+	      redirect('dashboard/login', 'refresh');
+	    }
+
+  }
+
+
+  public function disburse()    {
+
+	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+	    if($userdata) {     
+	      //FORM VALIDATION
+	      $this->form_validation->set_rules('id', 'ID', 'trim|required');     
+	     
+	       if($this->form_validation->run() == FALSE) {
+
+	        //convert validation errors to flashdata notification
+	          $notif['warning'] = array_values($this->form_validation->error_array());
+	          $this->sessnotif->setNotif($notif);
+	          
+	        redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+	      } else {
+
+	        $id = $this->encryption->decrypt($this->input->post('id')); //ID of the loan 
+	        $info = $this->loans_model->view($id);
+
+	        $charge = ($info['borrowed_amount']*0.05); //the constant 5% charge
+	        $interest = ((($info['borrowed_amount'])*($info['borrowed_percentage']*0.01))*-1); //get rate of interest
+
+	        $action1 = $this->loans_model->add_ledger($id, (($info['borrowed_amount'])*-1), $userdata['username'], 'Actual Disbursed: '.moneytize($info['borrowed_amount']-$charge), 'DISB');
+	        $action2 = $this->loans_model->add_ledger($id, $interest, $userdata['username'], 'Applied Standard Interests basing from '.$info['borrowed_percentage'].'% of '.moneytize($info['borrowed_amount']), 'INTR');
+	        $action3 = $this->loans_model->add_ledger($id, (($charge)*-1), $userdata['username'], 'Standard Service Charge', 'SCHR');
+	        $action4 = $this->loans_model->add_ledger($id, $charge, $userdata['username'], 'Service Charge Paid', 'SCHR');
+
+	        if($action1 && $action2 && $action3 && $action4) {
+
+	          $log[] = array(
+	              'user'    =>  $userdata['username'],
+	              'tag'     =>  'loan',
+	              'tag_id'  =>  $id,
+	              'action'  =>  'Processed Disbursement'
+	              );
+
+	        
+	          //Save Logs/////////////////////////
+	          $this->logs_model->save_logs($log);   
+	          ////////////////////////////////////
+	          $this->session->set_flashdata('success', 'Added a Disbursement Record!');
 	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
 	        } else {
 	          $this->session->set_flashdata('error', 'Error Occured!');

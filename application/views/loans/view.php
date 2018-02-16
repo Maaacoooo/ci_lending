@@ -127,9 +127,9 @@
                           <th>Requested Amount</th>
                           <td width="20%" class="bg-warning"><?=$loan['borrowed_amount']?></td>
                           <th>Days of Period / Due date</th>
-                          <td width="20%" class="bg-warning"></td>
+                          <td width="20%" class="bg-warning"><?=$loan['due_date']?></td>
                           <th>Rate(%) per Annum</th>
-                          <td width="20%" class="bg-warning"></td>
+                          <td width="20%" class="bg-warning"><?=$loan['borrowed_percentage']?></td>
                         </tr>
                         <tr>
                           <th>Other Creditors: </th>
@@ -168,7 +168,7 @@
                                   <tr>
                                     <th width="25%">DATE | TIME</th>
                                     <th>CODE</th>
-                                    <th width="40%">DESCRIPTION</th>
+                                    <th width="35%">DESCRIPTION</th>
                                     <th>DEBIT</th>
                                     <th>CREDIT</th>
                                     <th>BALANCE</th>
@@ -181,12 +181,12 @@
                                       <td><span class="badge bg-blue"><?=$ld['user']?></span> <?=$ld['created_at']?></td>
                                       <td><?=$ld['code']?></td>
                                       <td><?=$ld['description']?></td>
-                                      <td class="text-danger"><?=$ld['debit']?></td>
-                                      <td class="text-success"><?=$ld['credit']?></td>
+                                      <td class="text-danger"><?=moneytize($ld['debit'], '')?></td>
+                                      <td class="text-success"><?=moneytize($ld['credit'], '')?></td>
                                       <td class="bg-warning">
                                         <?php
                                           $bal = ($bal + $ld['debit']) - ($ld['credit']);
-                                          echo decimalize($bal);
+                                          echo moneytize($bal, '');
                                         ?>
                                       </td>
                                     </tr>
@@ -556,6 +556,9 @@
                 <li class="list-group-item">
                   <a href="#" data-target="#DisapproveLoan" data-toggle="modal" class="btn bg-navy btn-block btn-flat"><i class="fa fa-ban"></i> Disapprove Loan</a>
                 </li>
+                <li class="list-group-item">
+                  <a href="#" data-target="#disburse" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-money"></i> Disburse Cash</a>
+                </li>
                 <?php endif; ?>  
                 <li class="list-group-item">
                   <a href="<?=current_url()?>/print" target="_blank" class="btn btn-primary btn-block btn-flat"><i class="fa fa-print"></i> Print</a>
@@ -638,6 +641,50 @@
         <div class="modal-footer">
           <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
           <button type="submit" class="btn btn-flat bg-navy"><i class="fa fa-ban"></i> Disapprove Loan</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
+
+  <!-- ///////////////////////// Disapprove Loan ////////////////////////////// -->
+  <div class="modal fade" id="disburse">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+        <?=form_open('loans/disburse')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Disburse Cash</h4>
+        </div>
+        <div class="modal-body">   
+          <div class="row">
+            <div class="col-md-12">
+              <div class="callout callout-info">
+                <p><i class="fa fa-info"></i> You are to Disburse Cash</p>
+              </div><!-- /.callout callout-info -->
+              <div class="form-group">
+                <label for="">Requested Amount</label>
+                <input type="text" id="" class="form-control input-lg" disabled="" value="<?=moneytize($loan['borrowed_amount'])?>" />
+              </div><!-- /.form-group -->
+              <div class="form-group">
+                <label for="">Service Charge</label>
+                <input type="text" id="" class="form-control input-lg" disabled="" value="<?=moneytize(($loan['borrowed_amount'])*0.05)?>" />
+              </div><!-- /.form-group -->
+              <div class="form-group">
+                <label for="">Actual Disbursement</label>
+                <input type="text" id="" class="form-control input-lg" disabled="" value="<?=moneytize(($loan['borrowed_amount'])-(($loan['borrowed_amount'])*0.05))?>" />
+              </div><!-- /.form-group -->
+            </div><!-- /.col-md-12 -->
+          </div><!-- /.row -->
+        </div>
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-success"><i class="fa fa-check"></i> Disburse Cash</button>
         </div>
       </div>
       <?=form_close()?>
