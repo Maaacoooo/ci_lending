@@ -60,6 +60,7 @@ class Service extends CI_Controller {
                 //Send SMS Notification  /////////////////////
                 $message = "Hi ".$d['name']."! You failed to pay the scheduled payment. As a result of that, an automatic penalty of 5%(".moneytize(($d['borrowed_amount'])*0.05).") has been applied.
           ".COMPANY_NAME;
+
                 $number = $d['contacts'];
 
                   $this->smsgateway->sendMessageToNumber($number, $message, SMS_DEVICE); //Send SMS
@@ -81,7 +82,7 @@ class Service extends CI_Controller {
    * Do An SMS Command
    * @param [type] $request [description]
    */
-  function DoSMSReminder($request = NULL, $api) {
+  function DoSMSReminder($request = NULL, $api_key) {
     switch ($request) {
       case 'payment':
         
@@ -103,8 +104,9 @@ class Service extends CI_Controller {
               $to = unix_to_human(strtotime('now'), 'eu', TRUE);
 
               $data = $this->loans_model->fetch_active_loans($from, $to);
-            
-              if ($date == 12 || $date == 28) {
+              
+              //$date == 12 || $date == 28
+              if (TRUE) {
                 foreach ($data as $d) {
                     echo $d['name'];
                   
@@ -120,11 +122,12 @@ class Service extends CI_Controller {
                       $this->logs_model->save_logs($log);   
 
                     //Send SMS Notification  /////////////////////
-                    $message = "Hi ".$d['name']."! How is your day? We would like to remind you for the payment of your loan application.  
+                    $message = "Hi ".$d['name']."! How is your day? We would like to remind you for the payment of your loan application. Payments are only accepted in our office, and our accredited collectors. Have a nive day!  
               ".COMPANY_NAME;
+
                     $number = $d['contacts'];
 
-                      $this->smsgateway->sendMessageToNumber($number, $message, SMS_DEVICE); //Send SMS
+                      $data['sms'] = $this->smsgateway->sendMessageToNumber($number, $message, SMS_DEVICE); //Send SMS
                   }
 
               }
