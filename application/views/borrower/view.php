@@ -1637,7 +1637,7 @@
   <?php if (!$info['loan_id']): ?>
   <!-- ///////////////////////// Apply Loans ////////////////////////////// -->
   <div class="modal fade" id="AddLoan">
-    <div class="modal-dialog modal-lg">
+    <div class="modal-dialog">
       <div class="modal-content">
         <?=form_open('loans/create')?>
         <div class="modal-header">
@@ -1657,74 +1657,6 @@
               <input type="text" name="loan_days"> <br />days at the rate of <input type="text" name="loan_rate" max="100" />% per annum and repayable for only one term.
             </p>
             <hr />
-            <p><strong>Monthly Income and Expenses of the Borrower:</strong></p>
-            <div class="row">
-              <div class="col-md-8 col-md-offset-2">
-                <table class="table table-bordered table-condensed">
-                  <tr>
-                    <th colspan="2">Income</th>
-                  </tr>
-                  <?php $y=1; foreach($income as $inc): ?>
-                  <tr>
-                    <th><?=$y++.'. '.$inc['title']?></th>
-                    <td width="30%"><input type="text" id="test" class="integer" name="income[<?=$inc['id']?>]"/></td>
-                  </tr>
-                  <?php endforeach; ?>
-                </table><!-- /.table table-bordered table-condensed -->
-
-                <table class="table table-bordered table-condensed">
-                  <tr>
-                    <th colspan="2" class="bg-danger italic">Expenses (Less)</th>
-                  </tr>
-                  <?php $x=1; foreach($expenses as $exp): ?>
-                  <tr>
-                    <th><?=$x++.'. '.$exp['title']?></th>
-                    <td width="30%"><input type="text" class="integer" name="expense[<?=$exp['id']?>]"/></td>
-                  </tr>
-                  <?php endforeach; ?>
-                </table><!-- /.table table-bordered table-condensed -->
-              </div><!-- /.col-md-6 col-md-3-offset -->
-            </div><!-- /.row -->
-            <hr />
-            <p><strong>Summary of other Outstanding Obligations</strong></p>
-            <div class="row">
-              <div class="col-md-10 col-md-offset-1">
-                  <div class="row" id="creditors">
-                    <div class="col-sm-4">
-                      <div class="form-group">
-                        <label for="">Name of Creditor</label>
-                        <input type="text" name="creditors_name[]" class="form-control" />
-                      </div><!-- /.form-group -->  
-                    </div><!-- /.col-sm-4 -->
-                    <div class="col-sm-4">
-                      <div class="form-group">
-                        <label for="">Address</label>
-                        <input type="text" name="creditors_address[]" class="form-control" />
-                      </div><!-- /.form-group -->  
-                    </div><!-- /.col-sm-4 -->
-                    <div class="col-sm-2">
-                      <div class="form-group">
-                        <label for="">Amount</label>
-                        <input type="text" name="creditors_amount[]" class="form-control integer" />
-                      </div><!-- /.form-group -->  
-                    </div><!-- /.col-sm-2 -->
-                    <div class="col-sm-2">
-                      <div class="form-group">
-                        <label for="">Remarks</label>
-                        <input type="text" name="creditors_remarks[]" class="form-control" />
-                      </div><!-- /.form-group -->  
-                    </div><!-- /.col-sm-2 -->
-                  </div><!-- /.row -->
-                  <div class="row">
-                    <div class="col-sm-12">
-                      <button type="button" class="btn btn-default btn-sm pull-right" id="add_creditor"><i class="fa fa-plus"></i> Add Creditor</button>
-                    </div><!-- /.col-sm-12 -->
-                  </div><!-- /.row -->
-              </div><!-- /.col-md-10 col-md-offset-1 -->
-            </div><!-- /.row -->
-
-            <hr />
-
         </div>
 
         <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
