@@ -84,7 +84,7 @@ Class Logs_model extends CI_Model
                 action,
                 ip_address,
                 date_time,
-                username,
+                username as user,
                 date_time
             ');
             
