@@ -76,6 +76,17 @@ Class Logs_model extends CI_Model
             if (!is_null($tag_id)) {
                 $this->db->where('tag_id', $tag_id);
             }
+
+            $this->db->select('
+                CONCAT(users.firstname, " ",users.lastname) as name, 
+                tag,
+                tag_id,
+                action,
+                ip_address,
+                date_time,
+                username,
+                date_time
+            ');
             
 
             $this->db->join('users', 'users.username = logs.user', 'left');
