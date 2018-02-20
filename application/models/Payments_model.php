@@ -40,7 +40,7 @@ Class Payments_Model extends CI_Model {
     function view($id) {
         $this->db->select('
               users.username as user,
-              users.name,
+              CONCAT(users.firstname, " ",users.lastname) as name, 
               loans_payments.id,
               loans_payments.loan_id,
               loans_payments.receipt,
@@ -70,7 +70,7 @@ Class Payments_Model extends CI_Model {
 
             $this->db->select('
               users.username as user,
-              users.name,
+              CONCAT(users.firstname, " ",users.lastname) as name, 
               loans_payments.id,
               loans_payments.loan_id,
               loans_payments.receipt,

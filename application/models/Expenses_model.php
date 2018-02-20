@@ -72,7 +72,7 @@ Class Expenses_model extends CI_Model {
 
             $this->db->select('
               users.username as user,
-              users.name,
+              CONCAT(users.firstname, " ",users.lastname) as name, 
               store_expenses.id,
               store_expenses.payee,
               store_expenses.amount,

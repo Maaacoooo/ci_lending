@@ -56,7 +56,7 @@ Class Notes_Model extends CI_Model {
 
             $this->db->select('
               users.username as user,
-              users.name,
+              CONCAT(users.firstname, " ",users.lastname) as name, 
               notes.id,
               notes.title,
               notes.description,

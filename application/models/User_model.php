@@ -44,7 +44,9 @@ Class User_model extends CI_Model
 
              $this->db->select('
               users.username,
-              users.name,
+              users.firstname,
+              users.lastname,
+              CONCAT(users.firstname, " ",users.lastname) as name,              
               users.email,
               users.contact,
               users.img,

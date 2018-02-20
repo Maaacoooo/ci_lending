@@ -91,7 +91,7 @@ Class Logs_model extends CI_Model
     function fetch_user_logs($user, $limit) {
             $this->db->select('
             id,
-            user,
+            CONCAT(users.firstname, " ",users.lastname) as user, 
             tag,
             tag_id,
             action,

@@ -80,7 +80,7 @@ Class Files_Model extends CI_Model {
 
             $this->db->select('
               users.username as user,
-              users.name,
+              CONCAT(users.firstname, " ",users.lastname) as name, 
               files.id,
               files.url,
               files.title,
