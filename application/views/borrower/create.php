@@ -605,7 +605,7 @@
                       <label for="">Upload Picture</label>
                     </div><!-- /.col-sm-3 -->
                     <div class="col-sm-5">
-                      <input type="file" name="img" id="img">  
+                      <input type="file" name="img" id="img" accept="image/*">  
                     </div><!-- /.col-sm-5 -->
                   </div><!-- /.row -->    
                 </fieldset><!-- /.group-box -->

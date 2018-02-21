@@ -1346,15 +1346,15 @@
               <div class="row">
                 <div class="col-md-4 col-sm-12">
                   <label for="fname">First Name</label>
-                  <input type="text" class="form-control" name="fname" id="fname" placeholder="Enter First Name..." value="<?=$info['firstname']?>" required>
+                  <input type="text" class="form-control char-val" name="fname" id="fname" placeholder="Enter First Name..." value="<?=$info['firstname']?>" required>
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
                   <label for="mname">Middle Name</label>
-                  <input type="text" class="form-control" name="mname" id="mname" placeholder="Enter Middle Name..." value="<?=$info['middlename']?>" required>
+                  <input type="text" class="form-control char-val" name="mname" id="mname" placeholder="Enter Middle Name..." value="<?=$info['middlename']?>" required>
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
                   <label for="lname">Last Name</label>
-                  <input type="text" class="form-control" name="lname" id="lname" placeholder="Enter Last Name..." value="<?=$info['lastname']?>" required>
+                  <input type="text" class="form-control char-val" name="lname" id="lname" placeholder="Enter Last Name..." value="<?=$info['lastname']?>" required>
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
             </div><!-- /.form-group -->
@@ -1564,15 +1564,15 @@
               <div class="row">
                <div class="col-md-4 col-sm-12">
                   <label for="spouse_fname">Spouse First Name</label>
-                  <input type="text" class="form-control" name="spouse_fname" id="spouse_fname" placeholder="Enter First Name..." value="<?=$info['spouse_fname']?>">
+                  <input type="text" class="form-control char-val" name="spouse_fname" id="spouse_fname" placeholder="Enter First Name..." value="<?=$info['spouse_fname']?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
                   <label for="spouse_mname">Spouse Middle Name</label>
-                  <input type="text" class="form-control" name="spouse_mname" id="spouse_mname" placeholder="Enter Middle Name (Maiden)..." value="<?=$info['spouse_mname']?>">
+                  <input type="text" class="form-control char-val" name="spouse_mname" id="spouse_mname" placeholder="Enter Middle Name (Maiden)..." value="<?=$info['spouse_mname']?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
                   <label for="spouse_lname">Spouse Last Name</label>
-                  <input type="text" class="form-control" name="spouse_lname" id="spouse_lname" placeholder="Enter Last Name (Maiden)..." value="<?=$info['spouse_lname']?>">
+                  <input type="text" class="form-control char-val" name="spouse_lname" id="spouse_lname" placeholder="Enter Last Name (Maiden)..." value="<?=$info['spouse_lname']?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
             </div><!-- /.form-group -->
@@ -1691,7 +1691,7 @@
                   <legend class="group-box-title">Update Profile Picture</legend><!-- /.group-box-title -->
                   <div class="row">
                     <div class="col-sm-12">
-                      <input type="file" name="img" id="img">  
+                      <input type="file" name="img" id="img" accept="image/*">  
                     </div><!-- /.col-sm-12 -->
                   </div><!-- /.row -->    
                 </fieldset><!-- /.group-box -->
@@ -1777,7 +1777,7 @@
     <script src="<?=base_url('assets/plugins/iCheck/icheck.min.js')?>"></script>
     <script src="<?=base_url('assets/plugins/input-mask/jquery.inputmask.js')?>"></script>
     <script src="<?=base_url('assets/plugins/input-mask/jquery.inputmask.extensions.js')?>"></script>
-
+    <script src="<?=base_url('assets/custom/js/customvalidation.js')?>"></script>
     <script src="<?=base_url('assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')?>"></script>
 
     <script type="text/javascript">

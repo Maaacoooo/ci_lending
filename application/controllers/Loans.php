@@ -708,4 +708,47 @@ class Loans extends CI_Controller {
 
   }
 
+
+  function test() {
+  	//GET Due Date with Moment //////////////////////////////////////////
+				include APPPATH.'libraries/Moment/Moment.php';
+				include APPPATH.'libraries/Moment/MomentLocale.php';
+				include APPPATH.'libraries/Moment/MomentPeriodVo.php';
+				include APPPATH.'libraries/Moment/MomentHelper.php';
+				include APPPATH.'libraries/Moment/MomentFromVo.php';
+				include APPPATH.'libraries/Moment/MomentException.php';
+
+				$startdate = '2018-02-21';
+				$enddate = '2018-04-21';
+				$moment = new \Moment\Moment($startdate);
+
+				$month = new \Moment\Moment($startdate);
+				$month_end = $month->endOf('month')->format('Y-m-d');
+				
+				$flag = true;
+
+				while ($flag) {
+					$moment = new \Moment\Moment($startdate);
+					
+
+					if ($startdate < $enddate) {
+
+						$month = new \Moment\Moment($startdate);
+
+						$month_end = $month->endOf('month')->getDay();
+
+						echo $startdate.'<br/>';
+						$startdate = $moment->addDays(15)->format('Y-m-d');
+
+					} else {
+						echo $enddate;
+						$flag = false;
+					}
+
+				} 
+
+
+				
+  }
+
 }
