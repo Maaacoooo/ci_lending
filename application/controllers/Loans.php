@@ -708,84 +708,8 @@ class Loans extends CI_Controller {
 
   }
 
-
   function test() {
-  	//GET Due Date with Moment //////////////////////////////////////////
-				include APPPATH.'libraries/Moment/Moment.php';
-				include APPPATH.'libraries/Moment/MomentLocale.php';
-				include APPPATH.'libraries/Moment/MomentPeriodVo.php';
-				include APPPATH.'libraries/Moment/MomentHelper.php';
-				include APPPATH.'libraries/Moment/MomentFromVo.php';
-				include APPPATH.'libraries/Moment/MomentException.php';
-
-				$startdate = '2018-02-21';
-				$enddate = '2018-04-21';
-				//$moment = new \Moment\Moment($startdate);			
-				
-				$flag = true;
-
-				while ($flag) {
-					$moment = new \Moment\Moment($startdate);
-					
-					$month = new \Moment\Moment($startdate);
-					$month_end = $month->endOf('month');
-
-					if ($moment->from($month_end->format('Y-m-d'))->getDays() < 15) {
-						//for the 15th of the month
-						$add_days = $moment->from($month_end->format('Y-m-d'))->getDays();
-						$moment->addDays($add_days);
-
-						echo $moment->format('Y-m-d') . '<br/>';
-					} else {
-						//for 30th of the month
-						if ($month_end->getDay() < 30) {
-							//for feb 29, 28
-							echo $month_end->format('Y-m-d');
-						} else {
-							//set 30th of the month
-						}
-						echo($startdate) . '--<br/>';
-					}
-
-					$startdate = $moment->addDays(15)->format('Y-m-d');	
-
-					//set flag false to stop the loop
-					if ($startdate >= $enddate) {
-						echo $enddate . '<br/>';
-						$flag = false;
-					}
-
-
-					/*
-					if ($startdate < $enddate) {
-
-						$month = new \Moment\Moment($startdate);
-
-						$month_end = $month->endOf('month')->getDay();
-
-						echo $startdate.'<br/>';
-						$startdate = $moment->addDays(15)->format('Y-m-d');
-
-					} else {
-						echo $enddate;
-						$flag = false;
-					} */
-
-				} 
-
-
-				
-  }
-
-
-  function test2() {
-  	$x = 0;
-  	for ($i=1; $i < 10; $i++) { 
-  		echo $i . '<br/>';
-  		$x = $x + $i;
-  	}
-
-  	echo $x;
+  		echo json_encode(getSchedules('2018-02-21', '2018-04-20', 49800), JSON_PRETTY_PRINT);
   }
 
 }
