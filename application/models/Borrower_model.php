@@ -33,8 +33,9 @@ Class Borrower_Model extends CI_Model {
                 'firstname'      => strip_tags($this->input->post('fname')),  
                 'lastname'       => strip_tags($this->input->post('lname')),  
                 'middlename'     => strip_tags($this->input->post('mname')),  
-                'birthdate'      => dateform(strip_tags($this->input->post('bdate'))),
+                'birthdate'      => date('Y-m-d',strtotime(strip_tags($this->input->post('bdate')))),
                 'sex'            => strip_tags($this->input->post('sex')),
+                'due_days'       => strip_tags($this->input->post('loan_days')),
                 'civil_status'   => strip_tags($this->input->post('civil_stat'))
              );
 

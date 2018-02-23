@@ -1637,7 +1637,7 @@
   <?php if (!$info['loan_id']): ?>
   <!-- ///////////////////////// Apply Loans ////////////////////////////// -->
   <div class="modal fade" id="AddLoan">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-lg">
       <div class="modal-content">
         <?=form_open('loans/create')?>
         <div class="modal-header">
@@ -1646,16 +1646,43 @@
           <h4 class="modal-title">Loan Application</h4>
         </div>
         <div class="modal-body">   
-            <div class="callout callout-info">              
+          <div class="row">
+            <div class="col-md-8">
+              <div class="callout callout-info">              
               <p><i class="fa fa-exclamation-circle"></i> <strong>ATTENTION!</strong> <br />
               This Loan Application is subject for Approval. <br />
               After submitting this application, please print and sign the formal document.</p>
               <p><i class="fa fa-info-circle"></i> Please fill up all the important fields</p>
             </div><!-- /.callout callout-info -->       
-            <p>
-              <strong><?=$info['name']?></strong> hereby apply for a loan amounting <input type="text" name="loan_amount" id="loan_amount" /> for a period of 
-              <input type="text" name="loan_days"> <br />days at the rate of <input type="text" name="loan_rate" max="100" />% per annum and repayable for only one term.
-            </p>
+            <hr />
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="">Borrower</label>
+                  <input type="text" name="" id="" class="form-control input-lg" value="<?=$info['name']?>" disabled/>
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-12 -->
+            </div><!-- /.row -->
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="">Amount</label>
+                  <input type="text" name="loan_amount" id="loan_amount" class="form-control input-lg"/>
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 -->
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="">Days of Due</label>
+                  <input type="text" name="loan_days" id="loan_days" class="form-control input-lg"/>
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 -->
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="">Interest Rate</label>
+                  <input type="number" name="loan_rate" id="loan_rate" max="100" class="form-control input-lg" value="8.5" />
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 -->
+            </div><!-- /.row -->
             <hr />
             <p><strong>Monthly Income and Expenses of the Borrower:</strong></p>
             <div class="row">
@@ -1692,7 +1719,7 @@
                   <div class="row" id="creditors">
                     <div class="col-sm-4">
                       <div class="form-group">
-                        <label for="">Name of Creditor</label>
+                        <label for="">Name of Guarantor</label>
                         <input type="text" name="creditors_name[]" class="form-control" />
                       </div><!-- /.form-group -->  
                     </div><!-- /.col-sm-4 -->
@@ -1702,13 +1729,7 @@
                         <input type="text" name="creditors_address[]" class="form-control" />
                       </div><!-- /.form-group -->  
                     </div><!-- /.col-sm-4 -->
-                    <div class="col-sm-2">
-                      <div class="form-group">
-                        <label for="">Amount</label>
-                        <input type="text" name="creditors_amount[]" class="form-control integer" />
-                      </div><!-- /.form-group -->  
-                    </div><!-- /.col-sm-2 -->
-                    <div class="col-sm-2">
+                    <div class="col-sm-4">
                       <div class="form-group">
                         <label for="">Remarks</label>
                         <input type="text" name="creditors_remarks[]" class="form-control" />
@@ -1717,13 +1738,63 @@
                   </div><!-- /.row -->
                   <div class="row">
                     <div class="col-sm-12">
-                      <button type="button" class="btn btn-default btn-sm pull-right" id="add_creditor"><i class="fa fa-plus"></i> Add Creditor</button>
+                      <button type="button" class="btn btn-default btn-sm pull-right" id="add_creditor"><i class="fa fa-plus"></i> Add Guarantor</button>
                     </div><!-- /.col-sm-12 -->
                   </div><!-- /.row -->
               </div><!-- /.col-md-10 col-md-offset-1 -->
             </div><!-- /.row -->
 
             <hr />
+            </div><!-- /.col-md-8 -->
+            <div class="col-md-4">
+
+              <table class="table table-striped table-dark-border">
+                <thead>
+                  <tr>
+                    <th colspan="2">Interest</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <input type="text" id="service_interest" class="form-control" placeholder="Interest..." disabled="" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Total Payable</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <input type="text" id="payable" class="form-control" placeholder="Total Payables..." disabled="" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Service Charge</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <input type="text" id="service_charge" class="form-control" placeholder="Service Charge..." disabled="" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Approx. Date of Approval</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <input type="text" id="approve_date" class="form-control bootstrap-datepicker" placeholder="Approx. Date of Approval" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">PAYMENT SCHEDULES</th>
+                  </tr>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="payment_table">
+                </tbody>
+              </table><!-- /.table table-striped table-dard-border -->
+            </div><!-- /.col-md-4 -->
+          </div><!-- /.row -->
         </div>
 
         <input type="hidden" name="id" value="<?=$this->encryption->encrypt($info['id'])?>" />
@@ -1866,6 +1937,64 @@
               
           });
 
+       $('#loan_amount, #loan_days, #loan_rate, #approve_date').on('keyup change', function(e) {
+              $('#payment_table').children().remove();
+
+               jQuery.support.cors = true;
+
+              var loan_amount = $('#loan_amount').val();
+              var loan_days = $('#loan_days').val();
+              var loan_rate = $('#loan_rate').val();
+
+              var loan_amount = parseFloat(loan_amount).toFixed(2);
+              var loan_rate = parseFloat(loan_rate).toFixed(2);
+              var loan_days = parseFloat(loan_days);
+
+              var interest = parseFloat((loan_amount)*(loan_rate/100)).toFixed(2);
+              var total = parseFloat(+interest + +loan_amount).toFixed(2);
+
+              var serv_charge = parseFloat(loan_amount * (5/100)).toFixed(2);
+
+              //show service charge and interest
+              $('#service_charge').val(serv_charge);
+              $('#service_interest').val(interest);
+              $('#payable').val(total);
+
+              var start_date = $('#approve_date').val();
+              if ((start_date)=="") {
+                start_date = "";
+              }
+
+    $.ajax(
+    {
+        type: "GET",
+        url: "<?=base_url('loans/Schedules/')?>" + loan_days + "/" + total + "/?start=" + start_date,
+        data: "[]",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            
+        var trHTML = '';
+                
+        $.each(data, function (i, item) {
+            
+            trHTML += '<tr><td>' + data[i].schedule + '</td><td>' + data[i].amount + '</td></tr>';
+        });
+        
+         //     $('#payment_table').append('<tr><td>'+value+'</td></tr>');
+        $('#payment_table').append(trHTML);
+        
+        },
+        
+        error: function (msg) {
+            
+           //console.log(msg.responseText);
+        }
+    });
+              
+          });
+
       $('#loan_amount').focusout(function(e) {
               var value = $('#loan_amount').val();
               if(value) {
@@ -1879,7 +2008,7 @@
 
     //Initialize input mask
     $('[data-mask]').inputmask();
-    $('.integer').inputmask('9999');
+    $('.loan_rate').inputmask('9999');
 
     //Red color scheme for iCheck
     $('input[type="checkbox"].minimal-red, input[type="radio"].minimal-red').iCheck({

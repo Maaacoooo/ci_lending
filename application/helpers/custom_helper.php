@@ -1,5 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
+        include APPPATH.'libraries/Moment/Moment.php';
+        include APPPATH.'libraries/Moment/MomentLocale.php';
+        include APPPATH.'libraries/Moment/MomentPeriodVo.php';
+        include APPPATH.'libraries/Moment/MomentHelper.php';
+        include APPPATH.'libraries/Moment/MomentFromVo.php';
+        include APPPATH.'libraries/Moment/MomentException.php';
+
     /**
      * This provides an encrypted and/or unreadable data.
      * @param  String   $str    Any string to be encrypted.
@@ -287,14 +294,9 @@
      * @param  [type] $amount    [description]
      * @return [type]            [description]
      */
-    function getSchedules($startdate, $enddate, $amount) {
+    function getSchedules($startdate, $enddate, $amount, $moneytize = FALSE) {
     //GET Due Date with Moment //////////////////////////////////////////
-        include APPPATH.'libraries/Moment/Moment.php';
-        include APPPATH.'libraries/Moment/MomentLocale.php';
-        include APPPATH.'libraries/Moment/MomentPeriodVo.php';
-        include APPPATH.'libraries/Moment/MomentHelper.php';
-        include APPPATH.'libraries/Moment/MomentFromVo.php';
-        include APPPATH.'libraries/Moment/MomentException.php';
+
 
                 /**
                  * Gets the Median or Perios. 15 / 30
@@ -305,7 +307,7 @@
                     $date = new \Moment\Moment($date);
                     if ($date->getDay() >= 20) {
                         //15th day of next month
-                        $date->addMonths(1);
+                        $date->addDays(15);
                         $date->startOf('month');
                         $date->addDays(14);                     
                         return $date->format('Y-m-d');
@@ -345,13 +347,27 @@
                 $data = array();
                 for ($i=0; $i < count($dates); $i++) { 
                     $val['schedule'] = $dates[$i];
-                    $val['amount'] = round($amount / count($dates), 2);
-
+                    if ($moneytize) {
+                         $val['amount'] = moneytize(round($amount / count($dates), 2));                        
+                    } else {
+                         $val['amount'] = (round($amount / count($dates), 2));
+                    }
                     $data[] = $val;
                 }
 
         return $data;
                 
+  }
+
+
+
+  function AddDays($days, $startdate = null) {
+            
+
+            $date = new \Moment\Moment($startdate);
+            $date->addDays($days);
+
+            return $date->format('Y-m-d');
   }
 
 

@@ -132,7 +132,7 @@
                           <td width="20%" class="bg-warning"><?=$loan['borrowed_percentage']?></td>
                         </tr>
                         <tr>
-                          <th>Other Creditors: </th>
+                          <th>Guarantors: </th>
                           <td colspan="5" class="bg-warning">
                             <?php if ($creditors): ?>
                               <ol>
@@ -144,6 +144,32 @@
                           </td>
                         </tr>
                       </table><!-- /.table table-condensed table-dark-border -->
+
+                      <?php if ($schedules): ?>
+                      <table class="table table-condensed table-dark-border">
+                        <thead>
+                          <tr>
+                            <th colspan="4">Payment Schedules</th>
+                          </tr>
+                          <tr>
+                            <th>Schedule</th>
+                            <th>Due Amount</th>
+                            <th class="bg-success">Paid Amount</th>
+                            <th class="bg-success">Date Paid</th>
+                          </tr>
+                        </thead>
+                        <tbody>
+                          <?php foreach ($schedules as $sched): ?>
+                          <tr>
+                            <td><?=date('Y-m-d (D M, d)', strtotime($sched['schedule']))?></td>
+                            <td><?=moneytize($sched['amount'])?></td>
+                            <td class="bg-success"><?=$sched['paid_actual']?></td>
+                            <td class="bg-success"><?=$sched['paid_date']?></td>
+                          </tr>
+                          <?php endforeach ?>
+                        </tbody>
+                      </table><!-- /.table table-condensed table-dark-border -->                        
+                      <?php endif ?>
                     </div><!-- /.col-md-12 -->
                   </div><!-- /.row -->
                   <?php if ($loan['status']==1): ?>
@@ -596,14 +622,52 @@
             <span aria-hidden="true">&times;</span></button>
           <h4 class="modal-title">Approve Loan</h4>
         </div>
-        <div class="modal-body">   
-            <div class="callout callout-info">
-              <p><i class="fa fa-info-circle"></i> You cannot undo any action!</p>
-            </div><!-- /.callout callout-info -->
-            <div class="form-group">
-              <label for="description">Approval Remarks</label>
-              <textarea name="description" class="form-control" id="description" rows="10" required></textarea>
-            </div><!-- /.form-group -->
+        <div class="modal-body">               
+          <div class="row">
+            <div class="col-md-6">
+              <div class="callout callout-info">
+                <p><i class="fa fa-warning"></i> You are to approve this loan of <?=$info['name']?></p>
+                <p><i class="fa fa-info-circle"></i> You cannot undo any action!</p>
+              </div><!-- /.callout callout-info -->    
+               <div class="form-group">
+                <label for="">Requested Amount</label>
+                <input type="text" id="" class="form-control input-lg" disabled="" value="<?=moneytize($loan['borrowed_amount'])?>" />
+              </div><!-- /.form-group -->
+              <div class="form-group">
+                <label for="">Interest(<?=$loan['borrowed_percentage']?>%)</label>
+                <input type="text" id="" class="form-control input-lg" disabled="" value="<?=moneytize($loan['borrowed_amount']*($loan['borrowed_percentage']/100))?>" />
+              </div><!-- /.form-group -->
+              <div class="form-group">
+                <label for="">Total Payables</label>
+                <input type="text" id="" class="form-control input-lg" disabled="" value="<?=moneytize(($loan['borrowed_amount'])+(($loan['borrowed_amount']*($loan['borrowed_percentage']/100))))?>" />
+              </div><!-- /.form-group -->        
+              <div class="form-group">
+                <label for="description">Approval Remarks</label>
+                <textarea name="description" class="form-control" id="description" rows="5" required></textarea>
+              </div><!-- /.form-group -->
+            </div><!-- /.col-md-6 -->
+            <div class="col-md-6">
+              <table class="table table-condensed table-dark-bordered">
+                <thead>
+                  <tr>
+                    <th colspan="2">PAYMENT SCHEDULE (as per today's approval)</th>
+                  </tr>
+                  <tr>
+                    <th>Schedule</th>
+                    <th>Due Amount</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <?php foreach ($pre_sched as $ps): ?>
+                    <tr>
+                      <td><?=$ps['schedule']?></td>
+                      <td><?=$ps['amount']?></td>
+                    </tr>
+                  <?php endforeach ?>
+                </tbody>
+              </table><!-- /.table table-condensed table-dark-bordered -->
+            </div><!-- /.col-md-6 -->
+          </div><!-- /.row -->
         </div>
         <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
         <input type="hidden" name="key" value="<?=$this->encryption->encrypt('approve')?>" />
