@@ -267,21 +267,7 @@ class Loans extends CI_Controller {
 			} else {
 
 				$acc_id = $this->encryption->decrypt($this->input->post('id')); //ID of the Borrower	
-
-				//GET Due Date with Moment //////////////////////////////////////////
-				include APPPATH.'libraries/Moment/Moment.php';
-				include APPPATH.'libraries/Moment/MomentLocale.php';
-				include APPPATH.'libraries/Moment/MomentPeriodVo.php';
-				include APPPATH.'libraries/Moment/MomentHelper.php';
-				include APPPATH.'libraries/Moment/MomentFromVo.php';
-
-				$loan_days = strip_tags($this->input->post('loan_days')); //number of days input
-
-				$moment = new \Moment\Moment();
-				$due_date = date('Y-m-d',strtotime($loan_days." days"));
-
-
-				$loan_id = $this->loans_model->create($acc_id, $due_date); //Loan ID
+				$loan_id = $this->loans_model->create($acc_id); //Loan ID
 
 
 				if($loan_id) {
@@ -406,6 +392,13 @@ class Loans extends CI_Controller {
 			$data['notes']		= $this->notes_model->fetch_notes(NULL, NULL, 'loan', $data['loan']['id']);
 			$data['files']		= $this->files_model->fetch_files(NULL, NULL, 'loan', $data['loan']['id']);
 			$data['payments']	= $this->payments_model->fetch_payments(NULL, NULL, $data['loan']['id']);
+
+			$data['schedules']	= $this->payments_model->fetch_schedules(NULL, NULL, $data['loan']['id']);
+
+			//For loan approval
+			$startdate = date('Y-m-d');
+			$amount = $data['loan']['borrowed_amount'] + ($data['loan']['borrowed_amount'] * ($data['loan']['borrowed_percentage']/100));
+			$data['pre_sched'] = getSchedules($startdate, AddDays($data['loan']['due_days'], $startdate), $amount, TRUE);
 			
 			if($data['user']['user_level'] > 6) {
 				if ($this->uri->segment(4)=='print') {
@@ -530,9 +523,9 @@ class Loans extends CI_Controller {
 
 	       	switch ($key) {
 	       		case 'approve':
-	       			$flag = $this->loans_model->update_status($id, 1);
-	       			//update approve date
-	       			$this->loans_model->update_approve($id);
+
+	       			$flag = $this->loans_model->update_status($id, 1); //set the boolean flag
+	       			
 	       			//logs
 	       			$log_action = 'Approved Loan Request';
 	       			//add note
@@ -540,9 +533,22 @@ class Loans extends CI_Controller {
 	       			$description = $userdata['username'] . ': Approved this Loan Request. <br/> Remarks: ' . $description;
 	       			$this->notes_model->create('loan', $id, NULL, $description);
 
-	       			$info = $this->loans_model->view($id);
+	       			//Fetch Loan Info
+	       			$info = $this->loans_model->view($id); //fetch data 
+
+	       			//Set Payment Schedules
+	       			$amount_due = ($info['borrowed_amount'] + ($info['borrowed_amount'] * ($info['borrowed_percentage'] / 100)));
+	       			$this->payments_model->set_schedules($info['id'], $info['due_days'], $amount_due);
+
+	       			//update approve date and set due_date
+	       			$this->loans_model->update_approve($id, $info['due_days']);
+
+	       			//override old variable
+	       			$info = $this->loans_model->view($id); //fetch new data 
+
+
 	       			 //Send SMS Notification  /////////////////////
-		             $message = "Hi ".$info['name']."! Your Loan Application ".$info['id']." has been approved! Thank you for patronizing ".COMPANY_NAME;
+		             $message = "Hi ".$info['name']."! Your Loan Application ".$info['id']." has been approved! Set to due on ".$info['due_date']." with a total payable of ".moneytize($amount_due)." Thank you for patronizing ".COMPANY_NAME;
 
 		             $number = $this->loans_model->fetch_contacts($info['borrower_id']);
 		             $data['sms'] = $this->smsgateway->sendMessageToNumber($number, $message, SMS_DEVICE); //Send SMS
@@ -707,5 +713,29 @@ class Loans extends CI_Controller {
 	    }
 
   }
+
+  /**
+   * A helper function used to provide JSON for Payment Approximity
+   * @param integer $loan_days   [description]
+   * @param [type]  $loan_amount [description]
+   */
+  function Schedules($loan_days=0, $loan_amount=NULL) {
+  		
+
+
+        $startdate = $this->input->get('start');
+  		if ($startdate) {
+  			$startdate = date('Y-m-d', strtotime($startdate));
+  		} else {
+  			$startdate = date('Y-m-d');
+  		}
+
+  		
+  		$enddate = AddDays($loan_days, $startdate);
+
+
+  		echo json_encode(getSchedules($startdate, $enddate, $loan_amount, TRUE), JSON_PRETTY_PRINT);
+  }
+
 
 }

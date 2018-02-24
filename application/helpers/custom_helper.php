@@ -1,5 +1,12 @@
 <?php if ( ! defined('BASEPATH')) exit('No direct script access allowed'); 
 
+        include APPPATH.'libraries/Moment/Moment.php';
+        include APPPATH.'libraries/Moment/MomentLocale.php';
+        include APPPATH.'libraries/Moment/MomentPeriodVo.php';
+        include APPPATH.'libraries/Moment/MomentHelper.php';
+        include APPPATH.'libraries/Moment/MomentFromVo.php';
+        include APPPATH.'libraries/Moment/MomentException.php';
+
     /**
      * This provides an encrypted and/or unreadable data.
      * @param  String   $str    Any string to be encrypted.
@@ -259,7 +266,11 @@
 
 
 
-
+    /**
+     * Generates a textable contact format
+     * @param  [type] $str [description]
+     * @return [type]      [description]
+     */
     function safeContact($str) {
 
 
@@ -273,6 +284,91 @@
 
         return $str;
     }
+
+
+
+    /**
+     * Custom helper for payment schedules
+     * @param  [type] $startdate [description]
+     * @param  [type] $enddate   [description]
+     * @param  [type] $amount    [description]
+     * @return [type]            [description]
+     */
+    function getSchedules($startdate, $enddate, $amount, $moneytize = FALSE) {
+    //GET Due Date with Moment //////////////////////////////////////////
+
+
+                /**
+                 * Gets the Median or Perios. 15 / 30
+                 * @param  [type] $date [description]
+                 * @return [type]       [description]
+                 */
+                function getPeriod($date) {
+                    $date = new \Moment\Moment($date);
+                    if ($date->getDay() >= 20) {
+                        //15th day of next month
+                        $date->addDays(15);
+                        $date->startOf('month');
+                        $date->addDays(14);                     
+                        return $date->format('Y-m-d');
+                        
+                    } elseif ($date->getDay() >= 5) {
+                        //fall on the 30th of this month or 29/28 feb
+                        if ($date->endOf('month')->getDay() > 30) {
+                            $date->subtractDays(1); //subtract 1 if 31
+                            return $date->format('Y-m-d');
+                        } else {
+                            return $date->endOf('month')->format('Y-m-d');
+                        }
+                    } elseif($date->getDay() < 5) {
+                        //this month's 15th
+                        $date->startOf('month');
+                        $date->addDays(14);                     
+                        return $date->format('Y-m-d');
+                    }
+                }
+
+                $dates = array();
+                while($startdate < $enddate) {
+
+                    $startdate = getPeriod($startdate); //set a new date
+
+                    if ($startdate > $enddate) {
+                        //return the end date
+                        //echo $enddate;
+                        $dates[] = $enddate;
+                    } else {
+                        //echo $startdate . '<br/>';
+                        $dates[] = $startdate;
+                    }
+                    
+                }
+
+                $data = array();
+                for ($i=0; $i < count($dates); $i++) { 
+                    $val['schedule'] = $dates[$i];
+                    if ($moneytize) {
+                         $val['amount'] = moneytize(round($amount / count($dates), 2));                        
+                    } else {
+                         $val['amount'] = (round($amount / count($dates), 2));
+                    }
+                    $data[] = $val;
+                }
+
+        return $data;
+                
+  }
+
+
+
+  function AddDays($days, $startdate = null) {
+            
+
+            $date = new \Moment\Moment($startdate);
+            $date->addDays($days);
+
+            return $date->format('Y-m-d');
+  }
 
 
 

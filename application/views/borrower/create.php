@@ -62,25 +62,30 @@
           </div>
         </div>
         <div class="box-body">
-          <?=form_open_multipart('borrowers/create')?>
+
+          <div class="callout callout-warning hidden">
+            <h4>Oh snap!</h4>
+            <p>This form seems to be invalid :(</p>
+          </div>
+          <?=form_open_multipart('borrowers/create', array('id'=>'mainform', 'data-parsley-validate' => ''))?>
           <fieldset>
             <legend>Personal Information</legend>            
-            <div class="form-group">
               <div class="row">
                 <div class="col-md-4 col-sm-12">
-                  <label for="fname">First Name</label>
-                  <input type="text" class="form-control" name="fname" id="fname" placeholder="Enter First Name..." value="<?=set_value('fname')?>" required>
+                  <div class="form-group">
+                    <label for="fname">First Name</label>
+                    <input type="text" class="form-control char-val" name="fname" id="fname" placeholder="Enter First Name..." value="<?=set_value('fname')?>" required="true">
+                    </div><!-- /.form-group -->
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
                   <label for="mname">Middle Name</label>
-                  <input type="text" class="form-control" name="mname" id="mname" placeholder="Enter Middle Name..." value="<?=set_value('mname')?>" required>
+                  <input type="text" class="form-control char-val" name="mname" id="mname"  data-parsley-type="alphanum" data-parsley-trigger="change" placeholder="Enter Middle Name..." value="<?=set_value('mname')?>" required="true" data-parsley-required>
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
                   <label for="lname">Last Name</label>
-                  <input type="text" class="form-control" name="lname" id="lname" placeholder="Enter Last Name..." value="<?=set_value('lname')?>" required>
+                  <input type="text" class="form-control char-val" name="lname" id="lname" placeholder="Enter Last Name..." value="<?=set_value('lname')?>" required>
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
-            </div><!-- /.form-group -->
 
               <div class="row">
                 <div class="col-md-4 col-sm-12">
@@ -90,7 +95,7 @@
                       <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="text" class="form-control" name="bdate" id="birthdate" value="<?=set_value('bdate')?>" placeholder="mm/dd/yyyy">
+                      <input type="text" class="form-control char-val" name="bdate" id="birthdate" value="<?=set_value('bdate')?>" placeholder="mm/dd/yyyy">
                     </div>
                     <!-- /.input group -->
                   </div>
@@ -177,15 +182,15 @@
               <div class="row">
                <div class="col-md-4 col-sm-12">
                   <label for="spouse_fname">Spouse First Name</label>
-                  <input type="text" class="form-control" name="spouse_fname" id="spouse_fname" placeholder="Enter First Name..." value="<?=set_value('spouse_fname')?>">
+                  <input type="text" class="form-control char-val" name="spouse_fname" id="spouse_fname" placeholder="Enter First Name..." value="<?=set_value('spouse_fname')?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
                   <label for="spouse_mname">Spouse Middle Name</label>
-                  <input type="text" class="form-control" name="spouse_mname" id="spouse_mname" placeholder="Enter Middle Name (Maiden)..." value="<?=set_value('spouse_mname')?>">
+                  <input type="text" class="form-control char-val" name="spouse_mname" id="spouse_mname" placeholder="Enter Middle Name (Maiden)..." value="<?=set_value('spouse_mname')?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
                 <div class="col-md-4 col-sm-12">
                   <label for="spouse_lname">Spouse Last Name</label>
-                  <input type="text" class="form-control" name="spouse_lname" id="spouse_lname" placeholder="Enter Last Name (Maiden)..." value="<?=set_value('spouse_lname')?>">
+                  <input type="text" class="form-control char-val" name="spouse_lname" id="spouse_lname" placeholder="Enter Last Name (Maiden)..." value="<?=set_value('spouse_lname')?>">
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
             </div><!-- /.form-group -->
@@ -600,7 +605,7 @@
                       <label for="">Upload Picture</label>
                     </div><!-- /.col-sm-3 -->
                     <div class="col-sm-5">
-                      <input type="file" name="img" id="img">  
+                      <input type="file" name="img" id="img" accept="image/*">  
                     </div><!-- /.col-sm-5 -->
                   </div><!-- /.row -->    
                 </fieldset><!-- /.group-box -->
@@ -649,6 +654,7 @@
     <script src="<?=base_url('assets/plugins/iCheck/icheck.min.js')?>"></script>
     <script src="<?=base_url('assets/plugins/input-mask/jquery.inputmask.js')?>"></script>
     <script src="<?=base_url('assets/plugins/input-mask/jquery.inputmask.extensions.js')?>"></script>
+    <script src="<?=base_url('assets/custom/js/customvalidation.js')?>"></script>
 
     <script src="<?=base_url('assets/bower_components/bootstrap-datepicker/dist/js/bootstrap-datepicker.min.js')?>"></script>
 
@@ -678,7 +684,12 @@
               }
 
           });
+
+
+              
       });
+
+
 
     
     function sameAddress() {

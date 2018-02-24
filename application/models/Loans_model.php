@@ -50,6 +50,7 @@ Class Loans_Model extends CI_Model {
           loans.borrower_id,
           loans.borrowed_amount,
           loans.due_date,
+          loans.due_days,
           loans.borrowed_percentage,
           loans.description,
           loans.status,
@@ -74,11 +75,13 @@ Class Loans_Model extends CI_Model {
      * @param  [type] $loan_id [description]
      * @return [type]          [description]
      */
-    function update_approve($loan_id) {
+    function update_approve($loan_id, $loan_days) {
 
         $approved = unix_to_human(time(), TRUE, 'eu');
+        $due_date = AddDays($loan_days, date('Y-m-d'));
+
         $this->db->where('id', $loan_id);
-        return $this->db->update('loans', array('approved_at' => $approved));
+        return $this->db->update('loans', array('approved_at' => $approved, 'due_date' => $due_date));
     }
 
     /**
