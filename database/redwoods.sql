@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Feb 23, 2018 at 05:45 PM
+-- Generation Time: Feb 27, 2018 at 07:52 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -185,9 +185,7 @@ CREATE TABLE `ci_sessions` (
 --
 
 INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
-('uce6q6aqjhk5ujj6fqgqqdsa204db2p4', '::1', 1519294844, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531393239343734313b6572726f727c733a31383a22596f75206e65656420746f206c6f67696e21223b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a31393a2257656c636f6d65206261636b2061646d696e21223b7761726e696e677c613a333a7b693a303b733a35323a22546865204c6f616e20416d6f756e74206669656c64206d75737420636f6e7461696e206120646563696d616c206e756d6265722e223b693a313b733a33353a225468652044617973206f66204c6f616e206669656c642069732072657175697265642e223b693a323b733a33383a22546865204c6f616e2050657263656e74616765206669656c642069732072657175697265642e223b7d),
-('v33gtvop4matrro5es9bc2vr8g2dgm2n', '::1', 1519370433, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531393336393539323b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a31393a2257656c636f6d65206261636b2061646d696e21223b),
-('umnbi403ggg5ebs9vdgletuvf4c1upnq', '::1', 1519403622, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531393430333632323b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a32313a22417070726f766564204c6f616e2052657175657374223b);
+('dh5tv71ut6edvig8o6g3kpkdu3cvcecu', '::1', 1519714235, 0x5f5f63695f6c6173745f726567656e65726174657c693a313531393731343138353b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d737563636573737c733a32313a22417070726f766564204c6f616e2052657175657374223b6572726f727c733a31363a224e6f205265636f726420466f756e6421223b);
 
 -- --------------------------------------------------------
 
@@ -251,7 +249,9 @@ CREATE TABLE `files` (
 --
 
 INSERT INTO `files` (`id`, `tag`, `tag_id`, `url`, `title`, `description`, `created_at`, `updated_at`, `user`) VALUES
-(1, 'loan', '2018-00001-00001', './uploads/borrowers/2018-00001/loans/2018-00001-00001/Felix.jpg', 'Felix.jpg', 'image/jpeg', '2018-02-20 12:58:52', NULL, 'admin');
+(1, 'loan', '2018-00001-00001', './uploads/borrowers/2018-00001/loans/2018-00001-00001/Felix.jpg', 'Felix.jpg', 'image/jpeg', '2018-02-20 12:58:52', NULL, 'admin'),
+(2, 'loan', '2018-00001-00001', './uploads/borrowers/2018-00001/loans/2018-00001-00001/IMG_1377.jpg', 'IMG_1377.jpg', 'image/jpeg', '2018-02-27 13:17:33', NULL, 'admin'),
+(3, 'loan', '2018-00001-00001', './uploads/borrowers/2018-00001/loans/2018-00001-00001/03_LCD_Slide_Handout_1(3)_(1).pdf', '03_LCD_Slide_Handout_1(3)_(1).pdf', 'application/pdf', '2018-02-27 13:17:54', NULL, 'admin');
 
 -- --------------------------------------------------------
 
@@ -286,7 +286,7 @@ CREATE TABLE `loans` (
   `borrower_id` varchar(255) DEFAULT NULL,
   `borrowed_amount` varchar(255) DEFAULT NULL,
   `due_days` int(10) DEFAULT NULL,
-  `due_date` datetime DEFAULT NULL,
+  `due_date` date DEFAULT NULL,
   `borrowed_percentage` decimal(10,2) DEFAULT NULL,
   `description` text,
   `status` tinyint(1) DEFAULT '0' COMMENT '0 = pending; 1 = approved; 2 = disapprove; 3 = closed; 4 = cancelled',
@@ -300,7 +300,7 @@ CREATE TABLE `loans` (
 --
 
 INSERT INTO `loans` (`id`, `borrower_id`, `borrowed_amount`, `due_days`, `due_date`, `borrowed_percentage`, `description`, `status`, `approved_at`, `created_at`, `updated_at`) VALUES
-('2018-00001-00001', '2018-00001', '50000.00', 150, '2018-07-24 00:00:00', '8.50', NULL, 0, '2018-02-24 00:16:22', '2018-02-23 22:42:18', '2018-02-23 16:17:24');
+('2018-00001-00001', '2018-00001', '10000.00', 60, '2018-04-28', '8.50', NULL, 1, '2018-02-27 14:46:26', '2018-02-27 14:46:01', '2018-02-27 06:46:26');
 
 -- --------------------------------------------------------
 
@@ -322,8 +322,7 @@ CREATE TABLE `loans_creditors` (
 --
 
 INSERT INTO `loans_creditors` (`id`, `loan_id`, `fullname`, `address`, `amount`, `remarks`) VALUES
-(1, '2018-00001-00001', '', '', '0.00', ''),
-(2, '2018-00001-00001', 'WOW MAGIC', 'WOW', NULL, 'Magic');
+(1, '2018-00001-00001', 'TEST', 'TEST', NULL, 'TEST');
 
 -- --------------------------------------------------------
 
@@ -343,18 +342,12 @@ CREATE TABLE `loans_expense` (
 --
 
 INSERT INTO `loans_expense` (`id`, `loan_id`, `expense_id`, `amount`) VALUES
-(1, '2018-00001-00001', 1, '100.00'),
-(2, '2018-00001-00001', 2, '10000.00'),
-(3, '2018-00001-00001', 3, '100001.00'),
-(4, '2018-00001-00001', 4, '111.00'),
-(5, '2018-00001-00001', 5, '1000.00'),
-(6, '2018-00001-00001', 6, '1001.00'),
-(7, '2018-00001-00001', 1, '1000.00'),
-(8, '2018-00001-00001', 2, '1000.00'),
-(9, '2018-00001-00001', 3, '1000.00'),
-(10, '2018-00001-00001', 4, '100.00'),
-(11, '2018-00001-00001', 5, '1000.00'),
-(12, '2018-00001-00001', 6, '1000.00');
+(1, '2018-00001-00001', 1, '1200.00'),
+(2, '2018-00001-00001', 2, '3000.00'),
+(3, '2018-00001-00001', 3, '0.00'),
+(4, '2018-00001-00001', 4, '1000.00'),
+(5, '2018-00001-00001', 5, '1200.00'),
+(6, '2018-00001-00001', 6, '1200.00');
 
 -- --------------------------------------------------------
 
@@ -374,16 +367,11 @@ CREATE TABLE `loans_income` (
 --
 
 INSERT INTO `loans_income` (`id`, `loan_id`, `income_id`, `amount`) VALUES
-(1, '2018-00001-00001', 1, '1000.00'),
-(2, '2018-00001-00001', 2, '1000.00'),
-(3, '2018-00001-00001', 3, '100.00'),
-(4, '2018-00001-00001', 4, '100.00'),
-(5, '2018-00001-00001', 5, '10000.00'),
-(6, '2018-00001-00001', 1, '10000.00'),
-(7, '2018-00001-00001', 2, '1000.00'),
-(8, '2018-00001-00001', 3, '100.00'),
-(9, '2018-00001-00001', 4, '1000.00'),
-(10, '2018-00001-00001', 5, '100.00');
+(1, '2018-00001-00001', 1, '10000.00'),
+(2, '2018-00001-00001', 2, '1200.00'),
+(3, '2018-00001-00001', 3, '1200.00'),
+(4, '2018-00001-00001', 4, '12500.00'),
+(5, '2018-00001-00001', 5, '1200.00');
 
 -- --------------------------------------------------------
 
@@ -401,17 +389,6 @@ CREATE TABLE `loans_ledger` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `user` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
-
---
--- Dumping data for table `loans_ledger`
---
-
-INSERT INTO `loans_ledger` (`id`, `loan_id`, `code`, `description`, `debit`, `credit`, `created_at`, `user`) VALUES
-(1, '2018-00001-00001', 'DISB', 'Actual Disbursed: PHP 95,000.00', '100000.00', '0.00', '2018-02-19 21:40:14', 'admin'),
-(2, '2018-00001-00001', 'INTR', 'Applied Standard Interests basing from 8.50% of PHP 100,000.00', '8500.00', '0.00', '2018-02-19 21:40:14', 'admin'),
-(3, '2018-00001-00001', 'SCHR', 'Standard Service Charge', '5000.00', '0.00', '2018-02-19 21:40:14', 'admin'),
-(4, '2018-00001-00001', 'SCHR', 'Service Charge Paid', '0.00', '5000.00', '2018-02-19 21:40:14', 'admin'),
-(5, '2018-00001-00001', 'CPAY', 'Payment #PAY2018-00001', '0.00', '5000.00', '2018-02-19 21:40:58', 'admin');
 
 -- --------------------------------------------------------
 
@@ -456,13 +433,6 @@ CREATE TABLE `loans_payments` (
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1 ROW_FORMAT=COMPACT;
 
---
--- Dumping data for table `loans_payments`
---
-
-INSERT INTO `loans_payments` (`id`, `loan_id`, `payee`, `receipt`, `description`, `amount`, `user`, `created_at`) VALUES
-('PAY2018-00001', '2018-00001-00001', 'Maco Cortes', '1000000', 'TESTING 123', '5000.00', 'admin', '2018-02-19 21:40:58');
-
 -- --------------------------------------------------------
 
 --
@@ -483,16 +453,10 @@ CREATE TABLE `loans_payments_schedule` (
 --
 
 INSERT INTO `loans_payments_schedule` (`id`, `loan_id`, `schedule`, `amount`, `paid_actual`, `paid_date`) VALUES
-(1, '2018-00001-00001', '2018-03-15', '5425.00', NULL, NULL),
-(2, '2018-00001-00001', '2018-03-30', '5425.00', NULL, NULL),
-(3, '2018-00001-00001', '2018-04-15', '5425.00', NULL, NULL),
-(4, '2018-00001-00001', '2018-04-30', '5425.00', NULL, NULL),
-(5, '2018-00001-00001', '2018-05-15', '5425.00', NULL, NULL),
-(6, '2018-00001-00001', '2018-05-30', '5425.00', NULL, NULL),
-(7, '2018-00001-00001', '2018-06-15', '5425.00', NULL, NULL),
-(8, '2018-00001-00001', '2018-06-30', '5425.00', NULL, NULL),
-(9, '2018-00001-00001', '2018-07-15', '5425.00', NULL, NULL),
-(10, '2018-00001-00001', '2018-07-24', '5425.00', NULL, NULL);
+(1, '2018-00001-00001', '2018-03-15', '2712.50', NULL, NULL),
+(2, '2018-00001-00001', '2018-03-30', '2712.50', NULL, NULL),
+(3, '2018-00001-00001', '2018-04-15', '2712.50', NULL, NULL),
+(4, '2018-00001-00001', '2018-04-28', '2712.50', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -536,7 +500,22 @@ INSERT INTO `logs` (`id`, `user`, `tag`, `tag_id`, `action`, `ip_address`, `user
 (18, 'admin', 'loan', '2018-00001-00001', 'Loan Application - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-23 14:42:18'),
 (19, 'admin', 'borrower', '2018-00001', 'Loan Application - ID:2018-00001-00001 - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-23 14:42:18'),
 (20, 'admin', 'loan', '2018-00001-00001', 'Approved Loan Request', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-23 16:14:59'),
-(21, 'admin', 'loan', '2018-00001-00001', 'Approved Loan Request', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-23 16:16:22');
+(21, 'admin', 'loan', '2018-00001-00001', 'Approved Loan Request', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-23 16:16:22'),
+(22, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-26 13:50:28'),
+(23, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-26 22:42:51'),
+(24, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 04:25:01'),
+(25, 'admin', 'user', 'admin', 'Updated User Information', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 04:42:33'),
+(26, 'admin', 'user', 'admin', 'Updated User Information', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 04:42:40'),
+(27, 'admin', 'user', 'admin', 'Updated User Information', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 04:42:53'),
+(28, 'admin', 'loan', '2018-00001-00001', 'Loan Application - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 04:48:35'),
+(29, 'admin', 'borrower', '2018-00001', 'Loan Application - ID:2018-00001-00001 - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 04:48:35'),
+(30, 'admin', 'loan', '2018-00001-00001', 'Approved Loan Request', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 04:49:36'),
+(31, 'admin', 'loan', '2018-00001-00001', 'Processed Disbursement', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 04:54:16'),
+(32, 'admin', 'loan', '2018-00001-00001', 'Uploaded a File', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 05:17:33'),
+(33, 'admin', 'loan', '2018-00001-00001', 'Uploaded a File', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 05:17:54'),
+(34, 'admin', 'loan', '2018-00001-00001', 'Loan Application - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 06:46:01'),
+(35, 'admin', 'borrower', '2018-00001', 'Loan Application - ID:2018-00001-00001 - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 06:46:01'),
+(36, 'admin', 'loan', '2018-00001-00001', 'Approved Loan Request', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.167 Safari/537.36', '2018-02-27 06:46:26');
 
 -- --------------------------------------------------------
 
@@ -562,7 +541,9 @@ CREATE TABLE `notes` (
 INSERT INTO `notes` (`id`, `tag`, `tag_id`, `title`, `description`, `created_at`, `updated_at`, `user`) VALUES
 (1, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: askdjakjdkasjd', '2018-02-19 21:40:03', NULL, NULL),
 (2, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: Testing', '2018-02-24 00:14:59', NULL, NULL),
-(3, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: dasdasdasdasdasdasdasdasd', '2018-02-24 00:16:22', NULL, NULL);
+(3, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: dasdasdasdasdasdasdasdasd', '2018-02-24 00:16:22', NULL, NULL),
+(4, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: Test 123', '2018-02-27 12:49:36', NULL, NULL),
+(5, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: VOILA!', '2018-02-27 14:46:26', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -626,7 +607,7 @@ CREATE TABLE `users` (
 --
 
 INSERT INTO `users` (`pin`, `username`, `password`, `firstname`, `lastname`, `email`, `contact`, `usertype`, `img`, `created_at`, `updated_at`, `is_deleted`) VALUES
-('111111', 'admin', '$2y$10$mt9rqihNCu6CVMnAcyqOreGwmO4yh2rgD9zvODgvxcpcDHvMIMcm6', 'Administrator', '', 'admin@admin.com', '1234567890', 'Administrator', './uploads/users/admin/b770d94c8b5e5d9b17c109db881469d8.png', '2017-09-27 15:22:36', '2018-02-16 03:03:19', 0);
+('111111', 'admin', '$2y$10$mt9rqihNCu6CVMnAcyqOreGwmO4yh2rgD9zvODgvxcpcDHvMIMcm6', 'Administrator', 'Admin', 'admin@admin.com', '1234567890', 'Administrator', './uploads/users/admin/b770d94c8b5e5d9b17c109db881469d8.png', '2017-09-27 15:22:36', '2018-02-27 04:42:53', 0);
 
 -- --------------------------------------------------------
 
@@ -869,7 +850,7 @@ ALTER TABLE `expenses`
 -- AUTO_INCREMENT for table `files`
 --
 ALTER TABLE `files`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 --
 -- AUTO_INCREMENT for table `income`
 --
@@ -879,37 +860,37 @@ ALTER TABLE `income`
 -- AUTO_INCREMENT for table `loans_creditors`
 --
 ALTER TABLE `loans_creditors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 --
 -- AUTO_INCREMENT for table `loans_expense`
 --
 ALTER TABLE `loans_expense`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 --
 -- AUTO_INCREMENT for table `loans_income`
 --
 ALTER TABLE `loans_income`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `loans_ledger`
 --
 ALTER TABLE `loans_ledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 --
 -- AUTO_INCREMENT for table `loans_payments_schedule`
 --
 ALTER TABLE `loans_payments_schedule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=37;
 --
 -- AUTO_INCREMENT for table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 --
 -- AUTO_INCREMENT for table `store_expenses`
 --
