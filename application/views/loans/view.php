@@ -127,7 +127,7 @@
                           <th>Requested Amount</th>
                           <td width="20%" class="bg-warning"><?=$loan['borrowed_amount']?></td>
                           <th>Days of Period / Due date</th>
-                          <td width="20%" class="bg-warning"><?=$loan['due_date']?></td>
+                          <td width="20%" class="bg-warning"><?=$loan['due_days']?> days | <?=$loan['due_date']?></td>
                           <th>Rate(%) per Annum</th>
                           <td width="20%" class="bg-warning"><?=$loan['borrowed_percentage']?></td>
                         </tr>
@@ -960,6 +960,11 @@
               <div class="tab-pane active" id="file_info<?=$file['id']?>">
                 <div class="row">
                   <div class="col-md-12">
+
+                    <?php if (isImage($file['url'])): ?>
+                      <img src="<?=base_url($file['url'])?>" class="img-thumbnail center file-img" alt="" />
+                    <hr />
+                    <?php endif; ?>
                     <strong>Title</strong>
                     <p class="text-muted"><?=$file['title']?></p><!-- /.text-muted -->
                     <hr /> 

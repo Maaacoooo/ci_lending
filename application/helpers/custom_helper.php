@@ -372,6 +372,35 @@
 
 
 
+  /**
+   * Checks if it's an img
+   * @param  [type]  $img path or filename w/ extension
+   * @return boolean      [description]
+   */
+  function isImage($img) {
+
+     $img =  explode('.', $img);
+     $count = count($img);
+     $ext = $img[$count-1];
+
+     $image_ext = array(
+        'jpeg' => 'jpeg',
+        'jpg' => 'jpg',
+        'png' => 'png',
+        'gif' => 'gif'
+    );
+
+
+     if (array_search($ext, $image_ext)) {
+         return true;
+     }
+     
+     return false;
+
+  }
+
+
+
 
   
 
