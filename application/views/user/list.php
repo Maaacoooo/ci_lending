@@ -166,7 +166,7 @@
                      <?php 
                         if($usertypes):
                         foreach($usertypes as $usr):
-                          if($user['title'] != 'Administratror'):
+                          if($usr['title'] != 'Administrator'):
                       ?>
                       <option value="<?=$usr['title']?>"><?=$usr['title']?></option>
                       <?php
