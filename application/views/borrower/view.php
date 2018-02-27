@@ -1679,7 +1679,7 @@
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Interest Rate</label>
-                  <input type="number" name="loan_rate" id="loan_rate" max="100" class="form-control input-lg" value="8.5" />
+                  <input type="number" step=".05" name="loan_rate" id="loan_rate" max="100" class="form-control input-lg" value="8.5" />
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-4 -->
             </div><!-- /.row -->
@@ -1694,9 +1694,13 @@
                   <?php $y=1; foreach($income as $inc): ?>
                   <tr>
                     <th><?=$y++.'. '.$inc['title']?></th>
-                    <td width="30%"><input type="text" id="test" class="integer" name="income[<?=$inc['id']?>]"/></td>
+                    <td width="30%"><input type="number" class="integer income" name="income[<?=$inc['id']?>]"/></td>
                   </tr>
                   <?php endforeach; ?>
+                  <tr>
+                    <th class="text-right">TOTAL</th>
+                    <td id="total_income" class="bg-info">0.00</td>
+                  </tr>
                 </table><!-- /.table table-bordered table-condensed -->
 
                 <table class="table table-bordered table-condensed">
@@ -1706,9 +1710,13 @@
                   <?php $x=1; foreach($expenses as $exp): ?>
                   <tr>
                     <th><?=$x++.'. '.$exp['title']?></th>
-                    <td width="30%"><input type="text" class="integer" name="expense[<?=$exp['id']?>]"/></td>
+                    <td width="30%"><input type="number" class="integer expense" name="expense[<?=$exp['id']?>]"/></td>
                   </tr>
                   <?php endforeach; ?>
+                  <tr>
+                    <th class="text-right">TOTAL</th>
+                    <td id="total_expense" class="bg-info">0.00</td>
+                  </tr>
                 </table><!-- /.table table-bordered table-condensed -->
               </div><!-- /.col-md-6 col-md-3-offset -->
             </div><!-- /.row -->
@@ -1935,6 +1943,20 @@
                 $(this).val(value);
               }
               
+          });
+
+      $('.expense').on('change, keydown', function(e) {
+              var expenses = $('.expense').map(function() { return $(this).val();}).get();
+              var total_expense = expenses.reduce((a,b) => +a + +b, 0);
+
+              $('#total_expense').text(parseFloat(total_expense).toFixed(2));
+          });
+
+      $('.income').on('change, keydown', function(e) {
+              var income = $('.income').map(function() { return $(this).val();}).get();
+              var total_income = income.reduce((a,b) => +a + +b, 0);
+
+              $('#total_income').text(parseFloat(total_income).toFixed(2));
           });
 
        $('#loan_amount, #loan_days, #loan_rate, #approve_date').on('keyup change', function(e) {

@@ -738,4 +738,12 @@ class Loans extends CI_Controller {
   }
 
 
+
+	function test() {
+		var_dump(isImage('test.pngs'));
+	}
+
 }
+
+
+

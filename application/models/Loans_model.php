@@ -25,7 +25,7 @@ Class Loans_Model extends CI_Model {
 
 
 
-    function create($acc_id, $due_date) {
+    function create($acc_id) {
 
         $id = $this->generate_loanID($acc_id); //generate ID
 
@@ -34,7 +34,7 @@ Class Loans_Model extends CI_Model {
             'borrower_id'           => $acc_id,  
             'borrowed_amount'       => strip_tags($this->input->post('loan_amount')),  
             'borrowed_percentage'   => strip_tags($this->input->post('loan_rate')),  
-            'due_date'              => $due_date
+            'due_days'              => strip_tags($this->input->post('loan_days'))
         );
 
         $this->db->insert('loans', $data);
