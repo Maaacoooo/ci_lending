@@ -70,7 +70,8 @@ Class User_model extends CI_Model
             $data = array(              
                 'username'  => $username,  
                 'password'  => password_hash(APP_DEFAULT_PASS, PASSWORD_DEFAULT),  //Default Password
-                'name'      => strip_tags($this->input->post('name')),  
+                'firstname' => strip_tags($this->input->post('fname')),  
+                'lastname'  => strip_tags($this->input->post('lname')),  
                 'email'     => strip_tags($this->input->post('email')),  
                 'contact'   => strip_tags($this->input->post('contact')),  
                 'usertype'  => strip_tags($this->input->post('usertype'))                            
@@ -183,7 +184,8 @@ Class User_model extends CI_Model
             }
       
             $data = array(           
-                'name'      => $this->input->post('name'),  
+                'firstname'      => $this->input->post('fname'),  
+                'lastname'      => $this->input->post('lname'),  
                 'email'     => $this->input->post('email'),  
                 'contact'   => $this->input->post('contact'),  
                 'usertype'  => $this->input->post('usertype'),                                         
@@ -223,9 +225,17 @@ Class User_model extends CI_Model
     function fetch_users($limit, $id, $search, $is_deleted = 0) {
 
             if($search) {
-                $this->db->like('name', $search);
+                $this->db->like('users.firstname', $search);
+                $this->db->like('users.lastname', $search);
                 $this->db->or_like('username', $search);
             }
+
+            $this->db->select('
+            CONCAT(firstname, " ", lastname) as name,
+            usertype,
+            username,
+            img
+              ');
 
             $this->db->where('is_deleted', $is_deleted);            
             $this->db->limit($limit, (($id-1)*$limit));

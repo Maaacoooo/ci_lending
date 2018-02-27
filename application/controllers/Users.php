@@ -58,7 +58,8 @@ class Users extends CI_Controller {
 		    //END PAGINATION		
 		
 			//Form Validation for user
-			$this->form_validation->set_rules('name', 'Name', 'trim|required'); 
+			$this->form_validation->set_rules('fname', 'First Name', 'trim|required'); 
+			$this->form_validation->set_rules('lname', 'Last Name', 'trim|required'); 
 			$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email'); 
 			$this->form_validation->set_rules('contact', 'Contact Number', 'trim'); 
 			$this->form_validation->set_rules('username', 'Username', 'trim|required|is_unique[users.username]|alpha_dash'); 
@@ -152,7 +153,8 @@ class Users extends CI_Controller {
 			}	
 
 			//Form Validation for user
-			$this->form_validation->set_rules('name', 'Name', 'trim|required');  
+			$this->form_validation->set_rules('fname', 'First Name', 'trim|required'); 
+			$this->form_validation->set_rules('lname', 'Last Name', 'trim|required'); 
 			$this->form_validation->set_rules('usertype', 'Usertype', 'trim|required'); 
 			$this->form_validation->set_rules('email', 'Email Address', 'trim|required|valid_email'); 
 			$this->form_validation->set_rules('contact', 'Contact Number', 'trim');  

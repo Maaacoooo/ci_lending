@@ -111,7 +111,7 @@ Class Logs_model extends CI_Model
             if($limit) {
                 $this->db->limit($limit);
             }
-
+            $this->db->join('users', 'users.username = logs.user', 'left');
             if(!is_null($user)){
                 $this->db->where('user', $user);;
             }
