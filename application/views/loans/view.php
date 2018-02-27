@@ -125,7 +125,7 @@
                         </tr>
                         <tr>
                           <th>Requested Amount</th>
-                          <td width="20%" class="bg-warning"><?=$loan['borrowed_amount']?></td>
+                          <td width="20%" class="bg-warning"><?=moneytize($loan['borrowed_amount'])?></td>
                           <th>Days of Period / Due date</th>
                           <td width="20%" class="bg-warning"><?=$loan['due_days']?> days | <?=$loan['due_date']?></td>
                           <th>Rate(%) per Annum</th>
@@ -176,7 +176,7 @@
                             ?>
                             <td><?=$x++?></td>
                             <td><?=date('Y-m-d (D M, d)', strtotime($sched['schedule']))?></td>
-                            <td><?=moneytize($sched['amount'])?></td>
+                            <td class="text-danger"><?=moneytize($sched['amount'])?></td>
                             <td class="bg-success"><?=moneytize($sched['paid_actual'])?></td>
                             <td class="bg-success">
                               <?php if ($sched['paid_actual'] < $sched['amount']): ?>                                
@@ -192,9 +192,9 @@
                         <tfoot>
                           <tr>
                             <th colspan="2" class="text-right">TOTAL</th>
-                            <td><?=array_sum($totAmt)?></td>
-                            <td><?=array_sum($totPaid)?></td>
-                            <td><?=array_sum($totBal)?></td>
+                            <td><?=moneytize(array_sum($totAmt))?></td>
+                            <td><?=moneytize(array_sum($totPaid))?></td>
+                            <td><?=moneytize(array_sum($totBal))?></td>
                             <td></td>
                           </tr>
                         </tfoot>
@@ -205,7 +205,7 @@
                   <?php if ($loan['status']==1): ?>
                   <div class="row">
                     <div class="col-md-12">
-                      <div class="box box-default">
+                      <div class="box box-primary">
                         <div class="box-header with-border">
                           <h5 class="box-title">Loan Ledger</h5>
                           <div class="box-tools pull-right">
@@ -392,15 +392,20 @@
                     <td width="5%"></td>
                     <th colspan="3">Income</th>
                   </tr>
-                  <?php if ($income): ?>
+                  <?php $totInc[]=0; if ($income): ?>
                   <?php $x=1; foreach ($income as $inc): ?>
                   <tr>
+                    <?php $totInc[] = $inc['amount']; ?>
                     <td colspan="2" width="10%"></td>
                     <td><?=$x++?>. <?=$inc['title']?></td>
-                    <td width="50%" class="bg-warning"><?=$inc['amount']?></td>
+                    <td width="50%" class="bg-warning"><?=moneytize($inc['amount'])?></td>
                   </tr>
                   <?php endforeach ?>
                   <?php endif ?>
+                  <tr>
+                    <th colspan="3" class="text-right">TOTAL:</th>
+                    <td><?=moneytize(array_sum($totInc))?></td>
+                  </tr>
                   <tr>
                     <td colspan="4"></td>
                   </tr>
@@ -408,15 +413,20 @@
                     <td width="5%"></td>
                     <th colspan="3">Expenses</th>
                   </tr>
-                  <?php if ($expenses): ?>
+                  <?php $totExp[]=0; if ($expenses): ?>
                   <?php $x=1; foreach ($expenses as $exp): ?>
                   <tr>
+                    <?php $totExp[] = $exp['amount']; ?>
                     <td colspan="2" width="10%"></td>
                     <td><?=$x++?>. <?=$exp['title']?></td>
-                    <td width="50%" class="bg-warning"><?=$exp['amount']?></td>
+                    <td width="50%" class="bg-warning"><?=moneytize($exp['amount'])?></td>
                   </tr>
                   <?php endforeach ?>
                   <?php endif ?>
+                  <tr>
+                    <th colspan="3" class="text-right">TOTAL:</th>
+                    <td><?=moneytize(array_sum($totExp))?></td>
+                  </tr>
                 </table><!-- /.table .table-condensed table-dark-border -->             
               </div>
               
@@ -460,7 +470,7 @@
               <div class="tab-pane" id="payments">
                 <h4 class="title">Payments</h4>
                 <?php if ($payments): ?>
-                <table class="table table-condensed">
+                <table class="table table-condensed table-striped table-bordered">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -474,6 +484,7 @@
                   <tbody>
                     <?php foreach ($payments as $pay): ?>
                     <tr>
+                      <?php $totPay[] = $pay['amount']; ?>
                       <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=$pay['id']?></a></td>
                       <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=$pay['payee']?></a></td>
                       <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=ellipsize($pay['description'], 20, 1)?></a></td>
@@ -483,6 +494,14 @@
                     </tr>
                     <?php endforeach ?>
                   </tbody>
+                  <tfoot>
+                    <tr>
+                      <th colspan="3" class="text-right">TOTAL:</th>
+                      <td><?=moneytize(array_sum($totPay))?></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
                 </table><!-- /.table table-condensed -->
                 <?php else: ?>
                   <div class="well">               
@@ -613,17 +632,22 @@
                 <?php if ($loan['status']==1 && $ledger): ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#AddPayment" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-money"></i> Add Payment</a>
-                </li>
+                </li>                
                 <?php elseif(($loan['status']==1 || $loan['status']==0) && $user['user_level'] > 8): ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#DisapproveLoan" data-toggle="modal" class="btn bg-navy btn-block btn-flat"><i class="fa fa-ban"></i> Disapprove Loan</a>
-                </li>
+                </li>                
+                <?php endif; ?>  
+                <?php if ($loan['status'] == 1 && !$ledger): ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#disburse" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-money"></i> Disburse Cash</a>
                 </li>
-                <?php endif; ?>  
+                <?php endif ?>
                 <li class="list-group-item">
-                  <a href="<?=current_url()?>/print" target="_blank" class="btn btn-primary btn-block btn-flat"><i class="fa fa-print"></i> Print</a>
+                  <a href="<?=current_url()?>/print" target="_blank" class="btn btn-primary btn-block btn-flat"><i class="fa fa-print"></i> Print Loan Application</a>
+                </li>
+                <li class="list-group-item">
+                  <a href="<?=current_url()?>/print/statement" target="_blank" class="btn btn-primary btn-block btn-flat"><i class="fa fa-print"></i> Print Statement</a>
                 </li>
                                        
               </ul>
@@ -749,8 +773,11 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+  <?php endif; ?>     
 
-  <!-- ///////////////////////// Disapprove Loan ////////////////////////////// -->
+
+  <?php if ($loan['status'] == 1 && !$ledger): ?>
+  <!-- ///////////////////////// Disburse Cash ////////////////////////////// -->
   <div class="modal fade" id="disburse">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
@@ -793,7 +820,7 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
-  <?php endif; ?>     
+  <?php endif ?>
 
   <!-- ///////////////////////// Add Debit ////////////////////////////// -->
   <div class="modal fade" id="AddDebit">

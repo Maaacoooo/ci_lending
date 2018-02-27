@@ -402,7 +402,12 @@ class Loans extends CI_Controller {
 			
 			if($data['user']['user_level'] > 6) {
 				if ($this->uri->segment(4)=='print') {
-					$this->load->view('loans/print', $data);	
+					if ($this->uri->segment(5)=='statement') {
+						$data['title'] = 'Statement of Account: ' . $data['loan']['id'];
+						$this->load->view('loans/print_statement', $data);	
+					} else {
+						$this->load->view('loans/print', $data);	
+					}
 				} else {
 					$this->load->view('loans/view', $data);	
 				}
@@ -740,7 +745,9 @@ class Loans extends CI_Controller {
 
 
 	function test() {
-		var_dump(isImage('test.pngs'));
+		//var_dump($this->payments_model->set_scheduled_payment('2018-00001-00001'));
+		//
+		var_dump((100/3));
 	}
 
 }

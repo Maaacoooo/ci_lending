@@ -1367,7 +1367,7 @@
                       <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="text" class="form-control bootstrap-datepicker" name="bdate" id="birthdate" value="<?=dateform($info['birthdate'])?>" placeholder="mm/dd/yyyy">
+                      <input type="text" class="form-control bootstrap-datepicker" name="bdate" id="birthdate" value="<?=date('d/m/Y', strtotime($info['birthdate']))?>" placeholder="mm/dd/yyyy">
                     </div>
                     <!-- /.input group -->
                   </div>
@@ -1395,6 +1395,7 @@
                     <option disabled selected> Select Option...</option>
                     <option value="Single" <?php if($info['civil_status']=='Single')echo'selected';?>>Single</option>
                     <option value="Married" <?php if($info['civil_status']=='Married')echo'selected';?>>Married</option>
+                    <option value="Widowed" <?php if($info['civil_status']=='Widowed')echo'selected';?>>Widowed</option>
                   </select>
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
