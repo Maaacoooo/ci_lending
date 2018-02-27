@@ -77,6 +77,7 @@ Class Borrower_Model extends CI_Model {
             
             } 
 
+
             return $create_act;
        
 
@@ -373,7 +374,13 @@ Class Borrower_Model extends CI_Model {
 
          $this->db->insert('borrowers_address', $data);
 
-         return $this->db->insert_id(); //returns the inserted id
+         $id = $this->db->insert_id(); //returns the inserted id
+
+         if ($tag==0) {
+            $this->db->update('borrowers', array('bplace' => $id), array('id'=>$acc_id));
+             
+         }
+         return $id;
 
     }
 
