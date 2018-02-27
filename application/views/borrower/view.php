@@ -381,11 +381,11 @@
               <!-- ///////////////////////////////// Settings ///////////////////////////////////// -->
               <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="settings">
                 <strong>Account Options</strong>
-                <?php if ($info['is_deleted']==0): ?>
+                <?php /* if ($info['is_deleted']==0): ?>
                   <button class="btn btn-danger" data-toggle="modal" data-target="#ActivateBorrower"><i class="fa fa-lock"></i> Deactivate Borrower</button>
                 <?php else: ?>
                   <button class="btn btn-primary" data-toggle="modal" data-target="#ActivateBorrower"><i class="fa fa-check"></i> Activate Borrower</button>
-                <?php endif ?>
+                <?php endif */?>
                   <button class="btn btn-primary" data-toggle="modal" data-target="#ChangeProfile"><i class="fa fa-image"></i> Change Profile</button>
               </div>
               <!-- /.tab-pane -->
