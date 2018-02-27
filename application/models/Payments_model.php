@@ -56,7 +56,7 @@ Class Payments_Model extends CI_Model {
                 $amount = $amount - $balance;
               } else {
                 $this->db->where('id', $sched['id']);
-                $this->db->update('loans_payments_schedule', array('paid_actual' => $amount));
+                $this->db->update('loans_payments_schedule', array('paid_actual' => $sched['paid_actual'] + $amount));
                 //set new amount value
                 $amount = 0;
               }
