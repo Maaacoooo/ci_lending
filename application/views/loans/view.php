@@ -149,25 +149,55 @@
                       <table class="table table-condensed table-dark-border">
                         <thead>
                           <tr>
-                            <th colspan="4">Payment Schedules</th>
+                            <th colspan="6">Payment Schedules</th>
                           </tr>
                           <tr>
+                            <th width="2%"></th>
                             <th>Schedule</th>
                             <th>Due Amount</th>
                             <th class="bg-success">Paid Amount</th>
+                            <th class="bg-success">Balance</th>
                             <th class="bg-success">Date Paid</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <?php foreach ($schedules as $sched): ?>
+                          <?php 
+                          $totPaid[] = 0;
+                          $totAmt[] = 0;
+                          $totBal[] = 0;
+                          $x = 1;
+                          foreach ($schedules as $sched): ?>
                           <tr>
+                            <?php 
+                            $balance = $sched['amount'] - $sched['paid_actual'];
+                            $totBal[] = $balance;
+                            $totAmt[] = $sched['amount'];
+                            $totPaid[] = $sched['paid_actual'];
+                            ?>
+                            <td><?=$x++?></td>
                             <td><?=date('Y-m-d (D M, d)', strtotime($sched['schedule']))?></td>
                             <td><?=moneytize($sched['amount'])?></td>
-                            <td class="bg-success"><?=$sched['paid_actual']?></td>
+                            <td class="bg-success"><?=moneytize($sched['paid_actual'])?></td>
+                            <td class="bg-success">
+                              <?php if ($sched['paid_actual'] < $sched['amount']): ?>                                
+                                <strong class="text-danger"><?=moneytize($sched['amount'] - $sched['paid_actual'])?></strong>
+                              <?php else: ?>
+                                <?=moneytize($balance)?>
+                              <?php endif ?>
+                            </td>
                             <td class="bg-success"><?=$sched['paid_date']?></td>
                           </tr>
                           <?php endforeach ?>
                         </tbody>
+                        <tfoot>
+                          <tr>
+                            <th colspan="2" class="text-right">TOTAL</th>
+                            <td><?=array_sum($totAmt)?></td>
+                            <td><?=array_sum($totPaid)?></td>
+                            <td><?=array_sum($totBal)?></td>
+                            <td></td>
+                          </tr>
+                        </tfoot>
                       </table><!-- /.table table-condensed table-dark-border -->                        
                       <?php endif ?>
                     </div><!-- /.col-md-12 -->
