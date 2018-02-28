@@ -619,6 +619,12 @@
                   <b>Requested Amount</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount'])?></a>
                 </li>
                 <li class="list-group-item">
+                  <b>Interest</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount']*($loan['borrowed_percentage']/100))?></a>
+                </li>
+                <li class="list-group-item">
+                  <b>Total Payable</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount'] + $loan['borrowed_amount']*($loan['borrowed_percentage']/100))?></a>
+                </li>
+                <li class="list-group-item">
                   <b>Date Registered</b> <a class="pull-right"><?=$loan['created_at']?></a>
                 </li>
                 <li class="list-group-item">
