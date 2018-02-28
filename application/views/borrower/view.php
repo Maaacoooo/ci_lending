@@ -1668,13 +1668,13 @@
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Amount</label>
-                  <input type="text" name="loan_amount" id="loan_amount" class="form-control input-lg"/>
+                  <input type="number" name="loan_amount" id="loan_amount" class="form-control input-lg"/>
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-4 -->
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Days of Due</label>
-                  <input type="text" name="loan_days" id="loan_days" class="form-control input-lg"/>
+                  <input type="number" name="loan_days" id="loan_days" class="form-control input-lg"/>
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-4 -->
               <div class="col-sm-4">
@@ -1752,7 +1752,6 @@
                   </div><!-- /.row -->
               </div><!-- /.col-md-10 col-md-offset-1 -->
             </div><!-- /.row -->
-
             <hr />
             </div><!-- /.col-md-8 -->
             <div class="col-md-4">
@@ -1868,7 +1867,7 @@
   </div>
   <!-- /.modal -->
 
-
+<?php /*
   <!-- ///////////////////////////// Activate Borrower //////////////////////////////////// -->
 
   <div class="modal fade" id="ActivateBorrower">
@@ -1909,7 +1908,7 @@
     </div>
     <!-- /.modal-dialog -->
   </div>
-  <!-- /.modal -->
+  <!-- /.modal --> */ ?>
 
 
 

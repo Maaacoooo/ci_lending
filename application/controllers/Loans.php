@@ -344,6 +344,100 @@ class Loans extends CI_Controller {
 	}
 
 
+	public function update()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{
+			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+			$this->form_validation->set_rules('loan_amount', 'Loan Amount', 'trim|required');   
+			$this->form_validation->set_rules('loan_days', 'Days of Loan', 'trim|required');   
+			$this->form_validation->set_rules('loan_rate', 'Loan Percentage', 'trim|required');   
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$loan_id = $this->encryption->decrypt($this->input->post('id')); //ID of the Borrower	
+
+
+				if($this->loans_model->update($loan_id)) {
+
+					
+					//Save Expenses 
+					foreach ($this->input->post('expense') as $key => $value) {
+						$this->loans_model->update_expense($loan_id, $key, $value);
+					}
+
+
+					//Save Income 
+					foreach ($this->input->post('income') as $key => $value) {
+						$this->loans_model->update_income($loan_id, $key, $value);
+					}
+
+					
+					//Save Creditors
+					foreach ($this->input->post('creditors_name') as $key => $value) {
+
+						$cred['name'] = $value;
+						$cred['addr'] = $this->input->post('creditors_address')[$key];
+						$cred['amount'] = $this->input->post('creditors_amount')[$key];
+						$cred['remarks'] = $this->input->post('creditors_remarks')[$key];
+		
+						$this->loans_model->update_creditors($key, $loan_id, $cred['name'], $cred['addr'], $cred['amount'], $cred['remarks']);
+							
+					} 
+
+					foreach ($this->input->post('new_creditors_name') as $key => $value) {
+
+						if ($value) {
+							$cred['name'] = $value;
+							$cred['addr'] = $this->input->post('new_creditors_address')[$key];
+							$cred['amount'] = $this->input->post('creditors_amount')[$key];
+							$cred['remarks'] = $this->input->post('new_creditors_remarks')[$key];
+			
+							$this->loans_model->add_creditors($loan_id, $cred['name'], $cred['addr'], $cred['amount'], $cred['remarks']);
+						}
+						
+					} 
+
+
+					// Logs ////////////////////////////////////////
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'loan',
+							'tag_id'	=> 	$loan_id,
+							'action' 	=> 	'Updated Request Details'
+					);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$notif['success'] = 'Request Updated!';
+		   			$this->sessnotif->setNotif($notif);
+					
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
 	public function view($id)		{
 
 		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata

@@ -43,6 +43,20 @@ Class Loans_Model extends CI_Model {
     }
 
 
+    function update($loan_id) {
+
+        $data = array(
+            'borrowed_amount'       => strip_tags($this->input->post('loan_amount')),  
+            'borrowed_percentage'   => strip_tags($this->input->post('loan_rate')),  
+            'due_days'              => strip_tags($this->input->post('loan_days'))
+        );
+
+        $this->db->where('id', $loan_id);
+        return $this->db->update('loans', $data);
+
+    }
+
+
 
     function view($id) {
         $this->db->select('
@@ -267,6 +281,18 @@ Class Loans_Model extends CI_Model {
         return $this->db->insert_id();
     }
 
+    function update_expense($loan_id, $exp_id, $amount) {
+
+        $data = array(
+            'amount'        =>  $amount
+        );
+
+        $this->db->where('loan_id', $loan_id);
+        $this->db->where('id', $exp_id);
+        return $this->db->update('loans_expense', $data);
+
+    }
+
 
     function add_income($loan_id, $inc_id, $amount) {
 
@@ -279,6 +305,19 @@ Class Loans_Model extends CI_Model {
         $this->db->insert('loans_income', $data);
 
         return $this->db->insert_id();
+    }
+
+
+    function update_income($loan_id, $inc_id, $amount) {
+
+        $data = array(
+            'amount'        =>  $amount
+        );
+
+        $this->db->where('loan_id', $loan_id);
+        $this->db->where('id', $inc_id);
+        return $this->db->update('loans_income', $data);
+
     }
 
 
@@ -300,6 +339,27 @@ Class Loans_Model extends CI_Model {
 
         $this->db->insert('loans_creditors', $data);
 
+        return $this->db->insert_id();
+    }
+
+
+    function update_creditors($id, $loan_id, $name, $addr, $amount, $remarks) {
+
+        $data = array(
+            'fullname'      =>  $name,
+            'address'       =>  $addr,
+            'amount'        =>  $amount,
+            'remarks'       =>  $remarks
+        );
+
+        $this->db->where('loan_id', $loan_id);
+        $this->db->where('id', $id);
+
+        if ($name =="") {
+          $this->db->delete('loans_creditors');          
+        } else {
+          $this->db->update('loans_creditors', $data);
+        }
         return $this->db->insert_id();
     }
 
