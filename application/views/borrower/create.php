@@ -123,6 +123,7 @@
                     <option disabled selected> Select Option...</option>
                     <option value="Single" <?=set_select('civil_stat', 'Single')?>>Single</option>
                     <option value="Married" <?=set_select('civil_stat', 'Married')?>>Married</option>
+                    <option value="Widowed" <?=set_select('civil_stat', 'Widowed')?>>Widowed</option>
                   </select>
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->

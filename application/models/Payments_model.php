@@ -32,8 +32,41 @@ Class Payments_Model extends CI_Model {
         );
 
         $this->db->insert('loans_payments', $data);
-
+        $this->set_scheduled_payment($loan_id, $amount);
+        
         return $id;
+    }
+
+
+    function set_scheduled_payment($loan_id, $amount) {
+      //fetch schedules
+        $this->db->where('loan_id', $loan_id);
+        $query = $this->db->get('loans_payments_schedule');
+        
+        foreach ($query->result_array() as $sched) {
+          if($sched['amount'] != $sched['paid_actual'] && $amount != 0) {
+              
+              $balance = $sched['amount'] - $sched['paid_actual'];
+
+              if ($amount > $balance) {
+                //update actual_paid same with the amount
+                $this->db->where('id', $sched['id']);
+                $this->db->update('loans_payments_schedule', array('paid_actual' => $sched['amount']));
+                //set new amount value
+                $amount = $amount - $balance;
+              } else {
+                $this->db->where('id', $sched['id']);
+                $this->db->update('loans_payments_schedule', array('paid_actual' => $sched['paid_actual'] + $amount));
+                //set new amount value
+                $amount = 0;
+              }
+
+          }
+        }
+
+        return $amount;
+
+        
     }
 
 
@@ -194,6 +227,28 @@ Class Payments_Model extends CI_Model {
 
         return $this->db->count_all_results("loans_payments");
     }
+
+
+
+    /**
+     * Checks the totals of the ledger - credit / debit
+     * @param  [type] $loan_id [description]
+     * @return [type]          [description]
+     */
+    function check_ledger($loan_id, $tag) {
+
+        $this->db->where('loan_id', $loan_id);
+
+        if ($tag == 'credit') {
+          $this->db->select_sum('credit');
+          return $this->db->get('loans_ledger')->row_array()['credit'];
+        } elseif ($tag == 'debit') {
+          $this->db->select_sum('debit');
+          return $this->db->get('loans_ledger')->row_array()['debit'];
+        }
+        
+    }
+
 
 
 

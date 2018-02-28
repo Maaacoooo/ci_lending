@@ -132,9 +132,13 @@
               </div>
             </div>
             <div class="form-group">
-              <label for="name" class="col-sm-2 control-label">Full name</label>
-              <div class="col-sm-10">
-                <input type="text" name="name" class="form-control" id="name" placeholder="Full name..." value="<?=set_value('name')?>">
+              <label for="name" class="col-sm-2 control-label">Firstname</label>
+              <div class="col-sm-4">
+                <input type="text" name="fname" class="form-control" id="fname" placeholder="First name..." value="<?=set_value('fname')?>">
+              </div>
+              <label for="lname" class="col-sm-2 control-label">Lastname</label>
+              <div class="col-sm-4">
+                <input type="text" name="lname" class="form-control" id="lname" placeholder="Last name..." value="<?=set_value('lname')?>">
               </div>
             </div>
             <div class="form-group">
@@ -162,9 +166,11 @@
                      <?php 
                         if($usertypes):
                         foreach($usertypes as $usr):
+                          if($usr['title'] != 'Administrator'):
                       ?>
                       <option value="<?=$usr['title']?>"><?=$usr['title']?></option>
                       <?php
+                          endif;
                         endforeach;
                         endif;
                       ?>

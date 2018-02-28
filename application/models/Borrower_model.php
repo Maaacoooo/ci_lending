@@ -35,7 +35,6 @@ Class Borrower_Model extends CI_Model {
                 'middlename'     => strip_tags($this->input->post('mname')),  
                 'birthdate'      => date('Y-m-d',strtotime(strip_tags($this->input->post('bdate')))),
                 'sex'            => strip_tags($this->input->post('sex')),
-                'due_days'       => strip_tags($this->input->post('loan_days')),
                 'civil_status'   => strip_tags($this->input->post('civil_stat'))
              );
 
@@ -77,6 +76,7 @@ Class Borrower_Model extends CI_Model {
                 $this->db->update('borrowers', array('img' => $filepath), array('id'=>$acc_id));
             
             } 
+
 
             return $create_act;
        
@@ -374,7 +374,13 @@ Class Borrower_Model extends CI_Model {
 
          $this->db->insert('borrowers_address', $data);
 
-         return $this->db->insert_id(); //returns the inserted id
+         $id = $this->db->insert_id(); //returns the inserted id
+
+         if ($tag==0) {
+            $this->db->update('borrowers', array('bplace' => $id), array('id'=>$acc_id));
+             
+         }
+         return $id;
 
     }
 

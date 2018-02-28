@@ -138,10 +138,14 @@
 
               <div class="tab-pane <?php if($flash_error || $flash_success || $flash_valid)echo'active'?>" id="settings">
               <?=form_open_multipart('users/update/'.$info['username'], array('class' => 'form-horizontal'))?>                
-                  <div class="form-group">
-                    <label for="name" class="col-sm-2 control-label">Full name</label>
-                    <div class="col-sm-10">
-                      <input type="text" name="name" class="form-control" id="name" placeholder="Full name..." value="<?=$info['name']?>" required>
+                   <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Firstname</label>
+                    <div class="col-sm-4">
+                      <input type="text" name="fname" class="form-control" id="fname" placeholder="First name..." value="<?=$info['firstname']?>">
+                    </div>
+                    <label for="lname" class="col-sm-2 control-label">Lastname</label>
+                    <div class="col-sm-4">
+                      <input type="text" name="lname" class="form-control" id="lname" placeholder="Last name..." value="<?=$info['lastname']?>">
                     </div>
                   </div>
                   <div class="form-group">

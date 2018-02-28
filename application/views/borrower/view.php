@@ -381,11 +381,11 @@
               <!-- ///////////////////////////////// Settings ///////////////////////////////////// -->
               <div class="tab-pane <?php if($flash_settings)echo'active'?>" id="settings">
                 <strong>Account Options</strong>
-                <?php if ($info['is_deleted']==0): ?>
+                <?php /* if ($info['is_deleted']==0): ?>
                   <button class="btn btn-danger" data-toggle="modal" data-target="#ActivateBorrower"><i class="fa fa-lock"></i> Deactivate Borrower</button>
                 <?php else: ?>
                   <button class="btn btn-primary" data-toggle="modal" data-target="#ActivateBorrower"><i class="fa fa-check"></i> Activate Borrower</button>
-                <?php endif ?>
+                <?php endif */?>
                   <button class="btn btn-primary" data-toggle="modal" data-target="#ChangeProfile"><i class="fa fa-image"></i> Change Profile</button>
               </div>
               <!-- /.tab-pane -->
@@ -1367,7 +1367,7 @@
                       <div class="input-group-addon">
                         <i class="fa fa-calendar"></i>
                       </div>
-                      <input type="text" class="form-control bootstrap-datepicker" name="bdate" id="birthdate" value="<?=dateform($info['birthdate'])?>" placeholder="mm/dd/yyyy">
+                      <input type="text" class="form-control bootstrap-datepicker" name="bdate" id="birthdate" value="<?=date('d/m/Y', strtotime($info['birthdate']))?>" placeholder="mm/dd/yyyy">
                     </div>
                     <!-- /.input group -->
                   </div>
@@ -1395,6 +1395,7 @@
                     <option disabled selected> Select Option...</option>
                     <option value="Single" <?php if($info['civil_status']=='Single')echo'selected';?>>Single</option>
                     <option value="Married" <?php if($info['civil_status']=='Married')echo'selected';?>>Married</option>
+                    <option value="Widowed" <?php if($info['civil_status']=='Widowed')echo'selected';?>>Widowed</option>
                   </select>
                 </div><!-- /.col-md-4 col-sm-12 -->
               </div><!-- /.row -->
@@ -1667,19 +1668,19 @@
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Amount</label>
-                  <input type="text" name="loan_amount" id="loan_amount" class="form-control input-lg"/>
+                  <input type="number" name="loan_amount" id="loan_amount" class="form-control input-lg"/>
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-4 -->
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Days of Due</label>
-                  <input type="text" name="loan_days" id="loan_days" class="form-control input-lg"/>
+                  <input type="number" name="loan_days" id="loan_days" class="form-control input-lg"/>
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-4 -->
               <div class="col-sm-4">
                 <div class="form-group">
                   <label for="">Interest Rate</label>
-                  <input type="number" name="loan_rate" id="loan_rate" max="100" class="form-control input-lg" value="8.5" />
+                  <input type="number" step=".05" name="loan_rate" id="loan_rate" max="100" class="form-control input-lg" value="8.5" />
                 </div><!-- /.form-group -->
               </div><!-- /.col-sm-4 -->
             </div><!-- /.row -->
@@ -1694,9 +1695,13 @@
                   <?php $y=1; foreach($income as $inc): ?>
                   <tr>
                     <th><?=$y++.'. '.$inc['title']?></th>
-                    <td width="30%"><input type="text" id="test" class="integer" name="income[<?=$inc['id']?>]"/></td>
+                    <td width="30%"><input type="number" class="integer income" name="income[<?=$inc['id']?>]"/></td>
                   </tr>
                   <?php endforeach; ?>
+                  <tr>
+                    <th class="text-right">TOTAL</th>
+                    <td id="total_income" class="bg-info">0.00</td>
+                  </tr>
                 </table><!-- /.table table-bordered table-condensed -->
 
                 <table class="table table-bordered table-condensed">
@@ -1706,9 +1711,13 @@
                   <?php $x=1; foreach($expenses as $exp): ?>
                   <tr>
                     <th><?=$x++.'. '.$exp['title']?></th>
-                    <td width="30%"><input type="text" class="integer" name="expense[<?=$exp['id']?>]"/></td>
+                    <td width="30%"><input type="number" class="integer expense" name="expense[<?=$exp['id']?>]"/></td>
                   </tr>
                   <?php endforeach; ?>
+                  <tr>
+                    <th class="text-right">TOTAL</th>
+                    <td id="total_expense" class="bg-info">0.00</td>
+                  </tr>
                 </table><!-- /.table table-bordered table-condensed -->
               </div><!-- /.col-md-6 col-md-3-offset -->
             </div><!-- /.row -->
@@ -1743,7 +1752,6 @@
                   </div><!-- /.row -->
               </div><!-- /.col-md-10 col-md-offset-1 -->
             </div><!-- /.row -->
-
             <hr />
             </div><!-- /.col-md-8 -->
             <div class="col-md-4">
@@ -1859,7 +1867,7 @@
   </div>
   <!-- /.modal -->
 
-
+<?php /*
   <!-- ///////////////////////////// Activate Borrower //////////////////////////////////// -->
 
   <div class="modal fade" id="ActivateBorrower">
@@ -1900,7 +1908,7 @@
     </div>
     <!-- /.modal-dialog -->
   </div>
-  <!-- /.modal -->
+  <!-- /.modal --> */ ?>
 
 
 
@@ -1935,6 +1943,20 @@
                 $(this).val(value);
               }
               
+          });
+
+      $('.expense').on('change, keydown', function(e) {
+              var expenses = $('.expense').map(function() { return $(this).val();}).get();
+              var total_expense = expenses.reduce((a,b) => +a + +b, 0);
+
+              $('#total_expense').text(parseFloat(total_expense).toFixed(2));
+          });
+
+      $('.income').on('change, keydown', function(e) {
+              var income = $('.income').map(function() { return $(this).val();}).get();
+              var total_income = income.reduce((a,b) => +a + +b, 0);
+
+              $('#total_income').text(parseFloat(total_income).toFixed(2));
           });
 
        $('#loan_amount, #loan_days, #loan_rate, #approve_date').on('keyup change', function(e) {

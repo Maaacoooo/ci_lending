@@ -344,6 +344,100 @@ class Loans extends CI_Controller {
 	}
 
 
+	public function update()		{
+
+		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+
+		if($userdata)	{
+			
+			//FORM VALIDATION
+			$this->form_validation->set_rules('id', 'ID', 'trim|required');   
+			$this->form_validation->set_rules('loan_amount', 'Loan Amount', 'trim|required');   
+			$this->form_validation->set_rules('loan_days', 'Days of Loan', 'trim|required');   
+			$this->form_validation->set_rules('loan_rate', 'Loan Percentage', 'trim|required');   
+		 
+		   if($this->form_validation->run() == FALSE)	{
+
+				//convert validation errors to flashdata notification
+		   		$notif['warning'] = array_values($this->form_validation->error_array());
+		   		$this->sessnotif->setNotif($notif);
+		   		
+				redirect($_SERVER['HTTP_REFERER'], 'refresh');
+
+			} else {
+
+				$loan_id = $this->encryption->decrypt($this->input->post('id')); //ID of the Borrower	
+
+
+				if($this->loans_model->update($loan_id)) {
+
+					
+					//Save Expenses 
+					foreach ($this->input->post('expense') as $key => $value) {
+						$this->loans_model->update_expense($loan_id, $key, $value);
+					}
+
+
+					//Save Income 
+					foreach ($this->input->post('income') as $key => $value) {
+						$this->loans_model->update_income($loan_id, $key, $value);
+					}
+
+					
+					//Save Creditors
+					foreach ($this->input->post('creditors_name') as $key => $value) {
+
+						$cred['name'] = $value;
+						$cred['addr'] = $this->input->post('creditors_address')[$key];
+						$cred['amount'] = $this->input->post('creditors_amount')[$key];
+						$cred['remarks'] = $this->input->post('creditors_remarks')[$key];
+		
+						$this->loans_model->update_creditors($key, $loan_id, $cred['name'], $cred['addr'], $cred['amount'], $cred['remarks']);
+							
+					} 
+
+					foreach ($this->input->post('new_creditors_name') as $key => $value) {
+
+						if ($value) {
+							$cred['name'] = $value;
+							$cred['addr'] = $this->input->post('new_creditors_address')[$key];
+							$cred['amount'] = $this->input->post('creditors_amount')[$key];
+							$cred['remarks'] = $this->input->post('new_creditors_remarks')[$key];
+			
+							$this->loans_model->add_creditors($loan_id, $cred['name'], $cred['addr'], $cred['amount'], $cred['remarks']);
+						}
+						
+					} 
+
+
+					// Logs ////////////////////////////////////////
+					$log[] = array(
+							'user' 		=> 	$userdata['username'],
+							'tag' 		=> 	'loan',
+							'tag_id'	=> 	$loan_id,
+							'action' 	=> 	'Updated Request Details'
+					);
+
+				
+					//Save Logs/////////////////////////
+					$this->logs_model->save_logs($log);		
+					////////////////////////////////////
+					$notif['success'] = 'Request Updated!';
+		   			$this->sessnotif->setNotif($notif);
+					
+					redirect($_SERVER['HTTP_REFERER'], 'refresh');
+				}
+			}
+
+		} else {
+
+			$this->session->set_flashdata('error', 'You need to login!');
+			redirect('dashboard/login', 'refresh');
+		}
+
+	}
+
+
 	public function view($id)		{
 
 		$userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
@@ -386,7 +480,6 @@ class Loans extends CI_Controller {
 
 			$data['title'] 		= 'Loan Application: ' . $data['loan']['id'];
 
-
 			$data['logs']		= $this->logs_model->fetch_logs('loan', $data['loan']['id'], 50);
 
 			$data['notes']		= $this->notes_model->fetch_notes(NULL, NULL, 'loan', $data['loan']['id']);
@@ -395,6 +488,8 @@ class Loans extends CI_Controller {
 
 			$data['schedules']	= $this->payments_model->fetch_schedules(NULL, NULL, $data['loan']['id']);
 
+			$data['total_balance'] = $this->payments_model->check_ledger($id, 'debit') - $this->payments_model->check_ledger($id, 'credit');
+
 			//For loan approval
 			$startdate = date('Y-m-d');
 			$amount = $data['loan']['borrowed_amount'] + ($data['loan']['borrowed_amount'] * ($data['loan']['borrowed_percentage']/100));
@@ -402,7 +497,15 @@ class Loans extends CI_Controller {
 			
 			if($data['user']['user_level'] > 6) {
 				if ($this->uri->segment(4)=='print') {
-					$this->load->view('loans/print', $data);	
+					if ($this->uri->segment(5)=='statement') {
+						$data['title'] = 'Statement of Account: ' . $data['loan']['id'];
+						$this->load->view('loans/print_statement', $data);	
+					} elseif ($this->uri->segment(5)=='disburse') {
+						$data['title'] = 'Acknowledgement: ' . $data['loan']['id'];
+						$this->load->view('loans/print_disburse', $data);	
+					} else {
+						$this->load->view('loans/print', $data);	
+					}
 				} else {
 					$this->load->view('loans/view', $data);	
 				}
@@ -738,4 +841,14 @@ class Loans extends CI_Controller {
   }
 
 
+
+	function test() {
+		//var_dump($this->payments_model->set_scheduled_payment('2018-00001-00001'));
+		//
+		var_dump((100/3));
+	}
+
 }
+
+
+

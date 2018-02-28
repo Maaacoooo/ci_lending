@@ -125,9 +125,9 @@
                         </tr>
                         <tr>
                           <th>Requested Amount</th>
-                          <td width="20%" class="bg-warning"><?=$loan['borrowed_amount']?></td>
+                          <td width="20%" class="bg-warning"><?=moneytize($loan['borrowed_amount'])?></td>
                           <th>Days of Period / Due date</th>
-                          <td width="20%" class="bg-warning"><?=$loan['due_date']?></td>
+                          <td width="20%" class="bg-warning"><?=$loan['due_days']?> days | <?=$loan['due_date']?></td>
                           <th>Rate(%) per Annum</th>
                           <td width="20%" class="bg-warning"><?=$loan['borrowed_percentage']?></td>
                         </tr>
@@ -137,7 +137,7 @@
                             <?php if ($creditors): ?>
                               <ol>
                               <?php foreach ($creditors as $cred): ?>
-                                <li><?=$cred['fullname']?> - <?=$cred['address']?> -- Amount: <?=$cred['amount']?> | Remarks: <?=$cred['remarks']?></li>
+                                <li><?=$cred['fullname']?> - <?=$cred['address']?> | Remarks: <?=$cred['remarks']?></li>
                               <?php endforeach ?>
                               </ol>
                             <?php endif ?>
@@ -149,25 +149,55 @@
                       <table class="table table-condensed table-dark-border">
                         <thead>
                           <tr>
-                            <th colspan="4">Payment Schedules</th>
+                            <th colspan="6">Payment Schedules</th>
                           </tr>
                           <tr>
+                            <th width="2%"></th>
                             <th>Schedule</th>
                             <th>Due Amount</th>
                             <th class="bg-success">Paid Amount</th>
+                            <th class="bg-success">Balance</th>
                             <th class="bg-success">Date Paid</th>
                           </tr>
                         </thead>
                         <tbody>
-                          <?php foreach ($schedules as $sched): ?>
+                          <?php 
+                          $totPaid[] = 0;
+                          $totAmt[] = 0;
+                          $totBal[] = 0;
+                          $x = 1;
+                          foreach ($schedules as $sched): ?>
                           <tr>
+                            <?php 
+                            $balance = $sched['amount'] - $sched['paid_actual'];
+                            $totBal[] = $balance;
+                            $totAmt[] = $sched['amount'];
+                            $totPaid[] = $sched['paid_actual'];
+                            ?>
+                            <td><?=$x++?></td>
                             <td><?=date('Y-m-d (D M, d)', strtotime($sched['schedule']))?></td>
-                            <td><?=moneytize($sched['amount'])?></td>
-                            <td class="bg-success"><?=$sched['paid_actual']?></td>
+                            <td class="text-danger"><?=moneytize($sched['amount'])?></td>
+                            <td class="bg-success"><?=moneytize($sched['paid_actual'])?></td>
+                            <td class="bg-success">
+                              <?php if ($sched['paid_actual'] < $sched['amount']): ?>                                
+                                <strong class="text-danger"><?=moneytize($sched['amount'] - $sched['paid_actual'])?></strong>
+                              <?php else: ?>
+                                <?=moneytize($balance)?>
+                              <?php endif ?>
+                            </td>
                             <td class="bg-success"><?=$sched['paid_date']?></td>
                           </tr>
                           <?php endforeach ?>
                         </tbody>
+                        <tfoot>
+                          <tr>
+                            <th colspan="2" class="text-right">TOTAL</th>
+                            <td><?=moneytize(array_sum($totAmt))?></td>
+                            <td><?=moneytize(array_sum($totPaid))?></td>
+                            <td><?=moneytize(array_sum($totBal))?></td>
+                            <td></td>
+                          </tr>
+                        </tfoot>
                       </table><!-- /.table table-condensed table-dark-border -->                        
                       <?php endif ?>
                     </div><!-- /.col-md-12 -->
@@ -175,7 +205,7 @@
                   <?php if ($loan['status']==1): ?>
                   <div class="row">
                     <div class="col-md-12">
-                      <div class="box box-default">
+                      <div class="box box-primary">
                         <div class="box-header with-border">
                           <h5 class="box-title">Loan Ledger</h5>
                           <div class="box-tools pull-right">
@@ -224,6 +254,46 @@
                           </div><!-- /.row -->
                         </div><!-- /.box-body -->
                       </div><!-- /.box box-default -->
+                    </div><!-- /.col-md-12 -->
+                  </div><!-- /.row -->
+                  <?php endif ?>
+                  <?php if ($loan['status']==3): ?>
+                    <div class="row">
+                    <div class="col-md-12">
+                      <table class="table table-condensed table-dark-border">
+                                <thead>
+                                  <tr>
+                                    <th colspan="6" class="text-center">STATEMENT OF ACCOUNT</th>
+                                  </tr>
+                                  <tr>
+                                    <th width="25%">DATE | TIME</th>
+                                    <th>CODE</th>
+                                    <th width="40%">DESCRIPTION</th>
+                                    <th>DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th>BALANCE</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <?php $bal=0; if ($ledger): ?>
+                                    <?php foreach ($ledger as $ld): ?>
+                                    <tr>
+                                      <td><span class="badge bg-blue"><?=$ld['user']?></span> <?=$ld['created_at']?></td>
+                                      <td><?=$ld['code']?></td>
+                                      <td><?=$ld['description']?></td>
+                                      <td class="text-danger"><?=$ld['debit']?></td>
+                                      <td class="text-success"><?=$ld['credit']?></td>
+                                      <td class="bg-warning">
+                                        <?php
+                                          $bal = ($bal + $ld['debit']) - ($ld['credit']);
+                                          echo decimalize($bal);
+                                        ?>
+                                      </td>
+                                    </tr>
+                                    <?php endforeach ?>
+                                  <?php endif ?>
+                                </tbody>
+                              </table><!-- /.table table-condensed table-striped -->
                     </div><!-- /.col-md-12 -->
                   </div><!-- /.row -->
                   <?php endif ?>
@@ -362,15 +432,20 @@
                     <td width="5%"></td>
                     <th colspan="3">Income</th>
                   </tr>
-                  <?php if ($income): ?>
+                  <?php $totInc[]=0; if ($income): ?>
                   <?php $x=1; foreach ($income as $inc): ?>
                   <tr>
+                    <?php $totInc[] = $inc['amount']; ?>
                     <td colspan="2" width="10%"></td>
                     <td><?=$x++?>. <?=$inc['title']?></td>
-                    <td width="50%" class="bg-warning"><?=$inc['amount']?></td>
+                    <td width="50%" class="bg-warning"><?=moneytize($inc['amount'])?></td>
                   </tr>
                   <?php endforeach ?>
                   <?php endif ?>
+                  <tr>
+                    <th colspan="3" class="text-right">TOTAL:</th>
+                    <td><?=moneytize(array_sum($totInc))?></td>
+                  </tr>
                   <tr>
                     <td colspan="4"></td>
                   </tr>
@@ -378,15 +453,20 @@
                     <td width="5%"></td>
                     <th colspan="3">Expenses</th>
                   </tr>
-                  <?php if ($expenses): ?>
+                  <?php $totExp[]=0; if ($expenses): ?>
                   <?php $x=1; foreach ($expenses as $exp): ?>
                   <tr>
+                    <?php $totExp[] = $exp['amount']; ?>
                     <td colspan="2" width="10%"></td>
                     <td><?=$x++?>. <?=$exp['title']?></td>
-                    <td width="50%" class="bg-warning"><?=$exp['amount']?></td>
+                    <td width="50%" class="bg-warning"><?=moneytize($exp['amount'])?></td>
                   </tr>
                   <?php endforeach ?>
                   <?php endif ?>
+                  <tr>
+                    <th colspan="3" class="text-right">TOTAL:</th>
+                    <td><?=moneytize(array_sum($totExp))?></td>
+                  </tr>
                 </table><!-- /.table .table-condensed table-dark-border -->             
               </div>
               
@@ -430,7 +510,7 @@
               <div class="tab-pane" id="payments">
                 <h4 class="title">Payments</h4>
                 <?php if ($payments): ?>
-                <table class="table table-condensed">
+                <table class="table table-condensed table-striped table-bordered">
                   <thead>
                     <tr>
                       <th>#</th>
@@ -444,6 +524,7 @@
                   <tbody>
                     <?php foreach ($payments as $pay): ?>
                     <tr>
+                      <?php $totPay[] = $pay['amount']; ?>
                       <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=$pay['id']?></a></td>
                       <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=$pay['payee']?></a></td>
                       <td><a href="<?=base_url('payments/view/'.$pay['id'])?>"><?=ellipsize($pay['description'], 20, 1)?></a></td>
@@ -453,6 +534,14 @@
                     </tr>
                     <?php endforeach ?>
                   </tbody>
+                  <tfoot>
+                    <tr>
+                      <th colspan="3" class="text-right">TOTAL:</th>
+                      <td><?=moneytize(array_sum($totPay))?></td>
+                      <td></td>
+                      <td></td>
+                    </tr>
+                  </tfoot>
                 </table><!-- /.table table-condensed -->
                 <?php else: ?>
                   <div class="well">               
@@ -570,6 +659,12 @@
                   <b>Requested Amount</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount'])?></a>
                 </li>
                 <li class="list-group-item">
+                  <b>Interest</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount']*($loan['borrowed_percentage']/100))?></a>
+                </li>
+                <li class="list-group-item">
+                  <b>Balance</b> <a class="pull-right"><?=moneytize($total_balance)?></a>
+                </li>
+                <li class="list-group-item">
                   <b>Date Registered</b> <a class="pull-right"><?=$loan['created_at']?></a>
                 </li>
                 <li class="list-group-item">
@@ -579,21 +674,29 @@
                 <li class="list-group-item">
                   <a href="#" data-target="#ApproveLoan" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-check"></i> Approve Loan</a>
                 </li>
+                <li class="list-group-item">
+                  <a href="#" data-target="#UpdateRequest" data-toggle="modal" class="btn btn-flat btn-warning btn-block"><i class="fa fa-edit"></i> Update Request</a>                  
+                </li><!-- /.list-group-item -->
                 <?php endif; ?>  
                 <?php if ($loan['status']==1 && $ledger): ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#AddPayment" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-money"></i> Add Payment</a>
-                </li>
+                </li>                
                 <?php elseif(($loan['status']==1 || $loan['status']==0) && $user['user_level'] > 8): ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#DisapproveLoan" data-toggle="modal" class="btn bg-navy btn-block btn-flat"><i class="fa fa-ban"></i> Disapprove Loan</a>
-                </li>
+                </li>                
+                <?php endif; ?>  
+                <?php if ($loan['status'] == 1 && !$ledger): ?>
                 <li class="list-group-item">
                   <a href="#" data-target="#disburse" data-toggle="modal" class="btn btn-success btn-block btn-flat"><i class="fa fa-money"></i> Disburse Cash</a>
                 </li>
-                <?php endif; ?>  
+                <?php endif ?>
                 <li class="list-group-item">
-                  <a href="<?=current_url()?>/print" target="_blank" class="btn btn-primary btn-block btn-flat"><i class="fa fa-print"></i> Print</a>
+                  <a href="<?=current_url()?>/print" target="_blank" class="btn btn-primary btn-block btn-flat"><i class="fa fa-print"></i> Print Loan Application</a>
+                </li>
+                <li class="list-group-item">
+                  <a href="<?=current_url()?>/print/statement" target="_blank" class="btn btn-primary btn-block btn-flat"><i class="fa fa-print"></i> Print Statement</a>
                 </li>
                                        
               </ul>
@@ -682,6 +785,216 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+
+
+  <!-- ///////////////////////// Update Request ////////////////////////////// -->
+  <div class="modal fade" id="UpdateRequest">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+        <?=form_open('loans/update')?>
+        <div class="modal-header">
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span></button>
+          <h4 class="modal-title">Loan Application</h4>
+        </div>
+        <div class="modal-body">   
+          <div class="row">
+            <div class="col-md-8">
+              <div class="callout callout-info">              
+              <p><i class="fa fa-exclamation-circle"></i> <strong>ATTENTION!</strong> <br />
+              This Loan Application is subject for Approval. <br />
+              After submitting this application, please print and sign the formal document.</p>
+              <p><i class="fa fa-info-circle"></i> Please fill up all the important fields</p>
+            </div><!-- /.callout callout-info -->       
+            <hr />
+            <div class="row">
+              <div class="col-sm-12">
+                <div class="form-group">
+                  <label for="">Borrower</label>
+                  <input type="text" name="" id="" class="form-control input-lg" value="<?=$info['name']?>" disabled/>
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-12 -->
+            </div><!-- /.row -->
+            <div class="row">
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="">Amount</label>
+                  <input type="number" name="loan_amount" id="loan_amount" value="<?=$loan['borrowed_amount']?>" class="form-control input-lg"/>
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 -->
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="">Days of Due</label>
+                  <input type="number" name="loan_days" id="loan_days" value="<?=$loan['due_days']?>" class="form-control input-lg"/>
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 -->
+              <div class="col-sm-4">
+                <div class="form-group">
+                  <label for="">Interest Rate</label>
+                  <input type="number" step=".05" name="loan_rate" id="loan_rate" value="<?=$loan['borrowed_percentage']?>" max="100" class="form-control input-lg" value="8.5" />
+                </div><!-- /.form-group -->
+              </div><!-- /.col-sm-4 -->
+            </div><!-- /.row -->
+            <hr />
+            <p><strong>Monthly Income and Expenses of the Borrower:</strong></p>
+            <div class="row">
+              <div class="col-md-8 col-md-offset-2">
+                <table class="table table-bordered table-condensed">
+                  <tr>
+                    <th colspan="2">Income</th>
+                  </tr>
+                  <?php $y=1; $totInc=array(); foreach($income as $inc): ?>
+                  <tr>
+                    <?php $totInc[] = $inc['amount']; ?>
+                    <th><?=$y++.'. '.$inc['title']?></th>
+                    <td width="30%"><input type="number" class="integer income" value="<?=$inc['amount']?>" name="income[<?=$inc['id']?>]"/></td>
+                  </tr>
+                  <?php endforeach; ?>
+                  <tr>
+                    <th class="text-right">TOTAL</th>
+                    <td id="total_income" class="bg-info"><?=decimalize(array_sum($totInc))?></td>
+                  </tr>
+                </table><!-- /.table table-bordered table-condensed -->
+
+                <table class="table table-bordered table-condensed">
+                  <tr>
+                    <th colspan="2" class="bg-danger italic">Expenses (Less)</th>
+                  </tr>
+                  <?php $x=1; $totExp=array(); foreach($expenses as $exp): ?>
+                  <tr>
+                    <?php $totExp[] = $exp['amount']; ?>
+                    <th><?=$x++.'. '.$exp['title']?></th>
+                    <td width="30%"><input type="number" class="integer expense" value="<?=$exp['amount']?>" name="expense[<?=$exp['id']?>]"/></td>
+                  </tr>
+                  <?php endforeach; ?>
+                  <tr>
+                    <th class="text-right">TOTAL</th>
+                    <td id="total_expense" class="bg-info"><?=decimalize(array_sum($totExp))?></td>
+                  </tr>
+                </table><!-- /.table table-bordered table-condensed -->
+              </div><!-- /.col-md-6 col-md-3-offset -->
+            </div><!-- /.row -->
+            <hr />
+            <p><strong>Summary of other Outstanding Obligations</strong></p>
+            <div class="row">
+              <div class="col-md-10 col-md-offset-1">
+                <em>Clear the name to delete a guarantor</em>
+                  <?php foreach ($creditors as $cred): ?>
+                  <div class="row">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="">Name of Guarantor</label>
+                        <input type="text" name="creditors_name[<?=$cred['id']?>]" value="<?=$cred['fullname']?>" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-4 -->
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="">Address</label>
+                        <input type="text" name="creditors_address[<?=$cred['id']?>]" value="<?=$cred['address']?>" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-4 -->
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="">Remarks</label>
+                        <input type="text" name="creditors_remarks[<?=$cred['id']?>]" value="<?=$cred['remarks']?>" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-2 -->
+                  </div><!-- /.row -->
+                  <?php endforeach ?>
+                  <hr />
+                  <strong>Add Guarantor</strong>
+                  <div class="row" id="creditors">
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="">Name of Guarantor</label>
+                        <input type="text" name="new_creditors_name[]" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-4 -->
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="">Address</label>
+                        <input type="text" name="new_creditors_address[]" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-4 -->
+                    <div class="col-sm-4">
+                      <div class="form-group">
+                        <label for="">Remarks</label>
+                        <input type="text" name="new_creditors_remarks[]" class="form-control" />
+                      </div><!-- /.form-group -->  
+                    </div><!-- /.col-sm-2 -->
+                  </div><!-- /.row -->
+                   <div class="row">
+                    <div class="col-sm-12">
+                      <button type="button" class="btn btn-default btn-sm pull-right" id="add_creditor"><i class="fa fa-plus"></i> Add Guarantor</button>
+                    </div><!-- /.col-sm-12 -->
+                  </div><!-- /.row -->
+              </div><!-- /.col-md-10 col-md-offset-1 -->
+            </div><!-- /.row -->
+            <hr />
+            </div><!-- /.col-md-8 -->
+            <div class="col-md-4">
+
+              <table class="table table-striped table-dark-border">
+                <thead>
+                  <tr>
+                    <th colspan="2">Interest</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <input type="text" id="service_interest" class="form-control" placeholder="Interest..." value="<?=decimalize($loan['borrowed_amount']*($loan['borrowed_percentage']/100))?>" disabled="" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Total Payable</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <input type="text" id="payable" class="form-control" placeholder="Total Payables..." value="<?=decimalize($loan['borrowed_amount']+($loan['borrowed_amount']*($loan['borrowed_percentage']/100)))?>" disabled="" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Service Charge (5%)</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <input type="text" id="service_charge" class="form-control" placeholder="Service Charge..."  value="<?=decimalize($loan['borrowed_amount']*(5/100))?>" disabled="" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">Approx. Date of Approval</th>
+                  </tr>
+                  <tr>
+                    <td colspan="2">
+                      <input type="text" id="approve_date" class="form-control bootstrap-datepicker" placeholder="Approx. Date of Approval" />
+                    </td>
+                  </tr>
+                  <tr>
+                    <th colspan="2">PAYMENT SCHEDULES</th>
+                  </tr>
+                  <tr>
+                    <th>Date</th>
+                    <th>Amount</th>
+                  </tr>
+                </thead>
+                <tbody id="payment_table">
+                </tbody>
+              </table><!-- /.table table-striped table-dard-border -->
+            </div><!-- /.col-md-4 -->
+          </div><!-- /.row -->
+        </div>
+
+        <input type="hidden" name="id" value="<?=$this->encryption->encrypt($loan['id'])?>" />
+        <div class="modal-footer">
+          <button type="button" class="btn btn-flat btn-default pull-left" data-dismiss="modal">Close</button>
+          <button type="submit" class="btn btn-flat btn-warning">Update Request</button>
+        </div>
+      </div>
+      <?=form_close()?>
+      <!-- /.modal-content -->
+    </div>
+    <!-- /.modal-dialog -->
+  </div>
+  <!-- /.modal -->
   <?php endif; ?>  
 
   <?php if ($loan['status']==1 && $ledger): ?>
@@ -719,8 +1032,11 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
+  <?php endif; ?>     
 
-  <!-- ///////////////////////// Disapprove Loan ////////////////////////////// -->
+
+  <?php if ($loan['status'] == 1 && !$ledger): ?>
+  <!-- ///////////////////////// Disburse Cash ////////////////////////////// -->
   <div class="modal fade" id="disburse">
     <div class="modal-dialog modal-sm">
       <div class="modal-content">
@@ -763,7 +1079,7 @@
     <!-- /.modal-dialog -->
   </div>
   <!-- /.modal -->
-  <?php endif; ?>     
+  <?php endif ?>
 
   <!-- ///////////////////////// Add Debit ////////////////////////////// -->
   <div class="modal fade" id="AddDebit">
@@ -960,6 +1276,11 @@
               <div class="tab-pane active" id="file_info<?=$file['id']?>">
                 <div class="row">
                   <div class="col-md-12">
+
+                    <?php if (isImage($file['url'])): ?>
+                      <img src="<?=base_url($file['url'])?>" class="img-thumbnail center file-img" alt="" />
+                    <hr />
+                    <?php endif; ?>
                     <strong>Title</strong>
                     <p class="text-muted"><?=$file['title']?></p><!-- /.text-muted -->
                     <hr /> 
@@ -1122,7 +1443,7 @@
             <div class="col-sm-12 col-md-4">
               <div class="form-group">
                 <label for="amount">Amount</label>
-                <input type="text" name="amount" id="amount" class="form-control input-lg integer" placeholder="500.00" />
+                <input type="text" name="amount" id="amount" class="form-control input-lg integer" placeholder="500.00" value="<?=decimalize($total_balance)?>" />
               </div><!-- /.form-group -->
             </div><!-- /.col-sm-12 col-md-4 -->
             <div class="col-sm-12 col-md-8">
@@ -1178,17 +1499,6 @@
               $( "#creditors" ).after( creditors );
           });
 
-      $('.test').focus(function(e) {
-              var value = $('#test').val();
-              if(!value) {
-
-              } else {
-                value = parseFloat(value).toFixed(2);
-                $('#test').val(value);
-              }
-              
-          });
-
       <?php if($pay_id): ?>
         $('body').ready(function(e) {      
             window.open("<?=base_url('payments/view/'.$pay_id.'/print')?>", "_blank", "toolbar=no, location=yes, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, width=1000, height=400");
@@ -1206,6 +1516,89 @@
               }
               
     });
+
+
+    $('.expense').on('change keydown', function(e) {
+              var expenses = $('.expense').map(function() { return $(this).val();}).get();
+              var total_expense = expenses.reduce((a,b) => +a + +b, 0);
+
+              $('#total_expense').text(parseFloat(total_expense).toFixed(2));
+          });
+
+      $('.income').on('change keydown', function(e) {
+              var income = $('.income').map(function() { return $(this).val();}).get();
+              var total_income = income.reduce((a,b) => +a + +b, 0);
+
+              $('#total_income').text(parseFloat(total_income).toFixed(2));
+          });
+
+       $('#loan_amount, #loan_days, #loan_rate, #approve_date').on('load keyup change', function(e) {
+              $('#payment_table').children().remove();
+
+               jQuery.support.cors = true;
+
+              var loan_amount = $('#loan_amount').val();
+              var loan_days = $('#loan_days').val();
+              var loan_rate = $('#loan_rate').val();
+
+              var loan_amount = parseFloat(loan_amount).toFixed(2);
+              var loan_rate = parseFloat(loan_rate).toFixed(2);
+              var loan_days = parseFloat(loan_days);
+
+              var interest = parseFloat((loan_amount)*(loan_rate/100)).toFixed(2);
+              var total = parseFloat(+interest + +loan_amount).toFixed(2);
+
+              var serv_charge = parseFloat(loan_amount * (5/100)).toFixed(2);
+
+              //show service charge and interest
+              $('#service_charge').val(serv_charge);
+              $('#service_interest').val(interest);
+              $('#payable').val(total);
+
+              var start_date = $('#approve_date').val();
+              if ((start_date)=="") {
+                start_date = "";
+              }
+
+    $.ajax(
+    {
+        type: "GET",
+        url: "<?=base_url('loans/Schedules/')?>" + loan_days + "/" + total + "/?start=" + start_date,
+        data: "[]",
+        contentType: "application/json; charset=utf-8",
+        dataType: "json",
+        cache: false,
+        success: function (data) {
+            
+        var trHTML = '';
+                
+        $.each(data, function (i, item) {
+            
+            trHTML += '<tr><td>' + data[i].schedule + '</td><td>' + data[i].amount + '</td></tr>';
+        });
+        
+         //     $('#payment_table').append('<tr><td>'+value+'</td></tr>');
+        $('#payment_table').append(trHTML);
+        
+        },
+        
+        error: function (msg) {
+            
+           //console.log(msg.responseText);
+        }
+    });
+              
+          });
+
+      $('#loan_amount').focusout(function(e) {
+              var value = $('#loan_amount').val();
+              if(value) {
+                value = parseFloat(value).toFixed(2);
+                $('#loan_amount').val(value);
+              }
+              
+          });
+
 
     //Initialize input mask
     $('[data-mask]').inputmask();
