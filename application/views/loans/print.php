@@ -282,7 +282,7 @@
                             <?php if ($creditors): ?>
                               <ol>
                               <?php foreach ($creditors as $cred): ?>
-                                <li><?=$cred['fullname']?> - <?=$cred['address']?> -- Amount: <?=$cred['amount']?> | Remarks: <?=$cred['remarks']?></li>
+                                <li><?=$cred['fullname']?> - <?=$cred['address']?> | Remarks: <?=$cred['remarks']?></li>
                               <?php endforeach ?>
                               </ol>
                             <?php endif ?>
