@@ -1,10 +1,18 @@
 $(document).ready(function(){
-    $('.char-val').keydown(function(e) {
+    $('.char-val').bind('keydown blur', function(e) {
           
-      	var $field = $(this);
-      	var txt = $field.val();
+      	// Allow controls such as backspace, tab etc.
+        var arr = [8,9,16,17,20,35,36,37,38,39,40,45,46,189];
 
-      	$field.val(txt.replace(/[^a-z ]/gi,''));
+        // Allow letters
+        for(var i = 65; i <= 90; i++){
+          arr.push(i);
+        }
+
+        // Prevent default if not in array
+        if(jQuery.inArray(event.which, arr) === -1){
+          event.preventDefault();
+        }
  	});
 
  	$('#birthdate, #spouse_bdate').change(function(e) {
