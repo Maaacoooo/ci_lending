@@ -121,7 +121,7 @@ class Payments extends CI_Controller {
 
 	    if($userdata) {     
 	      //FORM VALIDATION
-	      $this->form_validation->set_rules('id', 'ID', 'trim|required');        
+	      $this->form_validation->set_rules('id', 'ID', 'trim|required|callback_check_payments');        
 	      $this->form_validation->set_rules('payee', 'Payee', 'trim|required');        
 	      $this->form_validation->set_rules('amount', 'Amount', 'trim|required|greater_than[0]');        
 	      $this->form_validation->set_rules('receipt', 'Receipt', 'trim');             
@@ -183,84 +183,34 @@ class Payments extends CI_Controller {
   }
 
 
+  public function check_payments($id) {
+  	
+  	$id = $this->encryption->decrypt($id); //loan ID
+  	$loan = $this->loans_model->view($id); //get loan information
 
-  public function update()    {
+  	$pay = $this->input->post('amount');
 
-	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
+  	$credit = $this->payments_model->check_ledger($id, 'credit');
+  	$debit  = $this->payments_model->check_ledger($id, 'debit');
 
-	    if($userdata) {     
-	      //FORM VALIDATION
-	      $this->form_validation->set_rules('id', 'ID', 'trim|required|callback_check_user');    
-	     
-	       if($this->form_validation->run() == FALSE) {
+  	$balance = $debit-$credit;
 
-	        //convert validation errors to flashdata notification
-	          $notif['warning'] = array_values($this->form_validation->error_array());
-	          $this->sessnotif->setNotif($notif);
-	          
-	        redirect($_SERVER['HTTP_REFERER'], 'refresh');
-
-	      } else {
-
-	        $id = $this->encryption->decrypt($this->input->post('id')); //ID of the loan 
-
-	        $description = strip_tags($this->input->post('description'));
-	        $title = strip_tags($this->input->post('title'));
-
-	        if($this->notes_model->update($id, $description, $title)) {
-	          $this->session->set_flashdata('success', 'Note Updated!');
-	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
-	        } else {
-	          $this->session->set_flashdata('error', 'Error Occured!');
-	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
-	        }
-	      }
-
-	    } else {
-
-	      $this->session->set_flashdata('error', 'You need to login!');
-	      redirect('dashboard/login', 'refresh');
-	    }
+  	if(($balance - $pay) < 0) {
+			if (isset($_POST)) {
+				$this->form_validation->set_message('check_payments', 'Your payment exceeds the payable amount');				
+			}
+			return FALSE;
+		} elseif (($balance - $pay) == 0) {
+			//Close Loan Account
+			$this->loans_model->update_status($id, 3);
+			return TRUE;
+		} else {
+			return TRUE;
+	}
 
   }
 
 
-  public function delete()    {
-
-	    $userdata = $this->session->userdata('admin_logged_in'); //it's pretty clear it's a userdata
-
-	    if($userdata) {     
-	      //FORM VALIDATION
-	      $this->form_validation->set_rules('id', 'ID', 'trim|required|callback_check_user');    
-	     
-	       if($this->form_validation->run() == FALSE) {
-
-	        //convert validation errors to flashdata notification
-	          $notif['warning'] = array_values($this->form_validation->error_array());
-	          $this->sessnotif->setNotif($notif);
-	          
-	        redirect($_SERVER['HTTP_REFERER'], 'refresh');
-
-	      } else {
-
-	        $id = $this->encryption->decrypt($this->input->post('id')); //ID of the loan 
-
-	        if($this->notes_model->delete($id)) {
-	          $this->session->set_flashdata('success', 'Note Deleted!');
-	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
-	        } else {
-	          $this->session->set_flashdata('error', 'Error Occured!');
-	          redirect($_SERVER['HTTP_REFERER'], 'refresh');
-	        }
-	      }
-
-	    } else {
-
-	      $this->session->set_flashdata('error', 'You need to login!');
-	      redirect('dashboard/login', 'refresh');
-	    }
-
-  }
 
 
   public function view($id = NULL)		{

@@ -257,6 +257,46 @@
                     </div><!-- /.col-md-12 -->
                   </div><!-- /.row -->
                   <?php endif ?>
+                  <?php if ($loan['status']==3): ?>
+                    <div class="row">
+                    <div class="col-md-12">
+                      <table class="table table-condensed table-dark-border">
+                                <thead>
+                                  <tr>
+                                    <th colspan="6" class="text-center">STATEMENT OF ACCOUNT</th>
+                                  </tr>
+                                  <tr>
+                                    <th width="25%">DATE | TIME</th>
+                                    <th>CODE</th>
+                                    <th width="40%">DESCRIPTION</th>
+                                    <th>DEBIT</th>
+                                    <th>CREDIT</th>
+                                    <th>BALANCE</th>
+                                  </tr>
+                                </thead>
+                                <tbody>
+                                  <?php $bal=0; if ($ledger): ?>
+                                    <?php foreach ($ledger as $ld): ?>
+                                    <tr>
+                                      <td><span class="badge bg-blue"><?=$ld['user']?></span> <?=$ld['created_at']?></td>
+                                      <td><?=$ld['code']?></td>
+                                      <td><?=$ld['description']?></td>
+                                      <td class="text-danger"><?=$ld['debit']?></td>
+                                      <td class="text-success"><?=$ld['credit']?></td>
+                                      <td class="bg-warning">
+                                        <?php
+                                          $bal = ($bal + $ld['debit']) - ($ld['credit']);
+                                          echo decimalize($bal);
+                                        ?>
+                                      </td>
+                                    </tr>
+                                    <?php endforeach ?>
+                                  <?php endif ?>
+                                </tbody>
+                              </table><!-- /.table table-condensed table-striped -->
+                    </div><!-- /.col-md-12 -->
+                  </div><!-- /.row -->
+                  <?php endif ?>
               </div>
               <!-- /.tab-pane -->
               
@@ -622,7 +662,7 @@
                   <b>Interest</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount']*($loan['borrowed_percentage']/100))?></a>
                 </li>
                 <li class="list-group-item">
-                  <b>Total Payable</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount'] + $loan['borrowed_amount']*($loan['borrowed_percentage']/100))?></a>
+                  <b>Balance</b> <a class="pull-right"><?=moneytize($total_balance)?></a>
                 </li>
                 <li class="list-group-item">
                   <b>Date Registered</b> <a class="pull-right"><?=$loan['created_at']?></a>
@@ -1403,7 +1443,7 @@
             <div class="col-sm-12 col-md-4">
               <div class="form-group">
                 <label for="amount">Amount</label>
-                <input type="text" name="amount" id="amount" class="form-control input-lg integer" placeholder="500.00" />
+                <input type="text" name="amount" id="amount" class="form-control input-lg integer" placeholder="500.00" value="<?=decimalize($total_balance)?>" />
               </div><!-- /.form-group -->
             </div><!-- /.col-sm-12 col-md-4 -->
             <div class="col-sm-12 col-md-8">

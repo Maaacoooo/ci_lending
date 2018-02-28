@@ -231,6 +231,28 @@ Class Payments_Model extends CI_Model {
 
 
     /**
+     * Checks the totals of the ledger - credit / debit
+     * @param  [type] $loan_id [description]
+     * @return [type]          [description]
+     */
+    function check_ledger($loan_id, $tag) {
+
+        $this->db->where('loan_id', $loan_id);
+
+        if ($tag == 'credit') {
+          $this->db->select_sum('credit');
+          return $this->db->get('loans_ledger')->row_array()['credit'];
+        } elseif ($tag == 'debit') {
+          $this->db->select_sum('debit');
+          return $this->db->get('loans_ledger')->row_array()['debit'];
+        }
+        
+    }
+
+
+
+
+    /**
      * --------------------------------------------------------------------
      * Schedules
      * --------------------------------------------------------------------

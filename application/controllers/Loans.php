@@ -480,7 +480,6 @@ class Loans extends CI_Controller {
 
 			$data['title'] 		= 'Loan Application: ' . $data['loan']['id'];
 
-
 			$data['logs']		= $this->logs_model->fetch_logs('loan', $data['loan']['id'], 50);
 
 			$data['notes']		= $this->notes_model->fetch_notes(NULL, NULL, 'loan', $data['loan']['id']);
@@ -488,6 +487,8 @@ class Loans extends CI_Controller {
 			$data['payments']	= $this->payments_model->fetch_payments(NULL, NULL, $data['loan']['id']);
 
 			$data['schedules']	= $this->payments_model->fetch_schedules(NULL, NULL, $data['loan']['id']);
+
+			$data['total_balance'] = $this->payments_model->check_ledger($id, 'debit') - $this->payments_model->check_ledger($id, 'credit');
 
 			//For loan approval
 			$startdate = date('Y-m-d');
@@ -499,6 +500,9 @@ class Loans extends CI_Controller {
 					if ($this->uri->segment(5)=='statement') {
 						$data['title'] = 'Statement of Account: ' . $data['loan']['id'];
 						$this->load->view('loans/print_statement', $data);	
+					} elseif ($this->uri->segment(5)=='disburse') {
+						$data['title'] = 'Acknowledgement: ' . $data['loan']['id'];
+						$this->load->view('loans/print_disburse', $data);	
 					} else {
 						$this->load->view('loans/print', $data);	
 					}
