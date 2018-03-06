@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: Mar 06, 2018 at 07:23 AM
+-- Generation Time: Mar 06, 2018 at 09:59 AM
 -- Server version: 10.1.21-MariaDB
 -- PHP Version: 7.1.1
 
@@ -266,7 +266,7 @@ INSERT INTO `ci_sessions` (`id`, `ip_address`, `timestamp`, `data`) VALUES
 ('lb1v8upa3bqnck0g82b5rhsid77g3pi6', '192.168.1.109', 1520309871, 0x5f5f63695f6c6173745f726567656e65726174657c693a313532303330393837313b),
 ('mulsoueoch7i6r4n9ahtfmu6e0dlrvsk', '192.168.1.109', 1520309969, 0x5f5f63695f6c6173745f726567656e65726174657c693a313532303330393936393b),
 ('il0rb28ca5s9inu7fle0tbtas9pgr9qi', '192.168.1.109', 1520310143, 0x5f5f63695f6c6173745f726567656e65726174657c693a313532303331303134333b),
-('pdk2alrm5s9fa3d248cum607uq3prt4h', '::1', 1520315942, 0x5f5f63695f6c6173745f726567656e65726174657c693a313532303331353838383b737563636573737c733a33333a22596f752068617665207375636365737366756c6c79206c6f67676564206f757421223b);
+('jpka27sfr0858acr8112efsc06q8qqf9', '::1', 1520326586, 0x5f5f63695f6c6173745f726567656e65726174657c693a313532303332363335303b737563636573737c733a32383a22416464656420612044697362757273656d656e74205265636f726421223b61646d696e5f6c6f676765645f696e7c613a313a7b733a383a22757365726e616d65223b733a353a2261646d696e223b7d64697362757273657c623a313b);
 
 -- --------------------------------------------------------
 
@@ -372,6 +372,8 @@ CREATE TABLE `loans` (
   `description` text,
   `status` tinyint(1) DEFAULT '0' COMMENT '0 = pending; 1 = approved; 2 = disapprove; 3 = closed; 4 = cancelled',
   `approved_at` datetime NOT NULL,
+  `disbursed_at` datetime NOT NULL,
+  `disbursed_by` varchar(255) NOT NULL,
   `created_at` datetime DEFAULT CURRENT_TIMESTAMP,
   `updated_at` timestamp NULL DEFAULT NULL ON UPDATE CURRENT_TIMESTAMP
 ) ENGINE=InnoDB DEFAULT CHARSET=latin1;
@@ -380,9 +382,11 @@ CREATE TABLE `loans` (
 -- Dumping data for table `loans`
 --
 
-INSERT INTO `loans` (`id`, `borrower_id`, `borrowed_amount`, `due_days`, `due_date`, `borrowed_percentage`, `description`, `status`, `approved_at`, `created_at`, `updated_at`) VALUES
-('2018-00001-00001', '2018-00001', '10000.00', 44, '2018-04-13', '8.50', NULL, 1, '2018-02-28 00:52:12', '2018-02-28 00:48:34', '2018-02-27 16:52:12'),
-('2018-00002-00002', '2018-00002', '120000.00', 205, '2018-09-21', '8.50', NULL, 3, '2018-02-28 10:22:31', '2018-02-28 08:35:26', '2018-02-28 06:11:13');
+INSERT INTO `loans` (`id`, `borrower_id`, `borrowed_amount`, `due_days`, `due_date`, `borrowed_percentage`, `description`, `status`, `approved_at`, `disbursed_at`, `disbursed_by`, `created_at`, `updated_at`) VALUES
+('2018-00001-00001', '2018-00001', '10000.00', 44, '2018-04-13', '8.50', NULL, 1, '2018-02-28 00:52:12', '0000-00-00 00:00:00', '', '2018-02-28 00:48:34', '2018-02-27 16:52:12'),
+('2018-00002-00002', '2018-00002', '120000.00', 205, '2018-09-21', '8.50', NULL, 3, '2018-02-28 10:22:31', '0000-00-00 00:00:00', '', '2018-02-28 08:35:26', '2018-02-28 06:11:13'),
+('2018-00002-00003', '2018-00002', '10000.00', 60, '2018-05-05', '16.50', NULL, 1, '2018-03-06 15:32:25', '0000-00-00 00:00:00', 'admin', '2018-03-06 15:32:05', '2018-03-06 08:52:43'),
+('2018-00003-00004', '2018-00003', '10000.00', 60, '2018-05-05', '16.50', NULL, 1, '2018-03-06 16:55:47', '2018-03-06 16:56:12', 'admin', '2018-03-06 16:55:40', '2018-03-06 08:56:12');
 
 -- --------------------------------------------------------
 
@@ -407,7 +411,9 @@ INSERT INTO `loans_creditors` (`id`, `loan_id`, `fullname`, `address`, `amount`,
 (1, '2018-00001-00001', 'Test', 'asdasdsadasd', NULL, 'asdasasdasdasd'),
 (3, NULL, 'Testss', 'Test', NULL, 'Test'),
 (4, '2018-00002-00002', 'asdasd', 'asdasd', NULL, 'asdasd'),
-(22, '2018-00002-00002', 'WOW', '', NULL, '');
+(22, '2018-00002-00002', 'WOW', '', NULL, ''),
+(23, '2018-00002-00003', 'Girly', 'saydghadasdaskjdadh', NULL, 'asdasd'),
+(24, '2018-00003-00004', '', '', NULL, '');
 
 -- --------------------------------------------------------
 
@@ -438,7 +444,19 @@ INSERT INTO `loans_expense` (`id`, `loan_id`, `expense_id`, `amount`) VALUES
 (9, '2018-00002-00002', 3, '2000.00'),
 (10, '2018-00002-00002', 4, '3500.00'),
 (11, '2018-00002-00002', 5, '0.00'),
-(12, '2018-00002-00002', 6, '0.00');
+(12, '2018-00002-00002', 6, '0.00'),
+(13, '2018-00002-00003', 1, '10000.00'),
+(14, '2018-00002-00003', 2, '1000.00'),
+(15, '2018-00002-00003', 3, '3000.00'),
+(16, '2018-00002-00003', 4, '3000.00'),
+(17, '2018-00002-00003', 5, '0.00'),
+(18, '2018-00002-00003', 6, '0.00'),
+(19, '2018-00003-00004', 1, '1000.00'),
+(20, '2018-00003-00004', 2, '1000.00'),
+(21, '2018-00003-00004', 3, '10000.00'),
+(22, '2018-00003-00004', 4, '4500.00'),
+(23, '2018-00003-00004', 5, '0.00'),
+(24, '2018-00003-00004', 6, '0.00');
 
 -- --------------------------------------------------------
 
@@ -467,7 +485,17 @@ INSERT INTO `loans_income` (`id`, `loan_id`, `income_id`, `amount`) VALUES
 (7, '2018-00002-00002', 2, '6000.00'),
 (8, '2018-00002-00002', 3, '3000.00'),
 (9, '2018-00002-00002', 4, '200.00'),
-(10, '2018-00002-00002', 5, '5100.00');
+(10, '2018-00002-00002', 5, '5100.00'),
+(11, '2018-00002-00003', 1, '10000.00'),
+(12, '2018-00002-00003', 2, '2000.00'),
+(13, '2018-00002-00003', 3, '2000.00'),
+(14, '2018-00002-00003', 4, '10000.00'),
+(15, '2018-00002-00003', 5, '1000.00'),
+(16, '2018-00003-00004', 1, '10000.00'),
+(17, '2018-00003-00004', 2, '10000.00'),
+(18, '2018-00003-00004', 3, '10000.00'),
+(19, '2018-00003-00004', 4, '1000.00'),
+(20, '2018-00003-00004', 5, '10000.00');
 
 -- --------------------------------------------------------
 
@@ -503,7 +531,15 @@ INSERT INTO `loans_ledger` (`id`, `loan_id`, `code`, `description`, `debit`, `cr
 (10, '2018-00002-00002', 'SCHR', 'Standard Service Charge', '6000.00', '0.00', '2018-02-28 12:36:22', 'admin'),
 (11, '2018-00002-00002', 'SCHR', 'Service Charge Paid', '0.00', '6000.00', '2018-02-28 12:36:22', 'admin'),
 (12, '2018-00002-00002', 'PNTY', 'Applied Penalties', '500.00', '0.00', '2018-02-28 13:02:03', 'admin'),
-(15, '2018-00002-00002', 'CPAY', 'Payment #PAY2018-00006', '0.00', '130700.00', '2018-02-28 14:11:13', 'admin');
+(15, '2018-00002-00002', 'CPAY', 'Payment #PAY2018-00006', '0.00', '130700.00', '2018-02-28 14:11:13', 'admin'),
+(16, '2018-00002-00003', 'DISB', 'Actual Disbursed: PHP 9,500.00', '10000.00', '0.00', '2018-03-06 16:52:43', 'admin'),
+(17, '2018-00002-00003', 'INTR', 'Applied Standard Interests basing from 16.50% of PHP 10,000.00', '1650.00', '0.00', '2018-03-06 16:52:43', 'admin'),
+(18, '2018-00002-00003', 'SCHR', 'Standard Service Charge', '500.00', '0.00', '2018-03-06 16:52:43', 'admin'),
+(19, '2018-00002-00003', 'SCHR', 'Service Charge Paid', '0.00', '500.00', '2018-03-06 16:52:43', 'admin'),
+(20, '2018-00003-00004', 'DISB', 'Actual Disbursed: PHP 9,500.00', '10000.00', '0.00', '2018-03-06 16:56:12', 'admin'),
+(21, '2018-00003-00004', 'INTR', 'Applied Standard Interests basing from 16.50% of PHP 10,000.00', '1650.00', '0.00', '2018-03-06 16:56:12', 'admin'),
+(22, '2018-00003-00004', 'SCHR', 'Standard Service Charge', '500.00', '0.00', '2018-03-06 16:56:12', 'admin'),
+(23, '2018-00003-00004', 'SCHR', 'Service Charge Paid', '0.00', '500.00', '2018-03-06 16:56:12', 'admin');
 
 -- --------------------------------------------------------
 
@@ -596,7 +632,15 @@ INSERT INTO `loans_payments_schedule` (`id`, `loan_id`, `schedule`, `amount`, `p
 (14, '2018-00002-00002', '2018-08-15', '9300.0000', '9300.0000', '2018-02-28 13:05:39'),
 (15, '2018-00002-00002', '2018-08-30', '9300.0000', '9300.0000', '2018-02-28 13:05:39'),
 (16, '2018-00002-00002', '2018-09-15', '9300.0000', '9300.0000', '2018-02-28 13:05:39'),
-(17, '2018-00002-00002', '2018-09-21', '9300.0000', '9300.0000', '2018-02-28 13:05:39');
+(17, '2018-00002-00002', '2018-09-21', '9300.0000', '9300.0000', '2018-02-28 13:05:39'),
+(18, '2018-00002-00003', '2018-03-30', '2912.5000', NULL, NULL),
+(19, '2018-00002-00003', '2018-04-15', '2912.5000', NULL, NULL),
+(20, '2018-00002-00003', '2018-04-30', '2912.5000', NULL, NULL),
+(21, '2018-00002-00003', '2018-05-05', '2912.5000', NULL, NULL),
+(22, '2018-00003-00004', '2018-03-30', '2912.5000', NULL, NULL),
+(23, '2018-00003-00004', '2018-04-15', '2912.5000', NULL, NULL),
+(24, '2018-00003-00004', '2018-04-30', '2912.5000', NULL, NULL),
+(25, '2018-00003-00004', '2018-05-05', '2912.5000', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -781,7 +825,17 @@ INSERT INTO `logs` (`id`, `user`, `tag`, `tag_id`, `action`, `ip_address`, `user
 (159, 'asdsdasda', '', '', 'Updated Access Pin', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-05 16:37:12'),
 (160, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 02:56:44'),
 (161, 'collector', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 02:58:03'),
-(162, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 04:20:01');
+(162, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 04:20:01'),
+(163, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 07:31:09'),
+(164, 'admin', 'loan', '2018-00002-00003', 'Loan Application - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 07:32:05'),
+(165, 'admin', 'borrower', '2018-00002', 'Loan Application - ID:2018-00002-00003 - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 07:32:05'),
+(166, 'admin', 'loan', '2018-00002-00003', 'Approved Loan Request', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 07:32:25'),
+(167, 'admin', ' ', ' ', 'User Logged In', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 08:00:14'),
+(168, 'admin', 'loan', '2018-00002-00003', 'Processed Disbursement', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 08:52:43'),
+(169, 'admin', 'loan', '2018-00003-00004', 'Loan Application - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 08:55:40'),
+(170, 'admin', 'borrower', '2018-00003', 'Loan Application - ID:2018-00003-00004 - Pending', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 08:55:40'),
+(171, 'admin', 'loan', '2018-00003-00004', 'Approved Loan Request', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 08:55:59'),
+(172, 'admin', 'loan', '2018-00003-00004', 'Processed Disbursement', '::1', 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/64.0.3282.186 Safari/537.36', '2018-03-06 08:56:12');
 
 -- --------------------------------------------------------
 
@@ -812,7 +866,9 @@ INSERT INTO `notes` (`id`, `tag`, `tag_id`, `title`, `description`, `created_at`
 (5, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: VOILA!', '2018-02-27 14:46:26', NULL, NULL),
 (6, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: Test', '2018-02-27 22:44:43', NULL, NULL),
 (7, 'loan', '2018-00001-00001', NULL, 'admin: Approved this Loan Request. <br/> Remarks: aasdsadsa', '2018-02-28 00:52:12', NULL, NULL),
-(8, 'loan', '2018-00002-00002', NULL, 'admin: Approved this Loan Request. <br/> Remarks: jhghjgh', '2018-02-28 10:22:31', NULL, NULL);
+(8, 'loan', '2018-00002-00002', NULL, 'admin: Approved this Loan Request. <br/> Remarks: jhghjgh', '2018-02-28 10:22:31', NULL, NULL),
+(9, 'loan', '2018-00002-00003', NULL, 'admin: Approved this Loan Request. <br/> Remarks: ApproveLoan', '2018-03-06 15:32:25', NULL, NULL),
+(10, 'loan', '2018-00003-00004', NULL, 'admin: Approved this Loan Request. <br/> Remarks: sdadsad', '2018-03-06 16:55:47', NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -1139,37 +1195,37 @@ ALTER TABLE `income`
 -- AUTO_INCREMENT for table `loans_creditors`
 --
 ALTER TABLE `loans_creditors`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT for table `loans_expense`
 --
 ALTER TABLE `loans_expense`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 --
 -- AUTO_INCREMENT for table `loans_income`
 --
 ALTER TABLE `loans_income`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 --
 -- AUTO_INCREMENT for table `loans_ledger`
 --
 ALTER TABLE `loans_ledger`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 --
 -- AUTO_INCREMENT for table `loans_payments_schedule`
 --
 ALTER TABLE `loans_payments_schedule`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=18;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=26;
 --
 -- AUTO_INCREMENT for table `logs`
 --
 ALTER TABLE `logs`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=163;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=173;
 --
 -- AUTO_INCREMENT for table `notes`
 --
 ALTER TABLE `notes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 --
 -- AUTO_INCREMENT for table `store_expenses`
 --
