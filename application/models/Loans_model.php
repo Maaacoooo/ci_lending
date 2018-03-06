@@ -71,7 +71,9 @@ Class Loans_Model extends CI_Model {
           loans.approved_at,
           loans.created_at,
           loans.updated_at,
-          CONCAT(borrowers.firstname, " ", borrowers.lastname) as name');
+          CONCAT(borrowers.firstname, " ", borrowers.lastname) as name,
+          loans.disbursed_by,
+          loans.disbursed_at');
         $this->db->join('borrowers', 'borrowers.id = loans.borrower_id', 'left');
         $this->db->where('loans.id', $id);
         $query = $this->db->get('loans');
@@ -489,6 +491,19 @@ Class Loans_Model extends CI_Model {
         $this->db->where('loan_id', $loan_id);
         $this->db->where('loans_payments.created_at BETWEEN "'.$from.'" AND "'.$to.'"');
         return $this->db->count_all_results('loans_payments');
+  }
+
+
+
+
+  function disburse($loan_id, $user) {
+
+      $data = array(
+          'disbursed_by' => $user,
+          'disbursed_at' => date('Y-m-d H:i:s')
+      );
+      $this->db->where('id', $loan_id);
+      return $this->db->update('loans', $data);
   }
 
 

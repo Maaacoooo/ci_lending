@@ -450,6 +450,7 @@ class Loans extends CI_Controller {
 			//Fetch Data	
 			$data['loan']	= $this->loans_model->view($id);
 			$data['pay_id'] = $this->session->flashdata('pay_id');
+			$data['disb'] = $this->session->flashdata('disburse');
 
 			//Validate if record exist
 			 //IF NO ID OR NO RESULT, REDIRECT
@@ -501,7 +502,7 @@ class Loans extends CI_Controller {
 						$data['title'] = 'Statement of Account: ' . $data['loan']['id'];
 						$this->load->view('loans/print_statement', $data);	
 					} elseif ($this->uri->segment(5)=='disburse') {
-						$data['title'] = 'Acknowledgement: ' . $data['loan']['id'];
+						$data['title'] = 'Receipt Slip: ' . $data['loan']['id'];
 						$this->load->view('loans/print_disburse', $data);	
 					} else {
 						$this->load->view('loans/print', $data);	
@@ -738,7 +739,11 @@ class Loans extends CI_Controller {
 	        $action3 = $this->loans_model->add_ledger($id, (($charge)*-1), $userdata['username'], 'Standard Service Charge', 'SCHR');
 	        $action4 = $this->loans_model->add_ledger($id, $charge, $userdata['username'], 'Service Charge Paid', 'SCHR');
 
-	        if($action1 && $action2 && $action3 && $action4) {
+	        $action5 = $this->loans_model->disburse($id, $userdata['username']);
+
+	        if($action1 && $action2 && $action3 && $action4 && $action5) {
+
+	          $this->session->set_flashdata('disburse', TRUE); //tag for auto popup
 
 	          $log[] = array(
 	              'user'    =>  $userdata['username'],

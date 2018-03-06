@@ -659,7 +659,7 @@
                   <b>Requested Amount</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount'])?></a>
                 </li>
                 <li class="list-group-item">
-                  <b>Interest</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount']*($loan['borrowed_percentage']/100))?></a>
+                  <b>Interest (<?=$loan['borrowed_percentage']?>%)</b> <a class="pull-right"><?=moneytize($loan['borrowed_amount']*($loan['borrowed_percentage']/100))?></a>
                 </li>
                 <li class="list-group-item">
                   <b>Balance</b> <a class="pull-right"><?=moneytize($total_balance)?></a>
@@ -1502,6 +1502,12 @@
       <?php if($pay_id): ?>
         $('body').ready(function(e) {      
             window.open("<?=base_url('payments/view/'.$pay_id.'/print')?>", "_blank", "toolbar=no, location=yes, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, width=1000, height=400");
+        });
+      <?php endif; ?>
+
+      <?php if($disb): ?>
+        $('body').ready(function(e) {      
+            window.open("<?=base_url('loans/view/'.$loan['id'].'/print/disburse')?>", "_blank", "toolbar=no, location=yes, directories=no, status=no, menubar=no, scrollbars=yes, resizable=no, width=1000, height=400");
         });
       <?php endif; ?>
     });
