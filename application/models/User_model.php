@@ -4,7 +4,7 @@ Class User_model extends CI_Model
 {
 
     function pin_login($pin) {
-      $this->db->where('pin', $pin);
+      $this->db->where('username', $pin);
       return $this->db->get('users')->row_array();
     }
 

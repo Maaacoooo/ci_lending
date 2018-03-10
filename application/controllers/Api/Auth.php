@@ -40,7 +40,7 @@ class Auth extends CI_Controller {
 
           if ($user_info) {
             $data["error"] = FALSE;
-            $data["uid"] = $user_info["pin"];
+            $data["uid"] = $user_info["username"];
             $data["user"]["name"] = $user_info["firstname"] . ' ' . $user_info["lastname"];
             $data["user"]["email"] = $user_info["email"];
             $data["user"]["created_at"] = $user_info["created_at"];
@@ -57,7 +57,7 @@ class Auth extends CI_Controller {
 
           if ($user_info) {
             $data["error"] = FALSE;
-            $data["uid"] = $user_info["pin"];
+            $data["uid"] = $user_info["username"];
             $data["user"]["name"] = $user_info["firstname"] . ' ' . $user_info["lastname"];
             $data["user"]["email"] = $user_info["email"];
             $data["user"]["created_at"] = $user_info["created_at"];
